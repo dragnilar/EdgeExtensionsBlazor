@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\example.js" />
+    <Content Remove="wwwroot\jsInteropScripts.js" />
   </ItemGroup>
 
 </Project>
