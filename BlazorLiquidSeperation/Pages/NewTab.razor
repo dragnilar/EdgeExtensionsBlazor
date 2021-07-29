@@ -1,0 +1,61 @@
+﻿@page "/newtab.html"
+@using BlazorLiquidSeperation.Models
+@using System.Text.Json
+@inherits Blazor.BrowserExtension.Pages.BasePage;
+@inject IJSRuntime JS;
+
+<h1>This is your new tab page, Blazor Style - The background image should be the current bing image of the day.</h1>
+<br/>
+<br/>
+
+@code{
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        try
+        {
+            Console.WriteLine("Test method fired");
+            var url = "https://peapix.com/bing/feed?country=US";
+            var httpClient = new HttpClient();
+            Console.WriteLine("We made a web request");
+            var response = await httpClient.GetAsync(url).ConfigureAwait(false);
+            Console.WriteLine("We finished the web request");
+            var json =  await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+            Console.WriteLine($"The Json: {json}");
+            Console.WriteLine("Deserializing the images.");
+            var images = JsonSerializer.Deserialize<List<BingImage>>(json);
+            Console.WriteLine("Finished serializing the images");
+            if (images != null)
+            {
+                Console.WriteLine("We got images");
+                foreach (var bingImage in images)
+                {
+                    Console.WriteLine($"An Image we Got: {bingImage.Title} - {bingImage.PageUrl}");
+                }
+                Console.WriteLine("Trying to set the image...");
+                var firstImage = images.FirstOrDefault();
+                if (firstImage != null)
+                {
+                    await JS.InvokeVoidAsync("setBackgroundImage1", firstImage.FullUrl).ConfigureAwait(false);
+                    Console.WriteLine("Image set");
+                }
+                else
+                {
+                    Console.WriteLine("We didn't sent the image because for some reason we didn't get anything back from the first item returned by the web request. :-/");
+                }
+            }
+            else
+            {
+                Console.WriteLine("The image collection was null, we probably screwed up deserializing the JSON :-/");
+            }
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine("We got an error.");
+            Console.WriteLine(e);
+        }
+        await base.OnAfterRenderAsync(firstRender).ConfigureAwait(false);
+    }
+}
+
+
