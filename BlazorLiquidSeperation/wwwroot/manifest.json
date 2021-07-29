@@ -20,7 +20,6 @@
     "storage",
     "alarms",
     "bookmarks",
-    "chrome://favicon/*",
-    "https://peapix.com/*"
+    "chrome://favicon/*"
   ]
 }
