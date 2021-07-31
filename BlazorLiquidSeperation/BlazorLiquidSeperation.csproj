@@ -2,13 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <AssemblyVersion>2021.0729.21.0</AssemblyVersion>
-    <FileVersion>2021.0729.21.0</FileVersion>
+    <AssemblyVersion>2021.0729.22.0</AssemblyVersion>
+    <FileVersion>2021.0729.22.0</FileVersion>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Blazor.BrowserExtension" Version="0.5.*" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web.Extensions" Version="5.0.0-preview9.20513.1" />
+    <PackageReference Include="BlazorFluentUI.CoreComponents" Version="5.5.3" />
+    <PackageReference Include="BlazorFluentUI.ListComponents" Version="5.5.3" />
+    <PackageReference Include="Blazorise.Bootstrap" Version="0.9.4.1" />
+    <PackageReference Include="Blazorise.Icons.FontAwesome" Version="0.9.4.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.*" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.*" PrivateAssets="all" />
   </ItemGroup>

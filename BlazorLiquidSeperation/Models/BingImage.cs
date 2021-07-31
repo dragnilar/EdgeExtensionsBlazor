@@ -16,7 +16,7 @@ namespace BlazorLiquidSeperation.Models
         }
 
         [JsonPropertyName("pageUrl")]
-        public string PageUrl { get; set;}
+        public string PageUrl { get; set; }
         [JsonPropertyName("thumbUrl")]
         public string ThumbUrl { get; set; }
         [JsonPropertyName("title")]
