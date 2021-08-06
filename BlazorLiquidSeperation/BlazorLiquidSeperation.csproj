@@ -9,10 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Blazor.BrowserExtension" Version="0.5.*" />
-    <PackageReference Include="BlazorFluentUI.CoreComponents" Version="5.5.3" />
-    <PackageReference Include="BlazorFluentUI.ListComponents" Version="5.5.3" />
-    <PackageReference Include="Blazorise.Bootstrap" Version="0.9.4.1" />
-    <PackageReference Include="Blazorise.Icons.FontAwesome" Version="0.9.4.1" />
+    <PackageReference Include="DevExpress.Blazor" Version="21.1.4" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.*" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.*" PrivateAssets="all" />
   </ItemGroup>
@@ -23,6 +20,10 @@
 
   <ItemGroup>
     <Content Remove="wwwroot\jsInteropScripts.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\css\" />
   </ItemGroup>
 
 </Project>

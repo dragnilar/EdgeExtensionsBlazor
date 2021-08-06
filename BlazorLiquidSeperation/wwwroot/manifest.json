@@ -17,8 +17,8 @@
     "newtab": "newtab.html"
   },
   "permissions": [
+    "search",
     "storage",
-    "alarms",
     "bookmarks",
     "chrome://favicon/*"
   ],

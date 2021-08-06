@@ -1,0 +1,126 @@
+﻿.office365Link{
+    color: ghostwhite;
+    font-size: 15px;
+    cursor: pointer;
+}
+.office365Link:hover{
+    background-color: rgba(158, 158, 158, 0.45);
+    border-radius: 4px;
+    cursor: pointer;
+}
+.MS365Link{
+    color: ghostwhite;
+    font-size: 32px;
+    cursor: pointer;
+}
+.MS365Link:hover{
+    background-color: rgba(158, 158, 158, 0.45);
+    border-radius: 4px;
+    cursor: pointer;
+}
+.M365TableCellLeft{
+    padding-top: 10px;
+    padding-bottom: 10px
+}
+.M365TableCellRight{
+    padding-left: 30px;
+    padding-top: 10px;
+    padding-bottom: 10px
+}
+.M365DropDownStyle  {
+    border: 1px solid transparent;
+}
+
+.SearchBoxStyle{
+    position: fixed; top: 20%; min-height: 40px; max-height: 52px; min-width: 580px; max-width: 596px;white-space: nowrap;
+    margin: 0 0 0 500px; width: 100%; height: 100%; z-index: 2; border-radius: 25px; opacity: 0.9; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+.QuickLinkContainer{
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: relative;
+    flex: auto;
+    width: 80%;
+}
+.QuickLinkContent{
+    height: 70px;
+    background: transparent;
+    width: 80px;
+    opacity: .80;
+    margin-top: 20px;
+    margin-right: 45px;
+    margin-bottom: 20px;
+    padding: 12px;
+    flex-direction: column;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border-style: none;
+    position: relative;
+    transition: all 0.2s ease-in-out;
+}
+.QuickLinkContent:active{
+    border-color: #f8f9fa;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 4px;
+    background: transparent;
+}
+.QuickLinkContent:hover {
+    opacity: 0.60;
+    background: rgba(248, 248, 255, 0.59);
+}
+.WaffleMenuIconStyle{
+    height: 32px;
+    width: 32px;
+}
+.TopMenuIconStyle{
+    width: 32px;
+    outline: 0;
+    border: none;
+    background: transparent;
+    height: 32px;
+    transition: all 0.1s ease-in-out;
+}
+.TopMenuIconStyle:hover{
+    opacity: 0.60;
+    background: rgba(248, 248, 255, 0.59);
+    border-radius: 4px;
+}
+
+.QuickLinkTitle {
+    font-size: 13px;
+    box-sizing: content-box;
+    max-height: 16px;
+    white-space: nowrap;
+    margin-top: 40px;
+    font-family: "Segoe UI Semibold", Helvetica, SansSerif, serif;
+    font-weight: 400;
+    color: #ffffff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.QuickLinkBookMarkImageContainer{
+    background: #4a4a4a;
+    opacity: .80;
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.QuickLinkBookMarkImage{
+    height: 32px;
+    width: 32px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    
+}

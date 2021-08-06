@@ -1,8 +1,4 @@
-﻿using BlazorFluentUI;
-using Blazorise;
-using Blazorise.Bootstrap;
-using Blazorise.Icons.FontAwesome;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+﻿using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http;
@@ -20,14 +16,7 @@ namespace BlazorLiquidSeperation
             // workaround to use JavaScript fetch to bypass url validation
             // see: https://github.com/dotnet/runtime/issues/52836
             builder.Services.AddScoped<HttpClient>(sp => new JsHttpClient(sp) { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddBlazorFluentUI();
-            builder.Services
-              .AddBlazorise( options =>
-              {
-                  options.ChangeTextOnKeyPress = true;
-              } )
-              .AddBootstrapProviders()
-              .AddFontAwesomeIcons();
+            builder.Services.AddDevExpressBlazor();
             builder.Services.AddBrowserExtensionServices(options =>
             {
                 options.ProjectNamespace = typeof(Program).Namespace;
