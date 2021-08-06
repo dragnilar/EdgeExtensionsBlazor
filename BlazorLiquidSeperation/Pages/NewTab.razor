@@ -4,115 +4,75 @@
 @inherits BasePage;
 @inject IJSRuntime JS;
 
-
-<DxGridLayout xmlns="http://www.w3.org/1999/html">
-    <Rows>
-        <DxGridLayoutRow Height="100px"></DxGridLayoutRow>
-        <DxGridLayoutRow Height="40%"></DxGridLayoutRow>
-        <DxGridLayoutRow Height="Auto"></DxGridLayoutRow>
-        <DxGridLayoutRow></DxGridLayoutRow>
-    </Rows>
-    <Columns>
-        <DxGridLayoutColumn Width="15px"></DxGridLayoutColumn>
-        <DxGridLayoutColumn></DxGridLayoutColumn>
-        <DxGridLayoutColumn></DxGridLayoutColumn>
-        <DxGridLayoutColumn></DxGridLayoutColumn>
-        <DxGridLayoutColumn></DxGridLayoutColumn>
-        <DxGridLayoutColumn Width="15px"></DxGridLayoutColumn>
-    </Columns>
-    <Items>
-        <DxGridLayoutItem Row="0" Column="1">
-            <Template>
-                <DxMenu DropDownActionMode="MenuDropDownActionMode.Click">
-                    <Items>
-                        <DxMenuItem IconUrl=".\icons\fluent_square_menu.png" IconCssClass="WaffleMenuIconStyle">
-                            <Items>
-                                <DxMenuItem Stretched="true">
-                                    <Template>
-                                        <MS635Menu></MS635Menu>
-                                    </Template>
-                                </DxMenuItem>
-                            </Items>
-                        </DxMenuItem>
-                    </Items>
-                </DxMenu>
-            </Template>
-        </DxGridLayoutItem>
-        <DxGridLayoutItem Row="0" Column="4" ColumnSpan="2">
-            <Template>
-                <DxStackLayout Orientation="Orientation.Horizontal">
-                    <Items>
-                        <DxStackLayoutItem>
-                            <Template>
-                                <div>
-                                    <a href="https://rewards.microsoft.com/?FORM=ANNRW1&redref=amc" class="btn">
-                                        <img src=".\icons\fluent_medal.png" alt="Click for Microsoft Rewards" class="TopMenuIconStyle">
-                                    </a>
-                                </div>
-                            </Template>
-                        </DxStackLayoutItem>
-                        <DxStackLayoutItem>
-                            <Template>
-                                <div>
-                                    <DxMenu DropDownActionMode="MenuDropDownActionMode.Click">
-                                        <Items>
-                                            <DxMenuItem IconUrl=".\icons\fluent_gear.png" IconCssClass="WaffleMenuIconStyle">
-                                                <Items>
-                                                    <DxMenuItem>
-                                                        <Template>
-                                                            <MS635Menu></MS635Menu>
-                                                        </Template>
-                                                    </DxMenuItem>
-                                                </Items>
-                                            </DxMenuItem>
-                                        </Items>
-                                    </DxMenu>
-                                </div>
-                            </Template>
-                        </DxStackLayoutItem>
-                    </Items>
-                </DxStackLayout>
-            </Template>
-        </DxGridLayoutItem>
-        <DxGridLayoutItem Row="1" Column="2" ColumnSpan="2">
-            <Template>
-                <div class="container">
-                    <div style="float: left; width: 75%;">
-                        <DxTextBox @bind-Text="SearchQuery" @onkeydown="SearchBox_OnKeyDown" BindValueMode="BindValueMode.OnInput" />
-                    </div>
-                    <div style="float: right; width: 25%">
-                        <DxButton RenderStyle="ButtonRenderStyle.Primary" Click="@FireSearchEngineQuery" >CLick To SeARCh</DxButton>
-                    </div>
+<div class="container-fluid" xmlns="http://www.w3.org/1999/html">
+    <div class="row" style="height: 150px">
+        <div class="col" style="width: 15px"></div>
+        <div class="col">
+            <div class="dropdown">
+                <button class="dropdown-toggle TopMenuIconStyle" type="button" id="waffleDropDown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="\icons\fluent_square_menu.png" alt="waffle icon">
+                </button>
+                <div class="dropdown-menu p-4 text-muted" style="min-width: 400px" aria-labelledby="waffleDropDown">
+                    <MS635Menu></MS635Menu>
                 </div>
-            </Template>
-        </DxGridLayoutItem>
-        <DxGridLayoutItem Row="2" Column="1" ColumnSpan="4">
-            <Template>
-                <div class="QuickLinkContainer">
-                    @{
-                        if (_quickLinks == null) return;
+            </div>
+        </div>
+        <div class="col-5"></div>
+        <div class="col-1">
+            <div>
+                <a href="https://rewards.microsoft.com/?FORM=ANNRW1&redref=amc" class="btn">
+                    <img src=".\icons\fluent_medal.png" alt="Click for Microsoft Rewards" class="TopMenuIconStyle">
+                </a>
+            </div>
+        </div>
+        <div class="col-1">
+            <img src=".\icons\fluent_square_menu.png" />
+        </div>
+        <div class="col" style="width: 15px"></div>
+    </div>
+    <div class="row" style="height: 200px">
+        <div class="col" style="width: 15px"></div>
+        <div class="col-9">
+            <div class="container">
+                <form style="float: left; width: 75%;">
+                    <input class="form-control" type="text" @bind="SearchQuery" @onkeydown="SearchBox_OnKeyDown">
+                </form>
+                <div style="float: right; width: 25%; height: 100%;">
+                    <button class="bg-dark" @onclick="FireSearchEngineQuery">Click to search</button>
+                </div>
+            </div>
+        </div>
+        <div class="col" style="width: 15px"></div>
+    </div>
+    <div class="row" style="height: auto">
+        <div class="col">
+            <div class="QuickLinkContainer">
+                @{
+                    if (_quickLinks == null) return;
+                    {
+                        foreach (var quickLink in _quickLinks)
                         {
-                            foreach (var quickLink in _quickLinks)
-                            {
-                                <button class="QuickLinkContent">
-                                    <a href="@quickLink.QuickLinkUrl">
-                                        <div class="QuickLinkBookMarkImageContainer">
-                                            <img src="@quickLink.QuickLinkImageUrl" class="QuickLinkBookMarkImage" alt="@quickLink.QuickLinkTitle"/>
-                                        </div>
-                                    </a>
-                                    <br>
-                                    <span class="QuickLinkTitle">@quickLink.QuickLinkTitle</span>
-                                </button>
-                            }
+                            <button class="QuickLinkContent">
+                                <a href="@quickLink.QuickLinkUrl">
+                                    <div class="QuickLinkBookMarkImageContainer">
+                                        <img src="@quickLink.QuickLinkImageUrl" class="QuickLinkBookMarkImage" alt="@quickLink.QuickLinkTitle"/>
+                                    </div>
+                                </a>
+                                <br>
+                                <span class="QuickLinkTitle">@quickLink.QuickLinkTitle</span>
+                            </button>
                         }
                     }
-                </div>
-            </Template>
-        </DxGridLayoutItem>
-    </Items>
-</DxGridLayout>
-
-
+                }
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-1" style="width: 15px"></div>
+        <div class="col-4"></div>
+        <div class="col-1" style="width: 15px"></div>
+    </div>
+</div>
 @code{
 
         private const string EdgeQuickLinksBookmarkName = "Edge Quick Links";
