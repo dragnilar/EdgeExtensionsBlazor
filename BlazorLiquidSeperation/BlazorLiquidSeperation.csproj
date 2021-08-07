@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <AssemblyVersion>2021.0729.22.0</AssemblyVersion>
-    <FileVersion>2021.0729.22.0</FileVersion>
+    <AssemblyVersion>2021.0807.50.0</AssemblyVersion>
+    <FileVersion>2021.0807.50.0</FileVersion>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
 

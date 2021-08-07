@@ -2,10 +2,10 @@
 
 namespace BlazorLiquidSeperation.Models
 {
-    public class BingImage
+    public class PixaBingImage
     {
 
-        public BingImage(string pageUrl, string thumbUrl, string title, string copyRight, string date, string fullUrl)
+        public PixaBingImage(string pageUrl, string thumbUrl, string title, string copyRight, string date, string fullUrl)
         {
             PageUrl = pageUrl;
             ThumbUrl = thumbUrl;

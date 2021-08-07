@@ -1,4 +1,5 @@
-﻿.office365Link{
+﻿/*M365 Menu Styles*/
+.office365Link{
     color: ghostwhite;
     font-size: 15px;
     cursor: pointer;
@@ -31,46 +32,90 @@
     border: 1px solid transparent;
 }
 
-.SearchBoxStyle{
-    position: fixed; top: 20%; min-height: 40px; max-height: 52px; min-width: 580px; max-width: 596px;white-space: nowrap;
-    margin: 0 0 0 500px; width: 100%; height: 100%; z-index: 2; border-radius: 25px; opacity: 0.9; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+/*Search Box Styles*/
+
+.SearchBoxStyle {
+    background: #4a4a4a;
+    border: none;
+    color: whitesmoke;
+    box-shadow: 0 0px 2.25px 1px #4f4f4f;
+}
+.SearchBoxStyle:focus-within {
+    background: #4a4a4a;
+    border: none;
+    color: whitesmoke;
+    box-shadow: 0 0px 2.25px 1px #4f4f4f;
+}
+.SearchButtonStyle {
+    background: #4a4a4a;
+    padding-left: 24px;
+    padding-right: 24px;
+    border-radius: 2px;
+    display: inherit;
+    border: none;
+    color: whitesmoke;
+    box-shadow: 0 0px 2px 1px #4f4f4f;
 }
 
-.WaffleMenuIconStyle{
-    height: 32px;
-    width: 32px;
-}
-.TopMenuIconStyle{
+
+/*Header Icon Styles*/
+
+.TopMenuIconStyle {
     border: none;
     background: transparent;
     transition: all 0.1s ease-in-out;
 }
-.TopMenuIconStyle:hover{
-    opacity: 0.60;
-    background: rgba(248, 248, 255, 0.59);
+.TopMenuIconStyle:hover {
+    opacity: 0.90;
+    background: #242424;
     border-radius: 4px;
 }
+.TopMenuIconStyle:active {
+    border-color: #7E7F80;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 4px;
+    background: transparent;
+}
 
-.QuickLinkTitle {
-    font-size: 13px;
-    box-sizing: content-box;
-    max-height: 16px;
-    white-space: nowrap;
-    margin-top: 40px;
-    font-family: "Segoe UI Semibold", Helvetica, SansSerif, serif;
-    font-weight: 400;
-    color: #ffffff;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+.TopMenuRewardsStyle {
+    border-radius: 15px;
+    border: solid 2px;
+}
+
+/*Quick Link Styles*/
+
+.QuickLinkContent {
+    height: 80px;
+    background: transparent;
+    width: 100px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    flex-direction: column;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border-style: none;
+    position: relative;
+    transition: all 0.2s ease-in-out;
+}
+
+.QuickLinkContent:active {
+    border-color: #7E7F80;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 4px;
+    background: transparent;
+}
+
+.QuickLinkContent:hover {
+    opacity: 0.90;
+    background: #242424;
 }
 
 .QuickLinkBookMarkImageContainer{
     background: #4a4a4a;
-    opacity: .90;
-    width: 50px;
-    height: 50px;
+    width: 55px;
+    height: 55px;
     border-radius: 5px;
     position: absolute;
     top: 50%;
@@ -79,46 +124,34 @@
 }
 
 .QuickLinkBookMarkImage{
-    height: 32px;
-    width: 32px;
+    height: 26px;
+    width: 26px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    
+
 }
-.QuickLinkContainer{
+
+.QuickLinkTitle {
+    font-size: 13px;
+    box-sizing: content-box;
+    max-height: 16px;
+    margin-top: 40px;
+    font-family: "Segoe UI Semibold", Helvetica, SansSerif, serif;
+    font-weight: 400;
+    color: #ffffff;
+    position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    position: relative;
-    flex: auto;
-    width: 80%;
+    overflow-wrap: break-word;
+    inline-size: 100%;
 }
-.QuickLinkContent{
-    height: 70px;
-    background: transparent;
-    width: 80px;
-    opacity: .90;
-    margin-top: 20px;
-    margin-right: 45px;
-    margin-bottom: 20px;
-    padding: 12px;
-    flex-direction: column;
-    box-sizing: border-box;
-    border-radius: 4px;
-    border-style: none;
-    position: relative;
-    transition: all 0.2s ease-in-out;
-}
-.QuickLinkContent:active{
-    border-color: #f8f9fa;
-    border-width: 1px;
-    border-style: solid;
-    border-radius: 4px;
-    background: transparent;
-}
-.QuickLinkContent:hover {
-    opacity: 0.60;
-    background: rgba(248, 248, 255, 0.59);
-}
+
+    .QuickLinkContainer{
+        position: relative;
+        flex: auto;
+        width: 80%
+    }
+

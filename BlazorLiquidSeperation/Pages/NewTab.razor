@@ -1,18 +1,22 @@
 ﻿@page "/newtab.html"
 @using BlazorLiquidSeperation.Models
 @using System.Text.Json
+@using WebExtensions.Net.Storage
+@using WebExtensions.Net.Types
+@using System.Security.Cryptography.X509Certificates
+@using System.Net
+@using System.IO
 @inherits BasePage;
 @inject IJSRuntime JS;
 
 <div class="container-fluid" xmlns="http://www.w3.org/1999/html">
     <div class="row" style="height: 150px">
-        <div class="col" style="width: 15px"></div>
         <div class="col">
             <div class="dropdown">
-                <button class="dropdown-toggle TopMenuIconStyle" type="button" id="waffleDropDown" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="dropdown-toggle TopMenuIconStyle btn" type="button" id="waffleDropDown" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="\icons\fluent_square_menu.png" alt="waffle icon">
                 </button>
-                <div class="dropdown-menu p-4 text-muted" style="min-width: 400px" aria-labelledby="waffleDropDown">
+                <div class="dropdown-menu p-4 text-muted" style="min-width: 350px" aria-labelledby="waffleDropDown">
                     <MS635Menu></MS635Menu>
                 </div>
             </div>
@@ -20,49 +24,63 @@
         <div class="col-5"></div>
         <div class="col-1">
             <div>
-                <a href="https://rewards.microsoft.com/?FORM=ANNRW1&redref=amc" class="btn">
-                    <img src=".\icons\fluent_medal.png" alt="Click for Microsoft Rewards" class="TopMenuIconStyle">
+                <a href="https://rewards.microsoft.com/?FORM=ANNRW1&redref=amc" class="TopMenuIconStyle btn">
+                    <img src=".\icons\fluent_medal.png" alt="Click for Microsoft Rewards" class="TopMenuRewardsStyle">
                 </a>
             </div>
         </div>
         <div class="col-1">
-            <img src=".\icons\fluent_square_menu.png" />
+            <div class="dropdown">
+                <button class="dropdown-toggle TopMenuIconStyle btn" type="button" id="settingsDropDown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="\icons\fluent_gear.png" alt="waffle icon">
+                </button>
+                <div class="dropdown-menu p-4 text-muted" style="min-width: 350px" aria-labelledby="settingsDropDown">
+                    <form class="mb-3">
+                        <h4>Settings</h4>
+                        <EditForm Model="this">
+                            <div class="custom-control custom-switch">
+                                <InputCheckbox @bind-Value="@QuickLinksVisible" Id="showQuickLinksSwitch" class="custom-control-input"/>
+                                <label class="custom-control-label" for="showQuickLinksSwitch">Show Quick Link</label>
+                            </div>
+                        </EditForm>
+                    </form>
+                </div>
+            </div>
         </div>
-        <div class="col" style="width: 15px"></div>
     </div>
     <div class="row" style="height: 200px">
         <div class="col" style="width: 15px"></div>
-        <div class="col-9">
-            <div class="container">
-                <form style="float: left; width: 75%;">
-                    <input class="form-control" type="text" @bind="SearchQuery" @onkeydown="SearchBox_OnKeyDown">
-                </form>
-                <div style="float: right; width: 25%; height: 100%;">
-                    <button class="bg-dark" @onclick="FireSearchEngineQuery">Click to search</button>
+        <div class="col-6">
+            <form @onsubmit="Enter">
+                <div class="input-group mb-3">
+                    <input class="form-control SearchBoxStyle" type="text" @bind="SearchQuery" placeholder="Search the web" aria-label="Query" aria-describedby="queryButtonAddon">
+                    <button class="btn SearchButtonStyle" type="button" id="queryButtonAddon" @onclick="FireSearchEngineQuery">
+                        <img alt="Search Icon" src="./icons/fluent_search.png"/>
+                    </button>
                 </div>
-            </div>
+            </form>
         </div>
         <div class="col" style="width: 15px"></div>
     </div>
     <div class="row" style="height: auto">
         <div class="col">
-            <div class="QuickLinkContainer">
+            <div class="QuickLinkContainer container-fluid" hidden="@(!QuickLinksVisible)">
                 @{
                     if (_quickLinks == null) return;
-                    {
-                        foreach (var quickLink in _quickLinks)
-                        {
-                            <button class="QuickLinkContent">
-                                <a href="@quickLink.QuickLinkUrl">
-                                    <div class="QuickLinkBookMarkImageContainer">
-                                        <img src="@quickLink.QuickLinkImageUrl" class="QuickLinkBookMarkImage" alt="@quickLink.QuickLinkTitle"/>
-                                    </div>
-                                </a>
-                                <br>
-                                <span class="QuickLinkTitle">@quickLink.QuickLinkTitle</span>
-                            </button>
-                        }
-                    }
+    {
+        foreach (var quickLink in _quickLinks)
+        {
+            <button class="QuickLinkContent">
+                <a href="@quickLink.QuickLinkUrl">
+                    <div class="QuickLinkBookMarkImageContainer">
+                        <img src="@quickLink.QuickLinkImageUrl" class="QuickLinkBookMarkImage" alt="@quickLink.QuickLinkTitle"/>
+                    </div>
+                </a>
+                <br>
+                <span class="QuickLinkTitle">@quickLink.QuickLinkTitle</span>
+            </button>
+        }
+    }
                 }
             </div>
         </div>
@@ -73,15 +91,30 @@
         <div class="col-1" style="width: 15px"></div>
     </div>
 </div>
+
 @code{
 
-        private const string EdgeQuickLinksBookmarkName = "Edge Quick Links";
+    private const string EdgeQuickLinksBookmarkName = "Edge Quick Links";
+    private StorageAreaSync SyncStorage { get; set; }
     private List<QuickLink> _quickLinks;
     private string SearchQuery { get; set; }
+    private bool _quickLinksVisible;
+    public bool QuickLinksVisible
+    {
+        get => _quickLinksVisible;
+        set
+        {
+            Console.WriteLine($"Setting Show QuickLinks to {value}");
+            _quickLinksVisible = value;
+            ExtensionSettings.SettingsDictionary[ExtensionSettings.ShowQuickLinks] = _quickLinksVisible.ToString();
+            SyncStorage.Set(ExtensionSettings.SettingsDictionary);
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
         _quickLinks = new List<QuickLink>();
+        await GetSettings();
         var bookMarkNode = await WebExtensions.Bookmarks.Search(EdgeQuickLinksBookmarkName);
         if (bookMarkNode == null) return;
         Console.WriteLine($"Got a bookmark node with count: {bookMarkNode.Count()}");
@@ -108,9 +141,7 @@
             Console.WriteLine("Getting Bing Image 🔍");
             var url = "https://peapix.com/bing/feed?country=US";
             var httpClient = new HttpClient();
-            var response = await httpClient.GetAsync(url).ConfigureAwait(false);
-            var json = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-            var images = JsonSerializer.Deserialize<List<BingImage>>(json);
+            var images = await httpClient.GetFromJsonAsync<List<PixaBingImage>>(url);
             if (images != null)
             {
                 var firstImage = images.FirstOrDefault();
@@ -136,23 +167,23 @@
         }
     }
 
-    private async Task SearchBox_OnKeyDown(KeyboardEventArgs obj)
+    private void Enter()
     {
-        if (obj.Key == "Enter" && !string.IsNullOrWhiteSpace(SearchQuery))
+        if (!string.IsNullOrWhiteSpace(SearchQuery))
         {
-            await FireSearchEngineQuery();
+            FireSearchEngineQuery();
         }
     }
 
-    private async Task FireSearchEngineQuery()
+    private void FireSearchEngineQuery()
     {
         try
         {
             Console.WriteLine($"Performing a search with query : {SearchQuery}");
-    // The code below always throws an exception; we are using JS Interop to work around this for now...
-    // var searchProps = new SearchProperties {Query = SearchQuery};
-    // await WebExtensions.Search.Search(searchProps);
-            await JS.InvokeVoidAsync("runSearchQuery", SearchQuery).ConfigureAwait(false);
+            // The code below always throws an exception; we are using JS Interop to work around this for now...
+            // var searchProps = new SearchProperties {Query = SearchQuery};
+            // await WebExtensions.Search.Search(searchProps);
+            JS.InvokeVoidAsync("runSearchQuery", SearchQuery).ConfigureAwait(false);
         }
         catch (Exception e)
         {
@@ -160,5 +191,31 @@
             Console.WriteLine(e);
         }
     }
+
+    private async Task GetSettings()
+    {
+        Console.WriteLine("Getting Extension settings...");
+        SyncStorage ??= await WebExtensions.Storage.GetSync();
+        var jsonElement = await SyncStorage.Get(ExtensionSettings.StorageKeys);
+        var rawJson = jsonElement.GetRawText();
+        Console.WriteLine($"Json Returned from storage: {rawJson.ToString()}");
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(rawJson);
+        if (dictionary?.FirstOrDefault(pair => pair.Key == ExtensionSettings.ShowQuickLinks ).Key != null)
+        {
+            Console.WriteLine("Extension settings found in storage, porting them onto the dictionary in memory");
+            QuickLinksVisible = Convert.ToBoolean(dictionary[ExtensionSettings.ShowQuickLinks]);
+            ExtensionSettings.SettingsDictionary = dictionary;
+        }
+        else
+        {
+            Console.WriteLine("Extension settings not found in storage, setting all settings to default and saving them to storage.");
+            await SyncStorage.Set(ExtensionSettings.SettingsDictionary);
+            QuickLinksVisible = Convert.ToBoolean(ExtensionSettings.SettingsDictionary[ExtensionSettings.ShowQuickLinks]);
+        }
+    }
+
+
+
+
 
 }
