@@ -9,11 +9,12 @@
     border-radius: 4px;
     cursor: pointer;
 }
-.MS365Link{
+.MS365Link {
     color: ghostwhite;
     font-size: 32px;
     cursor: pointer;
 }
+
 .MS365Link:hover{
     background-color: rgba(158, 158, 158, 0.45);
     border-radius: 4px;
@@ -33,18 +34,23 @@
 }
 
 /*Search Box Styles*/
+.SearchBoxOuterDivStyle {
+    box-shadow: 0 0px 2.25px 1px #4f4f4f;
+}
+.SearchBoxFormStyle {
+    box-shadow: inset 20px 0px 4px 2px #4f4f4f;
+}
 
 .SearchBoxStyle {
     background: #4a4a4a;
     border: none;
     color: whitesmoke;
-    box-shadow: 0 0px 2.25px 1px #4f4f4f;
+
 }
 .SearchBoxStyle:focus-within {
     background: #4a4a4a;
     border: none;
     color: whitesmoke;
-    box-shadow: 0 0px 2.25px 1px #4f4f4f;
 }
 .SearchButtonStyle {
     background: #4a4a4a;
@@ -54,7 +60,7 @@
     display: inherit;
     border: none;
     color: whitesmoke;
-    box-shadow: 0 0px 2px 1px #4f4f4f;
+    box-shadow: none;
 }
 
 
