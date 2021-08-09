@@ -8,6 +8,7 @@ namespace BlazorLiquidSeperation
 {
     public static class Program
     {
+#pragma warning disable AsyncFixer01 // Unnecessary async/await usage
         public static async Task Main(string[] args)
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -22,5 +23,6 @@ namespace BlazorLiquidSeperation
             });
             await builder.Build().RunAsync();
         }
+#pragma warning restore AsyncFixer01 // Unnecessary async/await usage
     }
 }

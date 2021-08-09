@@ -42,6 +42,12 @@
                                 <InputCheckbox @bind-Value="@QuickLinksVisible" Id="showQuickLinksSwitch" class="custom-control-input"/>
                                 <label class="custom-control-label" for="showQuickLinksSwitch">Show Quick Link</label>
                             </div>
+                            <br/>
+                            <div class="custom-control custom-switch">
+                                <InputCheckbox @bind-Value="@SearchVisible" Id="showSearchSwitch" class="custom-control-input"/>
+                                <label class="custom-control-label" for="showSearchSwitch">Show Web Search</label>
+                            </div>
+                            <br/>
                         </EditForm>
                     </form>
                 </div>
@@ -51,7 +57,7 @@
     <div class="row" style="height: 200px">
         <div class="col" style="width: 15px"></div>
         <div class="col-6">
-            <form @onsubmit="Enter" class="SearchBoxOuterDivStyle">
+            <form @onsubmit="Enter" class="SearchBoxOuterDivStyle" hidden="@(!SearchVisible)">
                 <div class="input-group mb-3 SearchBoxFormStyle">
                     <input class="form-control SearchBoxStyle" type="text" @bind="SearchQuery" placeholder="Search the web" aria-label="Query" aria-describedby="queryButtonAddon">
                     <button class="btn SearchButtonStyle" type="button" id="queryButtonAddon" @onclick="FireSearchEngineQuery">
@@ -94,8 +100,6 @@
 
 @code{
 
-    private const string EdgeQuickLinksBookmarkName = "Edge Quick Links";
-    private StorageAreaSync SyncStorage { get; set; }
     private List<QuickLink> _quickLinks;
     private string SearchQuery { get; set; }
     private bool _quickLinksVisible;
@@ -104,18 +108,38 @@
         get => _quickLinksVisible;
         set
         {
-            Console.WriteLine($"Setting Show QuickLinks to {value}");
+            if (value == _quickLinksVisible) return;
+            Console.WriteLine($"Setting show quick links to {value}");
             _quickLinksVisible = value;
-            ExtensionSettings.SettingsDictionary[ExtensionSettings.ShowQuickLinks] = _quickLinksVisible.ToString();
-            SyncStorage.Set(ExtensionSettings.SettingsDictionary);
+            Settings.UpdateSetting(Settings.ShowQuickLinks, value);
+            Settings.SaveAsync();
         }
+    }
+
+    private bool _searchVisible { get; set; }
+    public bool SearchVisible { get => _searchVisible; 
+        set
+        {
+            if (value == _searchVisible) return;
+            Console.WriteLine($"Setting search visible to {value}");
+            _searchVisible = value;
+            Settings.UpdateSetting(Settings.ShowWebSearch, value);
+            Settings.SaveAsync();
+        } 
     }
 
     protected override async Task OnInitializedAsync()
     {
-        _quickLinks = new List<QuickLink>();
+        //NOTE - Do NOT get settings until the quick links are set up. The elements need to exist in the dom first or the 
+        //QuickLinksVisible property will cause a nasty exception because it's trying to work on an HTML element that isn't drawn yet.
+        await SetUpQuickLinks();
         await GetSettings();
-        var bookMarkNode = await WebExtensions.Bookmarks.Search(EdgeQuickLinksBookmarkName);
+    }
+
+    private async Task SetUpQuickLinks(string bookMarkFolderName = Settings.DefualtBookmarkFolderName)
+    {
+        _quickLinks = new List<QuickLink>();
+        var bookMarkNode = await WebExtensions.Bookmarks.Search(bookMarkFolderName);
         if (bookMarkNode == null) return;
         Console.WriteLine($"Got a bookmark node with count: {bookMarkNode.Count()}");
         var quickLinkBookMarks = await WebExtensions.Bookmarks.GetChildren(bookMarkNode.First().Id);
@@ -139,16 +163,19 @@
         try
         {
             Console.WriteLine("Getting Bing Image 🔍");
-
-            var url = "https://peapix.com/bing/feed?country=US";
+            var dateString = $"{DateTime.Now.Year}{DateTime.Now.Month:00}{DateTime.Now.Day:00}_0700&";
+            Console.WriteLine($"Querying bing with date string - {dateString}");
+            var bingUrl = $"https://api.allorigins.win/raw?url=https://www.bing.com/hp/api/v1/imagegallery?format=json&ssd={dateString}";
+            Console.WriteLine($"Querying bing with the following URL:{bingUrl}");
             var httpClient = new HttpClient();
-            var images = await httpClient.GetFromJsonAsync<List<PixaBingImage>>(url);
-            if (images != null)
+            var dto = await httpClient.GetFromJsonAsync<BingImageDto>(bingUrl);
+            if (dto != null)
             {
-                var firstImage = images.FirstOrDefault();
+                var firstImage = dto.data.images.FirstOrDefault();
                 if (firstImage != null)
                 {
-                    await JS.InvokeVoidAsync("setBackgroundImage1", firstImage.FullUrl).ConfigureAwait(false);
+                    var fullImagePath = "https://bing.com" + firstImage.imageUrls.landscape.wallpaper;
+                    await JS.InvokeVoidAsync("setBackgroundImage1", fullImagePath).ConfigureAwait(false);
                     Console.WriteLine("Image set 😊");
                 }
                 else
@@ -195,28 +222,26 @@
 
     private async Task GetSettings()
     {
-        Console.WriteLine("Getting Extension settings...");
-        SyncStorage ??= await WebExtensions.Storage.GetSync();
-        var jsonElement = await SyncStorage.Get(ExtensionSettings.StorageKeys);
-        var rawJson = jsonElement.GetRawText();
-        Console.WriteLine($"Json Returned from storage: {rawJson.ToString()}");
-        var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(rawJson);
-        if (dictionary?.FirstOrDefault(pair => pair.Key == ExtensionSettings.ShowQuickLinks ).Key != null)
+        Console.WriteLine("Getting settings...");
+        Settings.Storage ??= await WebExtensions.Storage.GetSync();
+        var jsonElement = await Settings.Storage.Get(Settings.StorageKeys);
+        var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(jsonElement.GetRawText());
+        if (dictionary?.FirstOrDefault(pair => pair.Key == Settings.ShowWebSearch ).Key != null)
         {
-            Console.WriteLine("Extension settings found in storage, porting them onto the dictionary in memory");
-            QuickLinksVisible = Convert.ToBoolean(dictionary[ExtensionSettings.ShowQuickLinks]);
-            ExtensionSettings.SettingsDictionary = dictionary;
+            Console.WriteLine("Settings found");
+            QuickLinksVisible = Convert.ToBoolean(dictionary[Settings.ShowQuickLinks]);
+            SearchVisible = Convert.ToBoolean(dictionary[Settings.ShowWebSearch]);
+            Settings.UpdateDictionary(dictionary);
+
         }
         else
-        {
-            Console.WriteLine("Extension settings not found in storage, setting all settings to default and saving them to storage.");
-            await SyncStorage.Set(ExtensionSettings.SettingsDictionary);
-            QuickLinksVisible = Convert.ToBoolean(ExtensionSettings.SettingsDictionary[ExtensionSettings.ShowQuickLinks]);
+        {     
+            Console.WriteLine("Settings do not exist exist, setting and saving defaults....");
+            await Settings.SaveAsync();
+            QuickLinksVisible = Convert.ToBoolean(Settings.GetSettingValue(Settings.ShowQuickLinks));
+            SearchVisible = Convert.ToBoolean(Settings.GetSettingValue(Settings.ShowWebSearch));
         }
 
-
     }
-
-
 
 }
