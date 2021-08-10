@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace BlazorLiquidSeperation.Models
 {
-    public class BingImageDto
+    public class BingImageArchiveDto
     {
         public string title { get; set; }
         public Data data { get; set; }

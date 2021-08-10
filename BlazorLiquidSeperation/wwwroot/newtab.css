@@ -63,7 +63,6 @@
     box-shadow: none;
 }
 
-
 /*Header Icon Styles*/
 
 .TopMenuIconStyle {
@@ -88,6 +87,29 @@
     border-radius: 15px;
     border: solid 2px;
 }
+
+/*Image navigation button styles*/
+
+.imageNavigationButtonStyle {
+    background: #4a4a4a;
+    flex-direction: column;
+    box-sizing: border-box;
+    border-radius: 4px;
+    border-style: none;
+    position: relative;
+    transition: all 0.2s ease-in-out;
+}
+.imageNavigationButtonStyle:active {
+    border-color: #7E7F80;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 4px;
+    background: transparent;
+}
+    .imageNavigationButtonStyle:hover {
+        opacity: 0.90;
+        background: #242424;
+    }
 
 /*Quick Link Styles*/
 

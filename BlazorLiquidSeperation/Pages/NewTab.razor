@@ -93,7 +93,15 @@
     </div>
     <div class="row">
         <div class="col-1" style="width: 15px"></div>
-        <div class="col-4"></div>
+        <div class="col-9"></div>
+        <div class="col-2">
+            <br/>
+            <br/>
+            <div style="left: 50%; right: 50%;">
+                <button class="imageNavigationButtonStyle" @onclick="GetPreviousImage">◀</button>
+                <button class="imageNavigationButtonStyle" @onclick="GetNextImage">▶</button>
+            </div>
+        </div>
         <div class="col-1" style="width: 15px"></div>
     </div>
 </div>
@@ -101,8 +109,12 @@
 @code{
 
     private List<QuickLink> _quickLinks;
+    private List<Image> _bingArchiveImages;
+    private BingImageOfTheDay ImageOfTheDay;
     private string SearchQuery { get; set; }
     private bool _quickLinksVisible;
+    private HttpClient _httpClient;
+    private int imageArchiveIndex = -1;
     public bool QuickLinksVisible
     {
         get => _quickLinksVisible;
@@ -117,7 +129,7 @@
     }
 
     private bool _searchVisible { get; set; }
-    public bool SearchVisible { get => _searchVisible; 
+    public bool SearchVisible { get => _searchVisible;
         set
         {
             if (value == _searchVisible) return;
@@ -125,12 +137,12 @@
             _searchVisible = value;
             Settings.UpdateSetting(Settings.ShowWebSearch, value);
             Settings.SaveAsync();
-        } 
+        }
     }
 
     protected override async Task OnInitializedAsync()
     {
-        //NOTE - Do NOT get settings until the quick links are set up. The elements need to exist in the dom first or the 
+        //NOTE - Do NOT get settings until the quick links are set up. The elements need to exist in the dom first or the
         //QuickLinksVisible property will cause a nasty exception because it's trying to work on an HTML element that isn't drawn yet.
         await SetUpQuickLinks();
         await GetSettings();
@@ -154,6 +166,7 @@
         if (firstRender)
         {
             await GetBingImage();
+            await GetBingImageArchive();
         }
         await base.OnAfterRenderAsync(firstRender).ConfigureAwait(false);
     }
@@ -163,20 +176,16 @@
         try
         {
             Console.WriteLine("Getting Bing Image 🔍");
-            var dateString = $"{DateTime.Now.Year}{DateTime.Now.Month:00}{DateTime.Now.Day:00}_0700&";
-            Console.WriteLine($"Querying bing with date string - {dateString}");
-            var bingUrl = $"https://api.allorigins.win/raw?url=https://www.bing.com/hp/api/v1/imagegallery?format=json&ssd={dateString}";
-            Console.WriteLine($"Querying bing with the following URL:{bingUrl}");
-            var httpClient = new HttpClient();
-            var dto = await httpClient.GetFromJsonAsync<BingImageDto>(bingUrl);
+            var bingImageOfTheDayUrl = "http://api.allorigins.win/raw?url=https%3A//www.bing.com/HPImageArchive.aspx%3Fformat%3Djs%26idx%3D0%26n%3D1%26mkt%3Den-US";
+            Console.WriteLine($"Querying bing image of the day API with the following URL: {bingImageOfTheDayUrl}");
+            _httpClient??= new HttpClient();
+            var dto = await _httpClient.GetFromJsonAsync<BingImageOfTheDayDto>(bingImageOfTheDayUrl);
             if (dto != null)
             {
-                var firstImage = dto.data.images.FirstOrDefault();
-                if (firstImage != null)
+                ImageOfTheDay = dto.images[0];
+                if (ImageOfTheDay != null)
                 {
-                    var fullImagePath = "https://bing.com" + firstImage.imageUrls.landscape.wallpaper;
-                    await JS.InvokeVoidAsync("setBackgroundImage1", fullImagePath).ConfigureAwait(false);
-                    Console.WriteLine("Image set 😊");
+                    await SetBackgroundImage(ImageOfTheDay.url);
                 }
                 else
                 {
@@ -193,6 +202,63 @@
             Console.WriteLine("We got an error. 😡");
             Console.WriteLine(e);
         }
+    }
+
+    private async Task GetBingImageArchive()
+    {
+        var dateString = $"{DateTime.Now.Year}{DateTime.Now.Month:00}{DateTime.Now.Day:00}_0700&";
+        Console.WriteLine($"Querying bing with date string - {dateString}");
+        var bingImageArchiveUrl = $"https://api.allorigins.win/raw?url=https://www.bing.com/hp/api/v1/imagegallery?format=json&ssd={dateString}";
+        Console.WriteLine($"Querying bing image archive with the following URL:{bingImageArchiveUrl}");
+        _httpClient??= new HttpClient();
+        var dto = await _httpClient.GetFromJsonAsync<BingImageArchiveDto>(bingImageArchiveUrl);
+        _bingArchiveImages = dto?.data.images.ToList();
+
+    }
+
+    private async Task GetNextImage()
+    {
+        Console.WriteLine($"Getting next image 🖼, current image index is: {imageArchiveIndex}");
+        if (imageArchiveIndex >= _bingArchiveImages.Count - 1)
+        {
+            imageArchiveIndex = -1;
+            await SetBackgroundImage(ImageOfTheDay.url);
+        }
+        else
+        {
+            imageArchiveIndex++;
+            await SetBackgroundImage(_bingArchiveImages[imageArchiveIndex].imageUrls.landscape.wallpaper);
+        }
+    }
+
+    private async Task GetPreviousImage()
+    {
+        Console.WriteLine($"Getting previous image 🖼, current image index is: {imageArchiveIndex}");
+        if (imageArchiveIndex == -1)
+        {
+            imageArchiveIndex = _bingArchiveImages.Count - 1;
+            await SetBackgroundImage(_bingArchiveImages[imageArchiveIndex].imageUrls.landscape.wallpaper);
+        }
+        else if (imageArchiveIndex == 0)
+        {
+            imageArchiveIndex = -1;
+            await SetBackgroundImage(ImageOfTheDay.url);
+        }
+        else
+        {
+            imageArchiveIndex--;
+            await SetBackgroundImage(_bingArchiveImages[imageArchiveIndex].imageUrls.landscape.wallpaper);
+        }
+
+    }
+
+
+
+    private async Task SetBackgroundImage(string Url)
+    {
+        var fullImagePath = "https://bing.com" + Url;
+        await JS.InvokeVoidAsync("setBackgroundImage1", fullImagePath).ConfigureAwait(false);
+        Console.WriteLine("Image set 😊");
     }
 
     private void Enter()
@@ -235,7 +301,7 @@
 
         }
         else
-        {     
+        {
             Console.WriteLine("Settings do not exist exist, setting and saving defaults....");
             await Settings.SaveAsync();
             QuickLinksVisible = Convert.ToBoolean(Settings.GetSettingValue(Settings.ShowQuickLinks));
