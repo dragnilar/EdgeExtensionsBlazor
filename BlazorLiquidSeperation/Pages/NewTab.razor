@@ -227,7 +227,7 @@
         else
         {
             imageArchiveIndex++;
-            await SetBackgroundImage(_bingArchiveImages[imageArchiveIndex].imageUrls.landscape.wallpaper);
+            await SetBackgroundImage(GetImageUrlForIndex(imageArchiveIndex));
         }
     }
 
@@ -237,7 +237,7 @@
         if (imageArchiveIndex == -1)
         {
             imageArchiveIndex = _bingArchiveImages.Count - 1;
-            await SetBackgroundImage(_bingArchiveImages[imageArchiveIndex].imageUrls.landscape.wallpaper);
+            await SetBackgroundImage(GetImageUrlForIndex(imageArchiveIndex));
         }
         else if (imageArchiveIndex == 0)
         {
@@ -247,12 +247,17 @@
         else
         {
             imageArchiveIndex--;
-            await SetBackgroundImage(_bingArchiveImages[imageArchiveIndex].imageUrls.landscape.wallpaper);
+            await SetBackgroundImage(GetImageUrlForIndex(imageArchiveIndex));
         }
 
     }
-
-
+    
+    private string GetImageUrlForIndex(int index)
+    {
+        var imageUrls = _bingArchiveImages[index].imageUrls;
+        return string.IsNullOrWhiteSpace(imageUrls.landscape.wallpaper) ?
+            imageUrls.landscape.highDef : imageUrls.landscape.wallpaper;
+    }
 
     private async Task SetBackgroundImage(string Url)
     {
