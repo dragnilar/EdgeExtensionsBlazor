@@ -72,21 +72,23 @@
         <div class="col">
             <div class="QuickLinkContainer container-fluid" hidden="@(!QuickLinksVisible)">
                 @{
-                    if (_quickLinks == null) return;
-    {
-        foreach (var quickLink in _quickLinks)
-        {
-            <button class="QuickLinkContent">
-                <a href="@quickLink.QuickLinkUrl">
-                    <div class="QuickLinkBookMarkImageContainer">
-                        <img src="@quickLink.QuickLinkImageUrl" class="QuickLinkBookMarkImage" alt="@quickLink.QuickLinkTitle"/>
-                    </div>
-                </a>
-                <br>
-                <span class="QuickLinkTitle">@quickLink.QuickLinkTitle</span>
-            </button>
-        }
-    }
+    
+                    if (_quickLinks != null)
+                    {
+                        foreach (var quickLink in _quickLinks)
+                        {
+                            <button class="QuickLinkContent">
+                                <a href="@quickLink.QuickLinkUrl">
+                                    <div class="QuickLinkBookMarkImageContainer">
+                                        <img src="@quickLink.QuickLinkImageUrl" class="QuickLinkBookMarkImage" alt="@quickLink.QuickLinkTitle"/>
+                                    </div>
+                                </a>
+                                <br>
+                                <span class="QuickLinkTitle">@quickLink.QuickLinkTitle</span>
+                            </button>
+                        }
+                    }
+    
                 }
             </div>
         </div>
@@ -144,14 +146,16 @@
     {
         //NOTE - Do NOT get settings until the quick links are set up. The elements need to exist in the dom first or the
         //QuickLinksVisible property will cause a nasty exception because it's trying to work on an HTML element that isn't drawn yet.
-        await SetUpQuickLinks();
-        await GetSettings();
+        await GetSettings().ContinueWith(_ => SetUpQuickLinks());
+        QuickLinksVisible = Convert.ToBoolean(Settings.GetSettingValue(Settings.ShowQuickLinks));
+        SearchVisible = Convert.ToBoolean(Settings.GetSettingValue(Settings.ShowWebSearch));
     }
 
-    private async Task SetUpQuickLinks(string bookMarkFolderName = Settings.DefualtBookmarkFolderName)
+    private async Task SetUpQuickLinks()
     {
         _quickLinks = new List<QuickLink>();
-        var bookMarkNode = await WebExtensions.Bookmarks.Search(bookMarkFolderName);
+        Console.WriteLine($"{Settings.GetSettingValue(Settings.QuickLinkBookMarkFolder)}");
+        var bookMarkNode = await WebExtensions.Bookmarks.Search(Settings.GetSettingValue(Settings.QuickLinkBookMarkFolder));
         if (bookMarkNode == null) return;
         Console.WriteLine($"Got a bookmark node with count: {bookMarkNode.Count()}");
         var quickLinkBookMarks = await WebExtensions.Bookmarks.GetChildren(bookMarkNode.First().Id);
@@ -159,6 +163,7 @@
         {
             QuickLinkTitle = quickLinkBookMark.Title, QuickLinkImageUrl = "chrome://favicon/size/64/" + quickLinkBookMark.Url, QuickLinkUrl = quickLinkBookMark.Url
         }));
+        StateHasChanged();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -296,12 +301,10 @@
         Console.WriteLine("Getting settings...");
         Settings.Storage ??= await WebExtensions.Storage.GetSync();
         var jsonElement = await Settings.Storage.Get(Settings.StorageKeys);
-        var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(jsonElement.GetRawText());
-        if (dictionary?.FirstOrDefault(pair => pair.Key == Settings.ShowWebSearch ).Key != null)
+        if (!(string.IsNullOrWhiteSpace(jsonElement.ToString()) && jsonElement.ToString() != "{}"))
         {
             Console.WriteLine("Settings found");
-            QuickLinksVisible = Convert.ToBoolean(dictionary[Settings.ShowQuickLinks]);
-            SearchVisible = Convert.ToBoolean(dictionary[Settings.ShowWebSearch]);
+            var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(jsonElement.GetRawText());
             Settings.UpdateDictionary(dictionary);
 
         }
@@ -309,8 +312,7 @@
         {
             Console.WriteLine("Settings do not exist exist, setting and saving defaults....");
             await Settings.SaveAsync();
-            QuickLinksVisible = Convert.ToBoolean(Settings.GetSettingValue(Settings.ShowQuickLinks));
-            SearchVisible = Convert.ToBoolean(Settings.GetSettingValue(Settings.ShowWebSearch));
+
         }
 
     }
