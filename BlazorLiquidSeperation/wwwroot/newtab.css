@@ -1,35 +1,40 @@
 ﻿/*M365 Menu Styles*/
-.office365Link{
+.office365Link {
     color: ghostwhite;
     font-size: 15px;
     cursor: pointer;
 }
-.office365Link:hover{
+
+.office365Link:hover {
     background-color: rgba(158, 158, 158, 0.45);
     border-radius: 4px;
     cursor: pointer;
 }
+
 .MS365Link {
     color: ghostwhite;
     font-size: 32px;
     cursor: pointer;
 }
 
-.MS365Link:hover{
+.MS365Link:hover {
     background-color: rgba(158, 158, 158, 0.45);
     border-radius: 4px;
     cursor: pointer;
 }
-.M365TableCellLeft{
+
+.M365TableCellLeft {
     padding-top: 10px;
     padding-bottom: 10px
 }
-.M365TableCellRight{
+
+.M365TableCellRight {
     padding-left: 30px;
     padding-top: 10px;
     padding-bottom: 10px
 }
-.M365DropDownStyle  {
+
+.M365DropDownStyle {
     border: 1px solid transparent;
 }
 
@@ -37,6 +42,7 @@
 .SearchBoxOuterDivStyle {
     box-shadow: 0 0px 2.25px 1px #4f4f4f;
 }
+
 .SearchBoxFormStyle {
     box-shadow: inset 20px 0px 4px 2px #4f4f4f;
 }
@@ -47,11 +53,13 @@
     color: whitesmoke;
 
 }
+
 .SearchBoxStyle:focus-within {
     background: #4a4a4a;
     border: none;
     color: whitesmoke;
 }
+
 .SearchButtonStyle {
     background: #4a4a4a;
     padding-left: 24px;
@@ -70,11 +78,13 @@
     background: transparent;
     transition: all 0.1s ease-in-out;
 }
+
 .TopMenuIconStyle:hover {
     opacity: 0.90;
     background: #242424;
     border-radius: 4px;
 }
+
 .TopMenuIconStyle:active {
     border-color: #7E7F80;
     border-width: 2px;
@@ -99,6 +109,7 @@
     position: relative;
     transition: all 0.2s ease-in-out;
 }
+
 .imageNavigationButtonStyle:active {
     border-color: #7E7F80;
     border-width: 2px;
@@ -106,10 +117,11 @@
     border-radius: 4px;
     background: transparent;
 }
-    .imageNavigationButtonStyle:hover {
-        opacity: 0.90;
-        background: #242424;
-    }
+
+.imageNavigationButtonStyle:hover {
+    opacity: 0.90;
+    background: #242424;
+}
 
 /*Quick Link Styles*/
 
@@ -140,7 +152,7 @@
     background: #242424;
 }
 
-.QuickLinkBookMarkImageContainer{
+.QuickLinkBookMarkImageContainer {
     background: #4a4a4a;
     width: 55px;
     height: 55px;
@@ -151,7 +163,7 @@
     transform: translate(-50%, -50%);
 }
 
-.QuickLinkBookMarkImage{
+.QuickLinkBookMarkImage {
     height: 26px;
     width: 26px;
     position: absolute;
@@ -177,9 +189,9 @@
     inline-size: 100%;
 }
 
-    .QuickLinkContainer{
-        position: relative;
-        flex: auto;
-        width: 80%
-    }
+.QuickLinkContainer {
+    position: relative;
+    flex: auto;
+    width: 80%
+}
 

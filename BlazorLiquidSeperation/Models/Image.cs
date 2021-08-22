@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-
-namespace BlazorLiquidSeperation.Models
+﻿namespace BlazorLiquidSeperation.Models
 {
     public class Image
     {
@@ -18,8 +12,5 @@ namespace BlazorLiquidSeperation.Models
         public string descriptionPara2 { get; set; }
         public string descriptionPara3 { get; set; }
         public string isoDate { get; set; }
-
-
-
     }
 }

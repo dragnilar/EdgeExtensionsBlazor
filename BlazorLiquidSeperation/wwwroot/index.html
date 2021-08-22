@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Blazor Seperation</title>
-    <base href="/" />
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+    <title>Blazor Separation</title>
+    <base href="/"/>
     <link href="icons/favicon.ico" rel="shotcut icon" type="image/x-icon" />
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/bootstrap-utilities.min.css" />
+    <link rel="stylesheet" href="css/bootstrap.css" />
+    <link rel="stylesheet" href="css/bootstrap-utilities.css" />
     <link href="newtab.css" rel="stylesheet" />
 </head>
-    <body>
-        <div id="app">
-            <div style="position:absolute; top:30vh; width: 100%; text-align: center">
-                <h1>Loading New Tab Page</h1>
-                <div class="spinner-grow text-success" role="status">
-                    <span class="sr-only" style="width: 3rem; height: 3rem;">Loading New Tab Page...</span>
-                </div>
-            </div>
-        </div>
-        <script src="BrowserExtensionScripts/Core.js"></script>
-        <script src="jsInteropScripts.js"></script>
-        <script src="bootstrap.bundle.js"></script>
-    </body>
+<body>
+<div id="app">
+    <div style="position:absolute; top:30vh; width: 100%; text-align: center">
+        <h1>Loading New Tab Page</h1>
+        <div class="spinner-grow text-success" role="status"></div>
+        <div class="spinner-grow text-primary" role="status"></div>
+        <div class="spinner-grow text-secondary" role="status"></div>
+    </div>
+</div>
+<script src="BrowserExtensionScripts/Core.js"></script>
+<script src="jsInteropScripts.js"></script>
+<script src="bootstrap.bundle.js"></script>
+</body>
 </html>

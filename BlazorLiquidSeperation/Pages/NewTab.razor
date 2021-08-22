@@ -1,11 +1,5 @@
 ﻿@page "/newtab.html"
 @using BlazorLiquidSeperation.Models
-@using System.Text.Json
-@using WebExtensions.Net.Storage
-@using WebExtensions.Net.Types
-@using System.Security.Cryptography.X509Certificates
-@using System.Net
-@using System.IO
 @using BlazorLiquidSeperation.Constants
 @inherits BasePage;
 @inject IJSRuntime JS;
@@ -73,7 +67,6 @@
         <div class="col">
             <div class="QuickLinkContainer container-fluid" hidden="@(!QuickLinksVisible)">
                 @{
-    
                     if (_quickLinks != null)
                     {
                         foreach (var quickLink in _quickLinks)
@@ -89,7 +82,7 @@
                             </button>
                         }
                     }
-    
+
                 }
             </div>
         </div>
@@ -101,8 +94,12 @@
             <br/>
             <br/>
             <div style="left: 50%; right: 50%;">
-                <button class="imageNavigationButtonStyle" @onclick="GetPreviousImage">◀</button>
-                <button class="imageNavigationButtonStyle" @onclick="GetNextImage">▶</button>
+                <button class="imageNavigationButtonStyle" @onclick="GetPreviousImage">
+                    <img src="icons/fluent_backward.png" height="24px" width="24px" alt="&lt;"/>
+                </button>
+                <button class="imageNavigationButtonStyle" @onclick="GetNextImage">
+                    <img src="icons/fluent_forward.png" height="24px" width="24px" alt="&gt;"/>
+                </button>
             </div>
         </div>
         <div class="col-1" style="width: 15px"></div>
@@ -118,6 +115,7 @@
     private bool _quickLinksVisible;
     private HttpClient _httpClient;
     private int imageArchiveIndex = -1;
+
     public bool QuickLinksVisible
     {
         get => _quickLinksVisible;
@@ -132,7 +130,10 @@
     }
 
     private bool _searchVisible { get; set; }
-    public bool SearchVisible { get => _searchVisible;
+
+    public bool SearchVisible
+    {
+        get => _searchVisible;
         set
         {
             if (value == _searchVisible) return;
@@ -145,8 +146,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        //NOTE - Do NOT get settings until the quick links are set up. The elements need to exist in the dom first or the
-        //QuickLinksVisible property will cause a nasty exception because it's trying to work on an HTML element that isn't drawn yet.
+    //NOTE - Do NOT get settings until the quick links are set up. The elements need to exist in the dom first or the
+    //QuickLinksVisible property will cause a nasty exception because it's trying to work on an HTML element that isn't drawn yet.
         await Settings.LoadSettingsAsync(WebExtensions).ContinueWith(_ => SetUpQuickLinks());
         QuickLinksVisible = Convert.ToBoolean(Settings.GetSettingValue(StatValues.ShowQuickLinks));
         SearchVisible = Convert.ToBoolean(Settings.GetSettingValue(StatValues.ShowWebSearch));
@@ -184,7 +185,7 @@
             Console.WriteLine("Getting Bing Image 🔍");
             var bingImageOfTheDayUrl = "https://api.allorigins.win/raw?url=https%3A//www.bing.com/HPImageArchive.aspx%3Fformat%3Djs%26idx%3D0%26n%3D1%26mkt%3Den-US";
             Console.WriteLine($"Querying bing image of the day API with the following URL: {bingImageOfTheDayUrl}");
-            _httpClient??= new HttpClient();
+            _httpClient ??= new HttpClient();
             var dto = await _httpClient.GetFromJsonAsync<BingImageOfTheDayDto>(bingImageOfTheDayUrl);
             if (dto != null)
             {
@@ -216,10 +217,9 @@
         Console.WriteLine($"Querying bing with date string - {dateString}");
         var bingImageArchiveUrl = $"https://api.allorigins.win/raw?url=https://www.bing.com/hp/api/v1/imagegallery?format=json&ssd={dateString}";
         Console.WriteLine($"Querying bing image archive with the following URL:{bingImageArchiveUrl}");
-        _httpClient??= new HttpClient();
+        _httpClient ??= new HttpClient();
         var dto = await _httpClient.GetFromJsonAsync<BingImageArchiveDto>(bingImageArchiveUrl);
         _bingArchiveImages = dto?.data.images.ToList();
-
     }
 
     private async Task GetNextImage()
@@ -255,9 +255,8 @@
             imageArchiveIndex--;
             await SetBackgroundImage(GetImageUrlForIndex(imageArchiveIndex));
         }
-
     }
-    
+
     private string GetImageUrlForIndex(int index)
     {
         var imageUrls = _bingArchiveImages[index].imageUrls;
@@ -285,9 +284,9 @@
         try
         {
             Console.WriteLine($"Performing a search with query : {SearchQuery}");
-            // The code below always throws an exception; we are using JS Interop to work around this for now...
-            // var searchProps = new SearchProperties {Query = SearchQuery};
-            // await WebExtensions.Search.Search(searchProps);
+    // The code below always throws an exception; we are using JS Interop to work around this for now...
+    // var searchProps = new SearchProperties {Query = SearchQuery};
+    // await WebExtensions.Search.Search(searchProps);
             JS.InvokeVoidAsync("runSearchQuery", SearchQuery).ConfigureAwait(false);
         }
         catch (Exception e)

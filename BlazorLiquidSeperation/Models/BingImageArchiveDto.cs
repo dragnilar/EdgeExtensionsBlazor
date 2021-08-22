@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace BlazorLiquidSeperation.Models
+﻿namespace BlazorLiquidSeperation.Models
 {
     public class BingImageArchiveDto
     {

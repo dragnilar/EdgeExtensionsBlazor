@@ -1,8 +1,8 @@
-﻿using BlazorLiquidSeperation.Constants;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using BlazorLiquidSeperation.Constants;
 using WebExtensions.Net;
 using WebExtensions.Net.Storage;
 
@@ -10,8 +10,6 @@ namespace BlazorLiquidSeperation
 {
     public static class Settings
     {
-        public static StorageAreaSync Storage { get; set; }
-
         private static Dictionary<string, string> SettingsDictionary = new()
         {
             { StatValues.SearchRegion, "US" },
@@ -20,7 +18,6 @@ namespace BlazorLiquidSeperation
             { StatValues.ShowQuickLinks, "True" },
             { StatValues.ShowRandomImages, "False" },
             { StatValues.QuickLinkBookMarkFolder, StatValues.DefualtBookmarkFolderName }
-
         };
 
         private static readonly StorageAreaSyncGetKeys StorageKeys = new(
@@ -35,13 +32,15 @@ namespace BlazorLiquidSeperation
             }
         );
 
+        public static StorageAreaSync Storage { get; set; }
+
         public static string GetSettingValue(string settingKey)
         {
             return SettingsDictionary[settingKey];
         }
 
         /// <summary>
-        /// Updates the setting indicated by the provided key with the provided value
+        ///     Updates the setting indicated by the provided key with the provided value
         /// </summary>
         /// <param name="settingKey"></param>
         /// <param name="settingValue"></param>
@@ -50,9 +49,9 @@ namespace BlazorLiquidSeperation
             SettingsDictionary[settingKey] = settingValue.ToString();
         }
 
-        ///<summary>
-        /// Saves the settings dictionary back to the browser sync storage
-        ///</summary>
+        /// <summary>
+        ///     Saves the settings dictionary back to the browser sync storage
+        /// </summary>
         /// <returns>A completed ValueTask object</returns>
         public static ValueTask SaveAsync()
         {
@@ -61,7 +60,7 @@ namespace BlazorLiquidSeperation
         }
 
         /// <summary>
-        /// Loads the settings dictionary for the settings class from the browser storage
+        ///     Loads the settings dictionary for the settings class from the browser storage
         /// </summary>
         /// <param name="webApi"></param>
         /// <returns></returns>
@@ -70,25 +69,22 @@ namespace BlazorLiquidSeperation
             Console.WriteLine("Loading settings...");
             Storage ??= await webApi.Storage.GetSync();
             var jsonElement = await Storage.Get(StorageKeys);
-            if (!(string.IsNullOrWhiteSpace(jsonElement.ToString()) && jsonElement.ToString() != "{}"))
+            if (jsonElement.ToString() != "{}")
             {
                 Console.WriteLine("Settings found");
                 var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(jsonElement.GetRawText());
                 UpdateDictionary(dictionary);
-
             }
             else
             {
                 Console.WriteLine("Settings do not exist exist, setting and saving defaults....");
                 await SaveAsync();
-
             }
-
         }
-        static void UpdateDictionary(Dictionary<string, string> keyValuePairs)
+
+        private static void UpdateDictionary(Dictionary<string, string> keyValuePairs)
         {
             SettingsDictionary = keyValuePairs;
         }
-
     }
 }
