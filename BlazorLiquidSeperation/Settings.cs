@@ -1,6 +1,9 @@
-﻿using System;
+﻿using BlazorLiquidSeperation.Constants;
+using System;
 using System.Collections.Generic;
+using System.Text.Json;
 using System.Threading.Tasks;
+using WebExtensions.Net;
 using WebExtensions.Net.Storage;
 
 namespace BlazorLiquidSeperation
@@ -8,46 +11,40 @@ namespace BlazorLiquidSeperation
     public static class Settings
     {
         public static StorageAreaSync Storage { get; set; }
-        public const string SearchRegion = "SearchRegion";
-        public const string DisplayMode = "DisplayMode";
-        public const string ShowWebSearch = "ShowWebSearch";
-        public const string ShowQuickLinks = "ShowQuickLinks";
-        public const string ShowRandomImages = "ShowRandomImages";
-        public const string QuickLinkBookMarkFolder = "QuickLinkBookmarkFolder";
-        public const string DefualtBookmarkFolderName = "Edge Quick Links";
+
         private static Dictionary<string, string> SettingsDictionary = new()
         {
-            { SearchRegion, "US" },
-            { DisplayMode, "1" },
-            { ShowWebSearch, "True" },
-            { ShowQuickLinks, "True" },
-            { ShowRandomImages, "False" },
-            { QuickLinkBookMarkFolder, DefualtBookmarkFolderName }
+            { StatValues.SearchRegion, "US" },
+            { StatValues.DisplayMode, "1" },
+            { StatValues.ShowWebSearch, "True" },
+            { StatValues.ShowQuickLinks, "True" },
+            { StatValues.ShowRandomImages, "False" },
+            { StatValues.QuickLinkBookMarkFolder, StatValues.DefualtBookmarkFolderName }
 
         };
 
-        public static StorageAreaSyncGetKeys StorageKeys = new(
+        private static readonly StorageAreaSyncGetKeys StorageKeys = new(
             new List<string>
             {
-                SearchRegion,
-                DisplayMode,
-                ShowWebSearch,
-                ShowQuickLinks,
-                ShowRandomImages,
-                QuickLinkBookMarkFolder
+                StatValues.SearchRegion,
+                StatValues.DisplayMode,
+                StatValues.ShowWebSearch,
+                StatValues.ShowQuickLinks,
+                StatValues.ShowRandomImages,
+                StatValues.QuickLinkBookMarkFolder
             }
         );
-
-        public static void UpdateDictionary(Dictionary<string, string> keyValuePairs)
-        {
-            SettingsDictionary = keyValuePairs;
-        }
 
         public static string GetSettingValue(string settingKey)
         {
             return SettingsDictionary[settingKey];
         }
 
+        /// <summary>
+        /// Updates the setting indicated by the provided key with the provided value
+        /// </summary>
+        /// <param name="settingKey"></param>
+        /// <param name="settingValue"></param>
         public static void UpdateSetting(string settingKey, object settingValue)
         {
             SettingsDictionary[settingKey] = settingValue.ToString();
@@ -61,6 +58,36 @@ namespace BlazorLiquidSeperation
         {
             Console.WriteLine("Saving settings...");
             return Storage?.Set(SettingsDictionary) ?? ValueTask.CompletedTask;
+        }
+
+        /// <summary>
+        /// Loads the settings dictionary for the settings class from the browser storage
+        /// </summary>
+        /// <param name="webApi"></param>
+        /// <returns></returns>
+        public static async Task LoadSettingsAsync(IWebExtensionsApi webApi)
+        {
+            Console.WriteLine("Loading settings...");
+            Storage ??= await webApi.Storage.GetSync();
+            var jsonElement = await Storage.Get(StorageKeys);
+            if (!(string.IsNullOrWhiteSpace(jsonElement.ToString()) && jsonElement.ToString() != "{}"))
+            {
+                Console.WriteLine("Settings found");
+                var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(jsonElement.GetRawText());
+                UpdateDictionary(dictionary);
+
+            }
+            else
+            {
+                Console.WriteLine("Settings do not exist exist, setting and saving defaults....");
+                await SaveAsync();
+
+            }
+
+        }
+        static void UpdateDictionary(Dictionary<string, string> keyValuePairs)
+        {
+            SettingsDictionary = keyValuePairs;
         }
 
     }

@@ -6,6 +6,7 @@
 @using System.Security.Cryptography.X509Certificates
 @using System.Net
 @using System.IO
+@using BlazorLiquidSeperation.Constants
 @inherits BasePage;
 @inject IJSRuntime JS;
 
@@ -125,7 +126,7 @@
             if (value == _quickLinksVisible) return;
             Console.WriteLine($"Setting show quick links to {value}");
             _quickLinksVisible = value;
-            Settings.UpdateSetting(Settings.ShowQuickLinks, value);
+            Settings.UpdateSetting(StatValues.ShowQuickLinks, value);
             Settings.SaveAsync();
         }
     }
@@ -137,7 +138,7 @@
             if (value == _searchVisible) return;
             Console.WriteLine($"Setting search visible to {value}");
             _searchVisible = value;
-            Settings.UpdateSetting(Settings.ShowWebSearch, value);
+            Settings.UpdateSetting(StatValues.ShowWebSearch, value);
             Settings.SaveAsync();
         }
     }
@@ -146,16 +147,16 @@
     {
         //NOTE - Do NOT get settings until the quick links are set up. The elements need to exist in the dom first or the
         //QuickLinksVisible property will cause a nasty exception because it's trying to work on an HTML element that isn't drawn yet.
-        await GetSettings().ContinueWith(_ => SetUpQuickLinks());
-        QuickLinksVisible = Convert.ToBoolean(Settings.GetSettingValue(Settings.ShowQuickLinks));
-        SearchVisible = Convert.ToBoolean(Settings.GetSettingValue(Settings.ShowWebSearch));
+        await Settings.LoadSettingsAsync(WebExtensions).ContinueWith(_ => SetUpQuickLinks());
+        QuickLinksVisible = Convert.ToBoolean(Settings.GetSettingValue(StatValues.ShowQuickLinks));
+        SearchVisible = Convert.ToBoolean(Settings.GetSettingValue(StatValues.ShowWebSearch));
     }
 
     private async Task SetUpQuickLinks()
     {
         _quickLinks = new List<QuickLink>();
-        Console.WriteLine($"{Settings.GetSettingValue(Settings.QuickLinkBookMarkFolder)}");
-        var bookMarkNode = await WebExtensions.Bookmarks.Search(Settings.GetSettingValue(Settings.QuickLinkBookMarkFolder));
+        Console.WriteLine($"{Settings.GetSettingValue(StatValues.QuickLinkBookMarkFolder)}");
+        var bookMarkNode = await WebExtensions.Bookmarks.Search(Settings.GetSettingValue(StatValues.QuickLinkBookMarkFolder));
         if (bookMarkNode == null) return;
         Console.WriteLine($"Got a bookmark node with count: {bookMarkNode.Count()}");
         var quickLinkBookMarks = await WebExtensions.Bookmarks.GetChildren(bookMarkNode.First().Id);
@@ -181,7 +182,7 @@
         try
         {
             Console.WriteLine("Getting Bing Image 🔍");
-            var bingImageOfTheDayUrl = "http://api.allorigins.win/raw?url=https%3A//www.bing.com/HPImageArchive.aspx%3Fformat%3Djs%26idx%3D0%26n%3D1%26mkt%3Den-US";
+            var bingImageOfTheDayUrl = "https://api.allorigins.win/raw?url=https%3A//www.bing.com/HPImageArchive.aspx%3Fformat%3Djs%26idx%3D0%26n%3D1%26mkt%3Den-US";
             Console.WriteLine($"Querying bing image of the day API with the following URL: {bingImageOfTheDayUrl}");
             _httpClient??= new HttpClient();
             var dto = await _httpClient.GetFromJsonAsync<BingImageOfTheDayDto>(bingImageOfTheDayUrl);
@@ -294,27 +295,6 @@
             Console.WriteLine("We had an error doing the search query.");
             Console.WriteLine(e);
         }
-    }
-
-    private async Task GetSettings()
-    {
-        Console.WriteLine("Getting settings...");
-        Settings.Storage ??= await WebExtensions.Storage.GetSync();
-        var jsonElement = await Settings.Storage.Get(Settings.StorageKeys);
-        if (!(string.IsNullOrWhiteSpace(jsonElement.ToString()) && jsonElement.ToString() != "{}"))
-        {
-            Console.WriteLine("Settings found");
-            var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(jsonElement.GetRawText());
-            Settings.UpdateDictionary(dictionary);
-
-        }
-        else
-        {
-            Console.WriteLine("Settings do not exist exist, setting and saving defaults....");
-            await Settings.SaveAsync();
-
-        }
-
     }
 
 }
