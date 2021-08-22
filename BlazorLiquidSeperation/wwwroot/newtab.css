@@ -3,24 +3,28 @@
     color: ghostwhite;
     font-size: 15px;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .office365Link:hover {
     background-color: rgba(158, 158, 158, 0.45);
     border-radius: 4px;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .MS365Link {
     color: ghostwhite;
     font-size: 32px;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .MS365Link:hover {
     background-color: rgba(158, 158, 158, 0.45);
     border-radius: 4px;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .M365TableCellLeft {
@@ -36,6 +40,10 @@
 
 .M365DropDownStyle {
     border: 1px solid transparent;
+}
+
+.M365PopUp{
+    margin-left: 15px; border: 5px solid transparent;     background: #4a4a4a;
 }
 
 /*Search Box Styles*/
