@@ -8,7 +8,7 @@
     <div class="row" style="height: 150px">
         <div class="col">
             <div class="dropdown">
-                <button class="dropdown-toggle TopMenuIconStyle btn" type="button" id="waffleDropDown" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="dropdown-toggle TopMenuIconStyle btn" type="button" id="waffleDropDown" data-bs-toggle="dropdown" aria-expanded="false" title="Microsoft 365 Sites/Apps">
                     <img src="\icons\fluent_square_menu.png" alt="waffle icon">
                 </button>
                 <div class="dropdown-menu p-4 text-muted M365PopUp" style="min-width: 350px" aria-labelledby="waffleDropDown">
@@ -19,28 +19,28 @@
         <div class="col-5"></div>
         <div class="col-1">
             <div>
-                <a href="https://rewards.microsoft.com/?FORM=ANNRW1&redref=amc" class="TopMenuIconStyle btn">
+                <a href="https://rewards.microsoft.com/?FORM=ANNRW1&redref=amc" class="TopMenuIconStyle btn" title="Go To Microsoft Rewards Site">
                     <img src=".\icons\fluent_medal.png" alt="Click for Microsoft Rewards" class="TopMenuRewardsStyle">
                 </a>
             </div>
         </div>
         <div class="col-1">
             <div class="dropdown">
-                <button class="dropdown-toggle TopMenuIconStyle btn" type="button" id="settingsDropDown" data-bs-toggle="dropdown" aria-expanded="false">
+                <button class="dropdown-toggle TopMenuIconStyle btn" type="button" id="settingsDropDown" data-bs-toggle="dropdown" aria-expanded="false" title="Settings">
                     <img src="\icons\fluent_gear.png" alt="waffle icon">
                 </button>
                 <div class="dropdown-menu p-4 text-muted M365PopUp" style="min-width: 350px" aria-labelledby="settingsDropDown">
                     <form class="mb-3">
                         <h4>Settings</h4>
                         <EditForm Model="this">
-                            <div class="custom-control custom-switch">
-                                <InputCheckbox @bind-Value="@QuickLinksVisible" Id="showQuickLinksSwitch" class="custom-control-input"/>
-                                <label class="custom-control-label" for="showQuickLinksSwitch">Show Quick Link</label>
+                            <div class="form-check form-switch">
+                                <InputCheckbox @bind-Value="@QuickLinksVisible" Id="showQuickLinksSwitch" class="form-check-input"/>
+                                <label class="form-check-label" for="showQuickLinksSwitch">Show Quick Link</label>
                             </div>
                             <br/>
-                            <div class="custom-control custom-switch">
-                                <InputCheckbox @bind-Value="@SearchVisible" Id="showSearchSwitch" class="custom-control-input"/>
-                                <label class="custom-control-label" for="showSearchSwitch">Show Web Search</label>
+                            <div class="form-check form-switch">
+                                <InputCheckbox @bind-Value="@SearchVisible" Id="showSearchSwitch" class="form-check-input"/>
+                                <label class="form-control-label" for="showSearchSwitch">Show Web Search</label>
                             </div>
                             <br/>
                         </EditForm>
@@ -71,15 +71,11 @@
                     {
                         foreach (var quickLink in _quickLinks)
                         {
-                            <button class="QuickLinkContent">
-                                <a href="@quickLink.QuickLinkUrl">
-                                    <div class="QuickLinkBookMarkImageContainer">
-                                        <img src="@quickLink.QuickLinkImageUrl" class="QuickLinkBookMarkImage" alt="@quickLink.QuickLinkTitle"/>
-                                    </div>
-                                </a>
-                                <br>
-                                <span class="QuickLinkTitle">@quickLink.QuickLinkTitle</span>
-                            </button>
+                            <QuickLinkComponent
+                                QuickLinkTitle="@quickLink.QuickLinkTitle"
+                                QuickLinkUrl="@quickLink.QuickLinkUrl"
+                                QuickLinkImageUrl="@quickLink.QuickLinkImageUrl"
+                                ></QuickLinkComponent>
                         }
                     }
 
@@ -89,18 +85,23 @@
     </div>
     <div class="row">
         <div class="col-1" style="width: 15px"></div>
-        <div class="col-9"></div>
+        <div class="col-6"></div>
+        <div class="col-3">
+            <br/>
+            <br/>
+            <div class="MuseumCardStyle" >
+                <a style="text-decoration: none; color: ghostwhite" href="@MuseumLink">@MuseumCardText</a>
+            </div>
+        </div>
         <div class="col-2">
             <br/>
             <br/>
-            <div style="left: 50%; right: 50%;">
-                <button class="imageNavigationButtonStyle" @onclick="GetPreviousImage">
-                    <img src="icons/fluent_backward.png" height="24px" width="24px" alt="&lt;"/>
-                </button>
-                <button class="imageNavigationButtonStyle" @onclick="GetNextImage">
-                    <img src="icons/fluent_forward.png" height="24px" width="24px" alt="&gt;"/>
-                </button>
-            </div>
+            <button class="imageNavigationButtonStyle" @onclick="GetPreviousImage" title="Previous Image">
+                <img class="imageNavChevronStyle" src="icons/fluent_backward.png" alt="&lt;"/>
+            </button>
+            <button class="imageNavigationButtonStyle" @onclick="GetNextImage" title="Next Image">
+                <img class="imageNavChevronStyle" src="icons/fluent_forward.png" alt="&gt;"/>
+            </button>
         </div>
         <div class="col-1" style="width: 15px"></div>
     </div>
@@ -115,7 +116,8 @@
     private bool _quickLinksVisible;
     private HttpClient _httpClient;
     private int imageArchiveIndex = -1;
-
+    public string MuseumCardText { get; set; }
+    public string MuseumLink { get; set; }
     public bool QuickLinksVisible
     {
         get => _quickLinksVisible;
@@ -193,6 +195,8 @@
                 if (ImageOfTheDay != null)
                 {
                     await SetBackgroundImage(ImageOfTheDay.url);
+                    MuseumCardText = ImageOfTheDay.title;
+                    MuseumLink = $"{ImageOfTheDay.copyrightlink}";
                 }
                 else
                 {
@@ -229,11 +233,16 @@
         {
             imageArchiveIndex = -1;
             await SetBackgroundImage(ImageOfTheDay.url);
+            MuseumCardText = ImageOfTheDay.title;
+            MuseumLink = $"{ImageOfTheDay.copyrightlink}";
         }
         else
         {
             imageArchiveIndex++;
             await SetBackgroundImage(GetImageUrlForIndex(imageArchiveIndex));
+            MuseumCardText = _bingArchiveImages[imageArchiveIndex].title;
+            MuseumLink = $"https://bing.com{_bingArchiveImages[imageArchiveIndex].clickUrl}";
+
         }
     }
 
@@ -244,16 +253,22 @@
         {
             imageArchiveIndex = _bingArchiveImages.Count - 1;
             await SetBackgroundImage(GetImageUrlForIndex(imageArchiveIndex));
+            MuseumCardText = _bingArchiveImages[imageArchiveIndex].title;
+            MuseumLink = $"https://bing.com{_bingArchiveImages[imageArchiveIndex].clickUrl}";
         }
         else if (imageArchiveIndex == 0)
         {
             imageArchiveIndex = -1;
             await SetBackgroundImage(ImageOfTheDay.url);
+            MuseumCardText = ImageOfTheDay.title;
+            MuseumLink = $"{ImageOfTheDay.copyrightlink}";
         }
         else
         {
             imageArchiveIndex--;
             await SetBackgroundImage(GetImageUrlForIndex(imageArchiveIndex));
+            MuseumCardText = _bingArchiveImages[imageArchiveIndex].title;
+            MuseumLink = $"https://bing.com{_bingArchiveImages[imageArchiveIndex].clickUrl}";
         }
     }
 
@@ -295,5 +310,8 @@
             Console.WriteLine(e);
         }
     }
+
+
+
 
 }

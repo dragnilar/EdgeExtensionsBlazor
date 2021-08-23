@@ -1,4 +1,17 @@
-﻿/*M365 Menu Styles*/
+﻿/*Index*/
+.LoadingHeaderStyle{
+    --bs-text-opacity: 1;
+    color: rgba(var(--bs-white-rgb), var(--bs-text-opacity)) !important;
+    font-family: "Segoe UI Semibold", Helvetica, SansSerif, serif;
+}
+.IndexLoadingCenterStyle{
+    position:absolute; 
+    top:30vh; 
+    width: 100%; 
+    text-align: center;
+}
+
+/*M365 Menu Styles*/
 .office365Link {
     color: ghostwhite;
     font-size: 15px;
@@ -89,7 +102,7 @@
 
 .TopMenuIconStyle:hover {
     opacity: 0.90;
-    background: #242424;
+    background: rgba(66, 66, 66, 0.4);
     border-radius: 4px;
 }
 
@@ -103,19 +116,40 @@
 
 .TopMenuRewardsStyle {
     border-radius: 15px;
-    border: solid 2px;
+    border: 2px solid #D6D6DA;
 }
 
 /*Image navigation button styles*/
+
+.MuseumCardStyle{
+    background-color: #4a4a4a; border-radius: 5px; display: flex;
+    flex-grow: 1;
+    font-size: small;
+    font-family: "Segoe UI Semibold", Helvetica, SansSerif, serif;
+    opacity: 0.90;
+    color: #D6D6DA;
+    padding: 10px;
+}
 
 .imageNavigationButtonStyle {
     background: #4a4a4a;
     flex-direction: column;
     box-sizing: border-box;
+    height: 55px;
+    width: 55px;
+    display: inline-block;
+    align-items: center;
+    opacity: 0.90;
     border-radius: 4px;
     border-style: none;
     position: relative;
     transition: all 0.2s ease-in-out;
+}
+
+.imageNavChevronStyle{
+    margin-top: 25%;
+    height: 24px;
+    width: 24px;
 }
 
 .imageNavigationButtonStyle:active {
@@ -127,46 +161,41 @@
 }
 
 .imageNavigationButtonStyle:hover {
-    opacity: 0.90;
+    opacity: 0.80;
     background: #242424;
 }
 
 /*Quick Link Styles*/
 
 .QuickLinkContent {
-    height: 80px;
+    height: 100px;
     background: transparent;
     width: 100px;
-    margin-top: 15px;
-    margin-bottom: 15px;
     flex-direction: column;
     box-sizing: border-box;
     border-radius: 4px;
     border-style: none;
+    border-width: 2px;
     position: relative;
     transition: all 0.2s ease-in-out;
 }
 
 .QuickLinkContent:active {
-    border-color: #7E7F80;
-    border-width: 2px;
-    border-style: solid;
-    border-radius: 4px;
-    background: transparent;
+    box-shadow: 0 0 0 2pt #787878;
 }
 
 .QuickLinkContent:hover {
     opacity: 0.90;
-    background: #242424;
+    background: rgba(66, 66, 66, 0.4);
 }
 
 .QuickLinkBookMarkImageContainer {
     background: #4a4a4a;
-    width: 55px;
-    height: 55px;
+    width: 45px;
+    height: 45px;
     border-radius: 5px;
     position: absolute;
-    top: 50%;
+    top: 35%;
     left: 50%;
     transform: translate(-50%, -50%);
 }
@@ -184,13 +213,11 @@
 .QuickLinkTitle {
     font-size: 13px;
     box-sizing: content-box;
-    max-height: 16px;
-    margin-top: 40px;
     font-family: "Segoe UI Semibold", Helvetica, SansSerif, serif;
     font-weight: 400;
     color: #ffffff;
     position: absolute;
-    top: 50%;
+    top: 75%;
     left: 50%;
     transform: translate(-50%, -50%);
     overflow-wrap: break-word;

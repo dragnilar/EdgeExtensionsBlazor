@@ -1,0 +1,24 @@
+﻿@inject NavigationManager NavigationManager;
+
+<button class="QuickLinkContent" @onclick="FireQuickLink" title="@QuickLinkUrl">
+    <div class="QuickLinkBookMarkImageContainer">
+        <img src="@QuickLinkImageUrl" class="QuickLinkBookMarkImage" alt="@QuickLinkTitle"/>
+    </div>
+    <br>
+    <span class="QuickLinkTitle">@QuickLinkTitle</span>
+    </button>
+@code {
+    
+    [Parameter]
+    public string QuickLinkUrl { get; set; }
+    [Parameter]
+    public string QuickLinkImageUrl { get; set; }
+    [Parameter]
+    public string QuickLinkTitle { get; set; }
+
+    private void FireQuickLink()
+    {
+        NavigationManager.NavigateTo(QuickLinkUrl);
+    }
+
+}
