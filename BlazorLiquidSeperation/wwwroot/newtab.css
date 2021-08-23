@@ -3,12 +3,13 @@
 :root{
     --main-element-bg-color:rgba(34,34,34,.9);
     --main-bg-hover: rgba(66, 66, 66, 0.4);
+    --main-default-font: "Segoe UI Semibold", Helvetica, SansSerif, serif;
 }
 
 .LoadingHeaderStyle{
     --bs-text-opacity: 1;
     color: rgba(var(--bs-white-rgb), var(--bs-text-opacity)) !important;
-    font-family: "Segoe UI Semibold", Helvetica, SansSerif, serif;
+    font-family: var(--main-default-font);
 }
 .IndexLoadingCenterStyle{
     position:absolute; 
@@ -66,6 +67,13 @@
     background: var(--main-element-bg-color);
 }
 
+.SettingsTextEditStyle{
+    background: var(--main-element-bg-color);
+    color: #D6D6DA;
+    box-shadow: inset 20px 0 4px 2px #4f4f4f;
+    font-family: var(--main-default-font);
+}
+
 /*Search Box Styles*/
 .SearchBoxOuterDivStyle {
     box-shadow: 0 0 2.25px 1px #4f4f4f;
@@ -97,6 +105,7 @@
     border: none;
     color: whitesmoke;
     box-shadow: none;
+    margin: 0 0 0 0;
 }
 
 /*Header Icon Styles*/
@@ -133,9 +142,10 @@
     border-radius: 5px; display: flex;
     flex-grow: 1;
     font-size: small;
-    font-family: "Segoe UI Semibold", Helvetica, SansSerif, serif;
+    font-family:var(--main-default-font);
     opacity: 0.90;
     color: #D6D6DA;
+    height: 55px;
     padding: 10px;
 }
 
@@ -221,7 +231,7 @@
 .QuickLinkTitle {
     font-size: 13px;
     box-sizing: content-box;
-    font-family: "Segoe UI Semibold", Helvetica, SansSerif, serif;
+    font-family: var(--main-default-font);
     font-weight: 400;
     color: #ffffff;
     position: absolute;

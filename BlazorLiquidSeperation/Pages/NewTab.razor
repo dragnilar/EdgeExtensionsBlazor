@@ -29,7 +29,7 @@
                 <button class="dropdown-toggle TopMenuIconStyle btn" type="button" id="settingsDropDown" data-bs-toggle="dropdown" aria-expanded="false" title="Settings">
                     <img src="\icons\fluent_gear.png" alt="waffle icon">
                 </button>
-                <div class="dropdown-menu p-4 text-muted M365PopUp" style="min-width: 350px" aria-labelledby="settingsDropDown">
+                <div class="dropdown-menu p-4 text-muted M365PopUp" style="min-width: 450px" aria-labelledby="settingsDropDown">
                     <form class="mb-3">
                         <h4>Settings</h4>
                         <EditForm Model="this">
@@ -43,13 +43,17 @@
                                 <label class="form-control-label" for="showSearchSwitch">Show Web Search</label>
                             </div>
                             <br/>
+                            <label class="form-control-label">Quick Links Bookmark Folder</label>
+                            <div class="form-text">
+                                <InputText @bind-Value="QuickLinksFolder" class="SettingsTextEditStyle"></InputText>
+                            </div>
                         </EditForm>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row" style="height: 200px">
+    <div class="row" style="height: 100px">
         <div class="col" style="width: 15px"></div>
         <div class="col-6">
             <form @onsubmit="Enter" class="SearchBoxOuterDivStyle" hidden="@(!SearchVisible)">
@@ -63,6 +67,26 @@
         </div>
         <div class="col" style="width: 15px"></div>
     </div>
+        <div class="row" style="margin-right: 0; margin-left: 0; height: 125px">
+            <div class="col-8"></div> 
+            <div class="col-3">
+                <br/>
+                <br/>
+                <div class="MuseumCardStyle" >
+                    <a style="text-decoration: none; color: ghostwhite" href="@MuseumLink">@MuseumCardText</a>
+                </div>
+            </div>
+            <div class="col-1">
+                <br/>
+                <br/>
+                <button class="imageNavigationButtonStyle" @onclick="GetPreviousImage" title="Previous Image">
+                    <img class="imageNavChevronStyle" src="icons/fluent_backward.png" alt="&lt;"/>
+                </button>
+                <button class="imageNavigationButtonStyle" @onclick="GetNextImage" title="Next Image">
+                    <img class="imageNavChevronStyle" src="icons/fluent_forward.png" alt="&gt;"/>
+                </button>
+            </div>
+        </div>
     <div class="row" style="height: auto">
         <div class="col">
             <div class="QuickLinkContainer container-fluid" hidden="@(!QuickLinksVisible)">
@@ -72,7 +96,7 @@
                         foreach (var quickLink in _quickLinks)
                         {
                             <QuickLinkComponent
-                                QuickLinkTitle="@quickLink.QuickLinkTitle"
+                                QuickLinkTitle="@GetQuickLinkName(quickLink.QuickLinkTitle)"
                                 QuickLinkUrl="@quickLink.QuickLinkUrl"
                                 QuickLinkImageUrl="@quickLink.QuickLinkImageUrl"
                                 ></QuickLinkComponent>
@@ -82,28 +106,6 @@
                 }
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col-1" style="width: 15px"></div>
-        <div class="col-6"></div>
-        <div class="col-3">
-            <br/>
-            <br/>
-            <div class="MuseumCardStyle" >
-                <a style="text-decoration: none; color: ghostwhite" href="@MuseumLink">@MuseumCardText</a>
-            </div>
-        </div>
-        <div class="col-2">
-            <br/>
-            <br/>
-            <button class="imageNavigationButtonStyle" @onclick="GetPreviousImage" title="Previous Image">
-                <img class="imageNavChevronStyle" src="icons/fluent_backward.png" alt="&lt;"/>
-            </button>
-            <button class="imageNavigationButtonStyle" @onclick="GetNextImage" title="Next Image">
-                <img class="imageNavChevronStyle" src="icons/fluent_forward.png" alt="&gt;"/>
-            </button>
-        </div>
-        <div class="col-1" style="width: 15px"></div>
     </div>
 </div>
 
@@ -146,6 +148,20 @@
         }
     }
 
+    public string QuickLinksFolder
+    {
+        get => Settings.GetSettingValue(StatValues.QuickLinkBookMarkFolder);
+        set
+        {
+            var currentFolderName = Settings.GetSettingValue(StatValues.QuickLinkBookMarkFolder);
+            if (string.IsNullOrWhiteSpace(value) || currentFolderName == value) return;
+            Console.WriteLine($"Setting Quicklinks Folder To {value}");
+            Settings.UpdateSetting(StatValues.QuickLinkBookMarkFolder, value);
+            Settings.SaveAsync();
+            SetUpQuickLinks();
+        } 
+    }
+
     protected override async Task OnInitializedAsync()
     {
     //NOTE - Do NOT get settings until the quick links are set up. The elements need to exist in the dom first or the
@@ -158,10 +174,8 @@
     private async Task SetUpQuickLinks()
     {
         _quickLinks = new List<QuickLink>();
-        Console.WriteLine($"{Settings.GetSettingValue(StatValues.QuickLinkBookMarkFolder)}");
         var bookMarkNode = await WebExtensions.Bookmarks.Search(Settings.GetSettingValue(StatValues.QuickLinkBookMarkFolder));
         if (bookMarkNode == null) return;
-        Console.WriteLine($"Got a bookmark node with count: {bookMarkNode.Count()}");
         var quickLinkBookMarks = await WebExtensions.Bookmarks.GetChildren(bookMarkNode.First().Id);
         _quickLinks.AddRange(quickLinkBookMarks.Select(quickLinkBookMark => new QuickLink
         {
@@ -309,6 +323,16 @@
             Console.WriteLine("We had an error doing the search query.");
             Console.WriteLine(e);
         }
+    }
+
+    private string GetQuickLinkName(string quickLinkText)
+    {
+        if (!string.IsNullOrWhiteSpace(quickLinkText) && quickLinkText.Length > 25 )
+        {
+            var returnValue = quickLinkText.Substring(0, 22) + "...";
+            return returnValue;
+        }
+        return quickLinkText;
     }
 
 
