@@ -1,11 +1,12 @@
 ﻿@page "/newtab.html"
 @using BlazorLiquidSeperation.Models
 @using BlazorLiquidSeperation.Constants
+@using WebExtensions.Net.Downloads
 @inherits BasePage;
 @inject IJSRuntime JS;
 
 <div class="container-fluid" xmlns="http://www.w3.org/1999/html">
-    <div class="row" style="height: 150px">
+    <div class="row" style="height: 75px">
         <div class="col">
             <div class="dropdown">
                 <button class="dropdown-toggle TopMenuIconStyle btn" type="button" id="waffleDropDown" data-bs-toggle="dropdown" aria-expanded="false" title="Microsoft 365 Sites/Apps">
@@ -53,8 +54,25 @@
             </div>
         </div>
     </div>
+    <div class="row" style="margin-right: 0; margin-left: 0; height: 100px">
+        <div class="col-8"></div> 
+        <div class="col-3">
+            <div class="MuseumCardStyle" >
+                <a style="text-decoration: none; color: ghostwhite" href="@MuseumLink">@MuseumCardText</a>
+            </div>
+        </div>
+        <div class="col-1">
+            <button class="imageNavigationButtonStyle" @onclick="GetPreviousImage" title="Previous Image">
+                <img class="imageNavChevronStyle" src="icons/fluent_backward.png" alt="&lt;"/>
+            </button>
+            <button class="imageNavigationButtonStyle" @onclick="GetNextImage" title="Next Image">
+                <img class="imageNavChevronStyle" src="icons/fluent_forward.png" alt="&gt;"/>
+            </button>
+        </div>
+    </div>
     <div class="row" style="height: 100px">
-        <div class="col" style="width: 15px"></div>
+        <div class="col"></div>
+        <div class="col"></div>
         <div class="col-6">
             <form @onsubmit="Enter" class="SearchBoxOuterDivStyle" hidden="@(!SearchVisible)">
                 <div class="input-group mb-3 SearchBoxFormStyle">
@@ -65,28 +83,11 @@
                 </div>
             </form>
         </div>
-        <div class="col" style="width: 15px"></div>
-    </div>
-        <div class="row" style="margin-right: 0; margin-left: 0; height: 125px">
-            <div class="col-8"></div> 
-            <div class="col-3">
-                <br/>
-                <br/>
-                <div class="MuseumCardStyle" >
-                    <a style="text-decoration: none; color: ghostwhite" href="@MuseumLink">@MuseumCardText</a>
-                </div>
-            </div>
-            <div class="col-1">
-                <br/>
-                <br/>
-                <button class="imageNavigationButtonStyle" @onclick="GetPreviousImage" title="Previous Image">
-                    <img class="imageNavChevronStyle" src="icons/fluent_backward.png" alt="&lt;"/>
-                </button>
-                <button class="imageNavigationButtonStyle" @onclick="GetNextImage" title="Next Image">
-                    <img class="imageNavChevronStyle" src="icons/fluent_forward.png" alt="&gt;"/>
-                </button>
-            </div>
+        <div class="col">
+            <img src=".\icons\fluent_download.png" class="TopMenuIconStyle" alt="Click To Download" title="Click to download this image" @onclick="OnDownloadImageClick" />
         </div>
+        <div class="col"></div>
+    </div>
     <div class="row" style="height: auto">
         <div class="col">
             <div class="QuickLinkContainer container-fluid" hidden="@(!QuickLinksVisible)">
@@ -118,6 +119,7 @@
     private bool _quickLinksVisible;
     private HttpClient _httpClient;
     private int imageArchiveIndex = -1;
+    public string ImageDownloadLink { get; set; }
     public string MuseumCardText { get; set; }
     public string MuseumLink { get; set; }
     public bool QuickLinksVisible
@@ -158,7 +160,9 @@
             Console.WriteLine($"Setting Quicklinks Folder To {value}");
             Settings.UpdateSetting(StatValues.QuickLinkBookMarkFolder, value);
             Settings.SaveAsync();
+            #pragma warning disable 4014
             SetUpQuickLinks();
+            #pragma warning restore 4014
         } 
     }
 
@@ -209,8 +213,8 @@
                 if (ImageOfTheDay != null)
                 {
                     await SetBackgroundImage(ImageOfTheDay.url);
-                    MuseumCardText = ImageOfTheDay.title;
-                    MuseumLink = $"{ImageOfTheDay.copyrightlink}";
+                    UpdateMuseumCardForImageOfDay();
+                    StateHasChanged();
                 }
                 else
                 {
@@ -247,15 +251,13 @@
         {
             imageArchiveIndex = -1;
             await SetBackgroundImage(ImageOfTheDay.url);
-            MuseumCardText = ImageOfTheDay.title;
-            MuseumLink = $"{ImageOfTheDay.copyrightlink}";
+            UpdateMuseumCardForImageOfDay();
         }
         else
         {
             imageArchiveIndex++;
             await SetBackgroundImage(GetImageUrlForIndex(imageArchiveIndex));
-            MuseumCardText = _bingArchiveImages[imageArchiveIndex].title;
-            MuseumLink = $"https://bing.com{_bingArchiveImages[imageArchiveIndex].clickUrl}";
+            UpdateMuseumCardForArchiveImage();
 
         }
     }
@@ -267,23 +269,32 @@
         {
             imageArchiveIndex = _bingArchiveImages.Count - 1;
             await SetBackgroundImage(GetImageUrlForIndex(imageArchiveIndex));
-            MuseumCardText = _bingArchiveImages[imageArchiveIndex].title;
-            MuseumLink = $"https://bing.com{_bingArchiveImages[imageArchiveIndex].clickUrl}";
+            UpdateMuseumCardForArchiveImage();
         }
         else if (imageArchiveIndex == 0)
         {
             imageArchiveIndex = -1;
             await SetBackgroundImage(ImageOfTheDay.url);
-            MuseumCardText = ImageOfTheDay.title;
-            MuseumLink = $"{ImageOfTheDay.copyrightlink}";
+            UpdateMuseumCardForImageOfDay();
         }
         else
         {
             imageArchiveIndex--;
             await SetBackgroundImage(GetImageUrlForIndex(imageArchiveIndex));
-            MuseumCardText = _bingArchiveImages[imageArchiveIndex].title;
-            MuseumLink = $"https://bing.com{_bingArchiveImages[imageArchiveIndex].clickUrl}";
+            UpdateMuseumCardForArchiveImage();
         }
+    }
+
+    private void UpdateMuseumCardForImageOfDay()
+    {
+        MuseumCardText = ImageOfTheDay.title;
+        MuseumLink = $"{ImageOfTheDay.copyrightlink}";
+    }
+
+    private void UpdateMuseumCardForArchiveImage()
+    {
+        MuseumCardText = _bingArchiveImages[imageArchiveIndex].title;
+        MuseumLink = $"https://bing.com{_bingArchiveImages[imageArchiveIndex].clickUrl}";
     }
 
     private string GetImageUrlForIndex(int index)
@@ -297,6 +308,7 @@
     {
         var fullImagePath = "https://bing.com" + Url;
         await JS.InvokeVoidAsync("setBackgroundImage1", fullImagePath).ConfigureAwait(false);
+        ImageDownloadLink = fullImagePath.Replace("&pid=hp", "");
         Console.WriteLine("Image set 😊");
     }
 
@@ -335,7 +347,14 @@
         return quickLinkText;
     }
 
-
-
+    private async Task OnDownloadImageClick()
+    {
+        await WebExtensions.Downloads.Download(new DownloadOptions
+        {
+            Url = ImageDownloadLink,
+            SaveAs = true,
+            Filename = "Image.jpg"
+        });
+    }
 
 }

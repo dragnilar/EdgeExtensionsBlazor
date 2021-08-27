@@ -13,7 +13,6 @@ namespace BlazorLiquidSeperation
         {
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
-
             // workaround to use JavaScript fetch to bypass url validation
             // see: https://github.com/dotnet/runtime/issues/52836
             builder.Services.AddScoped<HttpClient>(sp => new JsHttpClient(sp)

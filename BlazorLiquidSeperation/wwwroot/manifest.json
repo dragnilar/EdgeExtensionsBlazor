@@ -16,7 +16,8 @@
     "search",
     "storage",
     "bookmarks",
-    "chrome://favicon/*"
+    "chrome://favicon/*",
+    "downloads"
   ],
   "icons": {
     "128": "icons/icon128.png",
