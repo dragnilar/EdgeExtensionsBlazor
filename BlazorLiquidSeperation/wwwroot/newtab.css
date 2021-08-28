@@ -6,6 +6,12 @@
     --main-default-font: "Segoe UI Semibold", Helvetica, SansSerif, serif;
 }
 
+.IndexBackgroundStyle{
+    background-repeat: no-repeat; 
+    background-size: cover;  
+    background-color: #2D2F48
+}
+
 .LoadingHeaderStyle{
     --bs-text-opacity: 1;
     color: rgba(var(--bs-white-rgb), var(--bs-text-opacity)) !important;
@@ -143,10 +149,14 @@
     flex-grow: 1;
     font-size: small;
     font-family:var(--main-default-font);
-    opacity: 0.90;
+    opacity: 0.2;
     color: #D6D6DA;
     height: 55px;
     padding: 10px;
+}
+
+.MuseumCardStyle:hover {
+    opacity: 0.9;
 }
 
 .imageNavigationButtonStyle {
