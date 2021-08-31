@@ -12,23 +12,23 @@ namespace BlazorLiquidSeperation
     {
         private static Dictionary<string, string> SettingsDictionary = new()
         {
-            { StatValues.SearchRegion, "US" },
-            { StatValues.DisplayMode, "1" },
-            { StatValues.ShowWebSearch, "True" },
-            { StatValues.ShowQuickLinks, "True" },
-            { StatValues.ShowRandomImages, "False" },
-            { StatValues.QuickLinkBookMarkFolder, StatValues.DefualtBookmarkFolderName }
+            { SettingsValues.SearchRegion, "US" },
+            { SettingsValues.DisplayMode, "1" },
+            { SettingsValues.ShowWebSearch, "True" },
+            { SettingsValues.ShowQuickLinks, "True" },
+            { SettingsValues.ShowRandomImages, "False" },
+            { SettingsValues.QuickLinkBookMarkFolder, SettingsValues.DefaultBookmarkFolderName }
         };
 
         private static readonly StorageAreaSyncGetKeys StorageKeys = new(
             new List<string>
             {
-                StatValues.SearchRegion,
-                StatValues.DisplayMode,
-                StatValues.ShowWebSearch,
-                StatValues.ShowQuickLinks,
-                StatValues.ShowRandomImages,
-                StatValues.QuickLinkBookMarkFolder
+                SettingsValues.SearchRegion,
+                SettingsValues.DisplayMode,
+                SettingsValues.ShowWebSearch,
+                SettingsValues.ShowQuickLinks,
+                SettingsValues.ShowRandomImages,
+                SettingsValues.QuickLinkBookMarkFolder
             }
         );
 

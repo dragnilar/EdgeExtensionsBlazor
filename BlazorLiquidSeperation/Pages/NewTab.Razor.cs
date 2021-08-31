@@ -32,7 +32,7 @@ namespace BlazorLiquidSeperation.Pages
                 if (value == _quickLinksVisible) return;
                 Console.WriteLine($"Setting show quick links to {value}");
                 _quickLinksVisible = value;
-                Settings.UpdateSetting(StatValues.ShowQuickLinks, value);
+                Settings.UpdateSetting(SettingsValues.ShowQuickLinks, value);
                 Settings.SaveAsync();
             }
         }
@@ -47,20 +47,20 @@ namespace BlazorLiquidSeperation.Pages
                 if (value == _searchVisible) return;
                 Console.WriteLine($"Setting search visible to {value}");
                 _searchVisible = value;
-                Settings.UpdateSetting(StatValues.ShowWebSearch, value);
+                Settings.UpdateSetting(SettingsValues.ShowWebSearch, value);
                 Settings.SaveAsync();
             }
         }
 
         public string QuickLinksFolder
         {
-            get => Settings.GetSettingValue(StatValues.QuickLinkBookMarkFolder);
+            get => Settings.GetSettingValue(SettingsValues.QuickLinkBookMarkFolder);
             set
             {
-                var currentFolderName = Settings.GetSettingValue(StatValues.QuickLinkBookMarkFolder);
+                var currentFolderName = Settings.GetSettingValue(SettingsValues.QuickLinkBookMarkFolder);
                 if (string.IsNullOrWhiteSpace(value) || currentFolderName == value) return;
                 Console.WriteLine($"Setting Quicklinks Folder To {value}");
-                Settings.UpdateSetting(StatValues.QuickLinkBookMarkFolder, value);
+                Settings.UpdateSetting(SettingsValues.QuickLinkBookMarkFolder, value);
                 Settings.SaveAsync();
                 #pragma warning disable 4014
                 SetUpQuickLinks();
@@ -73,15 +73,15 @@ namespace BlazorLiquidSeperation.Pages
             //NOTE - Do NOT get settings until the quick links are set up. The elements need to exist in the dom first or the
             //QuickLinksVisible property will cause a nasty exception because it's trying to work on an HTML element that isn't drawn yet.
             await Settings.LoadSettingsAsync(WebExtensions).ContinueWith(_ => SetUpQuickLinks());
-            QuickLinksVisible = Convert.ToBoolean(Settings.GetSettingValue(StatValues.ShowQuickLinks));
-            SearchVisible = Convert.ToBoolean(Settings.GetSettingValue(StatValues.ShowWebSearch));
+            QuickLinksVisible = Convert.ToBoolean(Settings.GetSettingValue(SettingsValues.ShowQuickLinks));
+            SearchVisible = Convert.ToBoolean(Settings.GetSettingValue(SettingsValues.ShowWebSearch));
         }
 
         private async Task SetUpQuickLinks()
         {
             _quickLinks = new List<QuickLink>();
             var bookMarkNode =
-                await WebExtensions.Bookmarks.Search(Settings.GetSettingValue(StatValues.QuickLinkBookMarkFolder));
+                await WebExtensions.Bookmarks.Search(Settings.GetSettingValue(SettingsValues.QuickLinkBookMarkFolder));
             if (bookMarkNode == null) return;
             var quickLinkBookMarks = await WebExtensions.Bookmarks.GetChildren(bookMarkNode.First().Id);
             _quickLinks.AddRange(quickLinkBookMarks.Select(quickLinkBookMark => new QuickLink
