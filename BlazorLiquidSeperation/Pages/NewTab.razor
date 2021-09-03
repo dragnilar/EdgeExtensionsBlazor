@@ -46,7 +46,7 @@
                             <br/>
                             <label class="form-control-label">Quick Links Bookmark Folder</label>
                             <div class="form-text">
-                                <InputText @bind-Value="QuickLinksFolder" class="SettingsTextEditStyle"></InputText>
+                                <InputText @bind-Value="QuickLinksFolder" class="form-control"></InputText>
                             </div>
                         </EditForm>
                     </form>
@@ -103,7 +103,7 @@
                             </QuickLinkComponent>
                         }
                     }
-                    <EmptyQuickLinkComponent>
+                    <EmptyQuickLinkComponent OnSaveEventCallback="SaveNewQuickLinkClickHandler">
                     </EmptyQuickLinkComponent>
 
                 }

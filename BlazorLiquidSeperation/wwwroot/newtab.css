@@ -258,6 +258,10 @@
     width: 80%
 }
 
+.AddNewQuickLinkLabel{
+    color: ghostwhite;
+}
+
 /* Pre-loading Animation */
 .holder {
     position: absolute;

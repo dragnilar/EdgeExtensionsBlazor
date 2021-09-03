@@ -263,5 +263,11 @@ namespace BlazorLiquidSeperation.Pages
                 Filename = "Image.jpg"
             });
         }
+
+        private async Task SaveNewQuickLinkClickHandler()
+        {
+            Console.WriteLine("Save was clicked on the new quick link modal.");
+            await SetUpQuickLinks();
+        }
     }
 }
