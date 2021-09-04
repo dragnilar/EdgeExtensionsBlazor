@@ -7,7 +7,7 @@
   "web_accessible_resources": [
     "framework/*",
     "BrowserExtensionScripts/*",
-    "WebExtensionsScripts/*"
+    "content/*"
   ],
   "chrome_url_overrides": {
     "newtab": "newtab.html"
