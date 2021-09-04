@@ -57,9 +57,11 @@
     <div class="row" style="margin-right: 0; margin-left: 0; height: 100px">
         <div class="col-8"></div> 
         <div class="col-3">
-            <div class="MuseumCardStyle" >
-                <a style="text-decoration: none; color: ghostwhite" href="@MuseumLink">@MuseumCardText</a>
+        <a style="text-decoration: none; color: ghostwhite" href="@MuseumLink">
+            <div class="MuseumCardStyle">
+                @MuseumCardText
             </div>
+        </a>
         </div>
         <div class="col-1">
             <button class="imageNavigationButtonStyle" @onclick="GetPreviousImage" title="Previous Image">
@@ -71,7 +73,13 @@
         </div>
     </div>
     <div class="row" style="height: 100px">
-        <div class="col"></div>
+        <div class="col">
+        <a style="text-decoration: none; color: ghostwhite" href="@MuseumLink2">
+            <div class="MuseumCardStyle">
+                @MuseumCardText2
+            </div>
+        </a>
+        </div>
         <div class="col"></div>
         <div class="col-6">
             <form @onsubmit="Enter" class="SearchBoxOuterDivStyle" hidden="@(!SearchVisible)">

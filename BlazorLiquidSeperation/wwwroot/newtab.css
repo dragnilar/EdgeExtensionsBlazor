@@ -73,13 +73,6 @@
     background: var(--main-element-bg-color);
 }
 
-.SettingsTextEditStyle{
-    background: var(--main-element-bg-color);
-    color: #D6D6DA;
-    box-shadow: inset 20px 0 4px 2px #4f4f4f;
-    font-family: var(--main-default-font);
-}
-
 /*Search Box Styles*/
 .SearchBoxOuterDivStyle {
     box-shadow: 0 0 2.25px 1px #4f4f4f;
@@ -149,14 +142,14 @@
     flex-grow: 1;
     font-size: small;
     font-family:var(--main-default-font);
-    opacity: 0.2;
+    opacity: 0.1;
     color: #D6D6DA;
-    height: 55px;
+    height: auto;
     padding: 10px;
 }
 
 .MuseumCardStyle:hover {
-    opacity: 0.9;
+    opacity: 0.8;
 }
 
 .imageNavigationButtonStyle {
@@ -256,10 +249,6 @@
     position: relative;
     flex: auto;
     width: 80%
-}
-
-.AddNewQuickLinkLabel{
-    color: ghostwhite;
 }
 
 /* Pre-loading Animation */

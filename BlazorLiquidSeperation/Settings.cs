@@ -17,7 +17,10 @@ namespace BlazorLiquidSeperation
             { SettingsValues.ShowWebSearch, "True" },
             { SettingsValues.ShowQuickLinks, "True" },
             { SettingsValues.ShowRandomImages, "False" },
-            { SettingsValues.QuickLinkBookMarkFolder, SettingsValues.DefaultBookmarkFolderName }
+            { SettingsValues.QuickLinkBookMarkFolder, SettingsValues.DefaultBookmarkFolderName },
+            {SettingsValues.ImageOfTheDayCache, null},
+            {SettingsValues.ImageArchiveCache, null},
+            {SettingsValues.ReQueryImagesAfterTime, "3:00"}
         };
 
         private static readonly StorageAreaSyncGetKeys StorageKeys = new(
@@ -28,7 +31,10 @@ namespace BlazorLiquidSeperation
                 SettingsValues.ShowWebSearch,
                 SettingsValues.ShowQuickLinks,
                 SettingsValues.ShowRandomImages,
-                SettingsValues.QuickLinkBookMarkFolder
+                SettingsValues.QuickLinkBookMarkFolder,
+                SettingsValues.ImageOfTheDayCache,
+                SettingsValues.ImageArchiveCache,
+                SettingsValues.ReQueryImagesAfterTime,
             }
         );
 

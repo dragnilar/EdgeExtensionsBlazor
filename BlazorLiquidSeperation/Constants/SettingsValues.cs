@@ -9,5 +9,8 @@
         public const string ShowRandomImages = "ShowRandomImages";
         public const string QuickLinkBookMarkFolder = "QuickLinkBookmarkFolder";
         public const string DefaultBookmarkFolderName = "Edge Quick Links";
+        public const string ImageOfTheDayCache = "ImageOfTheDayCache";
+        public const string ImageArchiveCache = "ImageArchiveCache";
+        public const string ReQueryImagesAfterTime = "ReQueryImagesAfterTime";
     }
 }

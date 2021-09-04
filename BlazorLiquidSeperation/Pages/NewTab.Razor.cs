@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
+using System.Text.Json;
 using System.Threading.Tasks;
 using BlazorLiquidSeperation.Constants;
 using BlazorLiquidSeperation.Models;
 using Microsoft.JSInterop;
 using WebExtensions.Net.Downloads;
+using WebExtensions.Net.ExtensionTypes;
 
 namespace BlazorLiquidSeperation.Pages
 {
@@ -22,7 +24,9 @@ namespace BlazorLiquidSeperation.Pages
         private string SearchQuery { get; set; }
         public string ImageDownloadLink { get; set; }
         public string MuseumCardText { get; set; }
+        public string MuseumCardText2 { get; set; }
         public string MuseumLink { get; set; }
+        public string MuseumLink2 { get; set; }
 
         public bool QuickLinksVisible
         {
@@ -73,6 +77,7 @@ namespace BlazorLiquidSeperation.Pages
             //NOTE - Do NOT get settings until the quick links are set up. The elements need to exist in the dom first or the
             //QuickLinksVisible property will cause a nasty exception because it's trying to work on an HTML element that isn't drawn yet.
             await Settings.LoadSettingsAsync(WebExtensions).ContinueWith(_ => SetUpQuickLinks());
+            await GetBingImage();
             QuickLinksVisible = Convert.ToBoolean(Settings.GetSettingValue(SettingsValues.ShowQuickLinks));
             SearchVisible = Convert.ToBoolean(Settings.GetSettingValue(SettingsValues.ShowWebSearch));
         }
@@ -97,7 +102,6 @@ namespace BlazorLiquidSeperation.Pages
         {
             if (firstRender)
             {
-                await GetBingImage();
                 await GetBingImageArchive();
             }
 
@@ -108,12 +112,27 @@ namespace BlazorLiquidSeperation.Pages
         {
             try
             {
+                var serializeDto = false;
                 Console.WriteLine("Getting Bing Image 🔍");
-                var bingImageOfTheDayUrl =
-                    "https://api.allorigins.win/raw?url=https%3A//www.bing.com/HPImageArchive.aspx%3Fformat%3Djs%26idx%3D0%26n%3D1%26mkt%3Den-US";
-                Console.WriteLine($"Querying bing image of the day API with the following URL: {bingImageOfTheDayUrl}");
-                _httpClient ??= new HttpClient();
-                var dto = await _httpClient.GetFromJsonAsync<BingImageOfTheDayDto>(bingImageOfTheDayUrl);
+                BingImageOfTheDayDto dto;
+                Console.WriteLine($"Time of day {DateTime.Now.TimeOfDay.Hours.ToString()}");
+                Console.WriteLine(Settings.GetSettingValue(SettingsValues.ImageOfTheDayCache));
+                if (Settings.GetSettingValue(SettingsValues.ImageOfTheDayCache) != null && DateTime.Now.TimeOfDay.Hours > 3)
+                {
+                    dto = JsonSerializer.Deserialize<BingImageOfTheDayDto>(
+                        Settings.GetSettingValue(SettingsValues.ImageOfTheDayCache));
+                }
+                else
+                {
+
+                    var bingImageOfTheDayUrl =
+                        "https://api.allorigins.win/raw?url=https%3A//www.bing.com/HPImageArchive.aspx%3Fformat%3Djs%26idx%3D0%26n%3D1%26mkt%3Den-US";
+                    Console.WriteLine($"Querying bing image of the day API with the following URL: {bingImageOfTheDayUrl}");
+                    _httpClient ??= new HttpClient();
+                    dto = await _httpClient.GetFromJsonAsync<BingImageOfTheDayDto>(bingImageOfTheDayUrl);
+                    serializeDto = true;
+                }
+
                 if (dto != null)
                 {
                     ImageOfTheDay = dto.images[0];
@@ -122,6 +141,15 @@ namespace BlazorLiquidSeperation.Pages
                         await SetBackgroundImage(ImageOfTheDay.url);
                         UpdateMuseumCardForImageOfDay();
                         StateHasChanged();
+                        if (serializeDto)
+                        {
+                            Console.WriteLine("Save DTO");
+                            var serializedCrap = JsonSerializer.Serialize(dto);
+                            Console.WriteLine(serializedCrap);
+                            Settings.UpdateSetting(SettingsValues.ImageOfTheDayCache, serializedCrap);
+                            await Settings.SaveAsync();
+                        }
+
                     }
                     else
                     {
@@ -196,13 +224,17 @@ namespace BlazorLiquidSeperation.Pages
         private void UpdateMuseumCardForImageOfDay()
         {
             MuseumCardText = ImageOfTheDay.title;
-            MuseumLink = $"{ImageOfTheDay.copyrightlink}";
+            MuseumLink = ImageOfTheDay.copyrightlink;
+            MuseumCardText2 = ImageOfTheDay.copyright;
+            MuseumLink2 = $"https://bing.com{ImageOfTheDay.quiz}";
         }
 
         private void UpdateMuseumCardForArchiveImage()
         {
             MuseumCardText = _bingArchiveImages[imageArchiveIndex].title;
             MuseumLink = $"https://bing.com{_bingArchiveImages[imageArchiveIndex].clickUrl}";
+            MuseumCardText2 = _bingArchiveImages[imageArchiveIndex].description;
+            MuseumLink2 = $"https://bing.com{_bingArchiveImages[imageArchiveIndex].clickUrl}";
         }
 
         private string GetImageUrlForIndex(int index)

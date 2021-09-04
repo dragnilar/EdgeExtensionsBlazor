@@ -14,13 +14,13 @@
   <div class="modal-dialog">
     <div class="modal-content M365PopUp">
       <div class="modal-header">
-         <h5 class="modal-title AddNewQuickLinkLabel" id="AddNewQuickLinkModalTitle">Add New Quick Link</h5>
+         <h5 class="modal-title text-secondary" id="AddNewQuickLinkModalTitle">Add New Quick Link</h5>
       </div>
       <div class="modal-body">
         <form Model="this" @onsubmit="SaveNewBookmark">
-          <label for="NewQuickLinkTitleText" class="form-label AddNewQuickLinkLabel">New Quick Link Title: </label>
+          <label for="NewQuickLinkTitleText" class="form-label text-secondary">New Quick Link Title: </label>
           <input @bind-value="NewQuickLinkTitle" id="NewQuickLinkTitleText" class="form-control"/>
-          <label for="NewQuickLinkUrlText" class="form-label AddNewQuickLinkLabel">New Quick Link URL: </label>
+          <label for="NewQuickLinkUrlText" class="form-label text-secondary">New Quick Link URL: </label>
           <input class="form-control" @bind-value="NewQuickLinkUrl" id="NewQuickLinkUrlText" />
         </form>
       </div>
