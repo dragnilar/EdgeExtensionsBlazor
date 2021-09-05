@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
 using System.Threading.Tasks;
 using BlazorLiquidSeperation.Constants;
@@ -10,20 +11,9 @@ namespace BlazorLiquidSeperation
 {
     public static class Settings
     {
-        private static Dictionary<string, string> SettingsDictionary = new()
-        {
-            { SettingsValues.SearchRegion, "US" },
-            { SettingsValues.DisplayMode, "1" },
-            { SettingsValues.ShowWebSearch, "True" },
-            { SettingsValues.ShowQuickLinks, "True" },
-            { SettingsValues.ShowRandomImages, "False" },
-            { SettingsValues.QuickLinkBookMarkFolder, SettingsValues.DefaultBookmarkFolderName },
-            {SettingsValues.ImageOfTheDayCache, null},
-            {SettingsValues.ImageArchiveCache, null},
-            {SettingsValues.ReQueryImagesAfterTime, "3:00"}
-        };
+        private static Dictionary<string, string> SettingsDictionary = InitializeSettings();
 
-        private static readonly StorageAreaSyncGetKeys StorageKeys = new(
+        private static readonly StorageAreaGetKeys StorageKeys = new(
             new List<string>
             {
                 SettingsValues.SearchRegion,
@@ -38,11 +28,28 @@ namespace BlazorLiquidSeperation
             }
         );
 
-        public static StorageAreaSync Storage { get; set; }
+        public static Dictionary<string, string> InitializeSettings()
+        {
+            return new()
+            {
+                { SettingsValues.SearchRegion, "US" },
+                { SettingsValues.DisplayMode, "1" },
+                { SettingsValues.ShowWebSearch, "True" },
+                { SettingsValues.ShowQuickLinks, "True" },
+                { SettingsValues.ShowRandomImages, "False" },
+                { SettingsValues.QuickLinkBookMarkFolder, SettingsValues.DefaultBookmarkFolderName },
+                { SettingsValues.ImageOfTheDayCache, null},
+                { SettingsValues.ImageArchiveCache, null},
+                { SettingsValues.ReQueryImagesAfterTime, DateTime.Now.ToString(CultureInfo.InvariantCulture)}
+            };
+        }
+
+        public static StorageArea Storage { get; set; }
 
         public static string GetSettingValue(string settingKey)
         {
-            return SettingsDictionary[settingKey];
+            var foundSetting = SettingsDictionary.ContainsKey(settingKey) ? SettingsDictionary[settingKey] : null;
+            return foundSetting;
         }
 
         /// <summary>
@@ -52,11 +59,19 @@ namespace BlazorLiquidSeperation
         /// <param name="settingValue"></param>
         public static void UpdateSetting(string settingKey, object settingValue)
         {
-            SettingsDictionary[settingKey] = settingValue.ToString();
+            if (settingValue != null)
+            {
+                SettingsDictionary[settingKey] = settingValue.ToString();
+            }
+            else
+            {
+                SettingsDictionary[settingKey] = null;
+            }
+
         }
 
         /// <summary>
-        ///     Saves the settings dictionary back to the browser sync storage
+        ///     Saves the settings dictionary back to the browser locals storage
         /// </summary>
         /// <returns>A completed ValueTask object</returns>
         public static ValueTask SaveAsync()
@@ -73,7 +88,7 @@ namespace BlazorLiquidSeperation
         public static async Task LoadSettingsAsync(IWebExtensionsApi webApi)
         {
             Console.WriteLine("Loading settings...");
-            Storage ??= await webApi.Storage.GetSync();
+            Storage ??= await webApi.Storage.GetLocal();
             var jsonElement = await Storage.Get(StorageKeys);
             if (jsonElement.ToString() != "{}")
             {
