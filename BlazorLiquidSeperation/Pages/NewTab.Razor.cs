@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -123,6 +124,7 @@ namespace BlazorLiquidSeperation.Pages
                 Console.WriteLine("We got an error. 😡");
                 Console.WriteLine(e);
             }
+            
         }
 
         private async Task ApplyImageOfDayAndcache(BingImageOfTheDayDto dto, bool serializeDto)
@@ -134,6 +136,7 @@ namespace BlazorLiquidSeperation.Pages
             {
                 Console.WriteLine("Serializing and saving DTO since we can cache it.");
                 Settings.UpdateSetting(SettingsValues.ImageOfTheDayCache, JsonSerializer.Serialize(dto));
+                Settings.UpdateSetting(SettingsValues.ReQueryImagesAfterTime, DateTime.Now.ToString(CultureInfo.InvariantCulture));
                 await Settings.SaveAsync();
             }
         }
