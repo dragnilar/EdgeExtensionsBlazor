@@ -25,6 +25,7 @@ namespace BlazorLiquidSeperation
                 SettingsValues.ImageOfTheDayCache,
                 SettingsValues.ImageArchiveCache,
                 SettingsValues.ReQueryImagesAfterTime,
+                SettingsValues.ReQueryArchiveAfterTime
             }
         );
 
@@ -38,9 +39,10 @@ namespace BlazorLiquidSeperation
                 { SettingsValues.ShowQuickLinks, "True" },
                 { SettingsValues.ShowRandomImages, "False" },
                 { SettingsValues.QuickLinkBookMarkFolder, SettingsValues.DefaultBookmarkFolderName },
-                { SettingsValues.ImageOfTheDayCache, null},
-                { SettingsValues.ImageArchiveCache, null},
-                { SettingsValues.ReQueryImagesAfterTime, DateTime.Now.ToString(CultureInfo.InvariantCulture)}
+                { SettingsValues.ImageOfTheDayCache, null },
+                { SettingsValues.ImageArchiveCache, null },
+                { SettingsValues.ReQueryImagesAfterTime, DateTime.Now.ToString(CultureInfo.InvariantCulture) },
+                { SettingsValues.ReQueryArchiveAfterTime, DateTime.Now.ToString(CultureInfo.InvariantCulture) }
             };
         }
 

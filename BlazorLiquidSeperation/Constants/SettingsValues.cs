@@ -12,5 +12,6 @@
         public const string ImageOfTheDayCache = "ImageOfTheDayCache";
         public const string ImageArchiveCache = "ImageArchiveCache";
         public const string ReQueryImagesAfterTime = "ReQueryImagesAfterTime";
+        public const string ReQueryArchiveAfterTime = "ReQueryArchiveAfterTime";
     }
 }
