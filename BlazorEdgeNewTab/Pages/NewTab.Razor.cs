@@ -18,7 +18,6 @@ namespace BlazorEdgeNewTab.Pages
         private List<Image> _bingArchiveImages;
         private HttpClient _httpClient;
         private List<QuickLink> _quickLinks;
-        private bool _quickLinksVisible;
         private int imageArchiveIndex = -1;
         private BingImageOfTheDay ImageOfTheDay;
         private string SearchQuery { get; set; }
@@ -27,50 +26,7 @@ namespace BlazorEdgeNewTab.Pages
         public string MuseumCardText2 { get; set; }
         public string MuseumLink { get; set; }
         public string MuseumLink2 { get; set; }
-
-        public bool QuickLinksVisible
-        {
-            get => _quickLinksVisible;
-            set
-            {
-                if (value == _quickLinksVisible) return;
-                Console.WriteLine($"Setting show quick links to {value}");
-                _quickLinksVisible = value;
-                Settings.UpdateSetting(SettingsValues.ShowQuickLinks, value);
-                Settings.SaveAsync();
-            }
-        }
-
-        private bool _searchVisible { get; set; }
-
-        public bool SearchVisible
-        {
-            get => _searchVisible;
-            set
-            {
-                if (value == _searchVisible) return;
-                Console.WriteLine($"Setting search visible to {value}");
-                _searchVisible = value;
-                Settings.UpdateSetting(SettingsValues.ShowWebSearch, value);
-                Settings.SaveAsync();
-            }
-        }
-
-        public string QuickLinksFolder
-        {
-            get => Settings.GetSettingValue(SettingsValues.QuickLinkBookMarkFolder);
-            set
-            {
-                var currentFolderName = Settings.GetSettingValue(SettingsValues.QuickLinkBookMarkFolder);
-                if (string.IsNullOrWhiteSpace(value) || currentFolderName == value) return;
-                Console.WriteLine($"Setting QuickLinks Folder To {value}");
-                Settings.UpdateSetting(SettingsValues.QuickLinkBookMarkFolder, value);
-                Settings.SaveAsync();
-#pragma warning disable 4014
-                SetUpQuickLinks();
-#pragma warning restore 4014
-            }
-        }
+        public SettingsMenu SettingsMenuNewTab { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -79,8 +35,6 @@ namespace BlazorEdgeNewTab.Pages
             await Settings.LoadSettingsAsync(WebExtensions).ContinueWith(_ => SetUpQuickLinks());
             await GetBingImage();
             await GetBingImageArchive();
-            QuickLinksVisible = Convert.ToBoolean(Settings.GetSettingValue(SettingsValues.ShowQuickLinks));
-            SearchVisible = Convert.ToBoolean(Settings.GetSettingValue(SettingsValues.ShowWebSearch));
         }
 
         private async Task SetUpQuickLinks()
@@ -314,6 +268,12 @@ namespace BlazorEdgeNewTab.Pages
         private async Task SaveNewQuickLinkClickHandler()
         {
             Console.WriteLine("Save was clicked on the new quick link modal.");
+            await SetUpQuickLinks();
+        }
+
+        private async Task QuickLinksFolderChangedHandler()
+        {
+            Console.Write("Quick links folder was changed from settings menu.");
             await SetUpQuickLinks();
         }
     }

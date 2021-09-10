@@ -23,32 +23,7 @@
             </div>
         </div>
         <div class="col-1">
-            <div class="dropdown">
-                <button class="dropdown-toggle TopMenuIconStyle btn" type="button" id="settingsDropDown" data-bs-toggle="dropdown" aria-expanded="false" title="Settings">
-                    <img src="\icons\fluent_gear.png" alt="waffle icon">
-                </button>
-                <div class="dropdown-menu p-4 text-muted M365PopUp" style="min-width: 450px" aria-labelledby="settingsDropDown">
-                    <form class="mb-3">
-                        <h4>Settings</h4>
-                        <EditForm Model="this">
-                            <div class="form-check form-switch">
-                                <InputCheckbox @bind-Value="@QuickLinksVisible" Id="showQuickLinksSwitch" class="form-check-input"/>
-                                <label class="form-check-label" for="showQuickLinksSwitch">Show Quick Links</label>
-                            </div>
-                            <br/>
-                            <div class="form-check form-switch">
-                                <InputCheckbox @bind-Value="@SearchVisible" Id="showSearchSwitch" class="form-check-input"/>
-                                <label class="form-control-label" for="showSearchSwitch">Show Web Search</label>
-                            </div>
-                            <br/>
-                            <label class="form-control-label">Quick Links Bookmark Folder</label>
-                            <div class="form-text">
-                                <InputText @bind-Value="QuickLinksFolder" class="form-control"></InputText>
-                            </div>
-                        </EditForm>
-                    </form>
-                </div>
-            </div>
+            <SettingsMenu @ref="SettingsMenuNewTab" OnQuickLinksFolderChangedCallBack="QuickLinksFolderChangedHandler" ></SettingsMenu>
         </div>
     </div>
     <div class="row" style="margin-right: 0; margin-left: 0; height: 100px">
@@ -79,7 +54,7 @@
         </div>
         <div class="col"></div>
         <div class="col-6">
-            <form @onsubmit="Enter" class="SearchBoxOuterDivStyle" hidden="@(!SearchVisible)">
+            <form @onsubmit="Enter" class="SearchBoxOuterDivStyle" hidden="@(!SettingsMenuNewTab.SearchVisible)">
                 <div class="input-group mb-3 SearchBoxFormStyle">
                     <input class="form-control SearchBoxStyle" type="text" @bind="SearchQuery" placeholder="Search the web" aria-label="Query" aria-describedby="queryButtonAddon">
                     <button class="btn SearchButtonStyle" type="button" id="queryButtonAddon" @onclick="FireSearchEngineQuery">
@@ -89,13 +64,13 @@
             </form>
         </div>
         <div class="col">
-            <img src=".\icons\fluent_download.png" class="TopMenuIconStyle" alt="Click To Download" title="Click to download this image" @onclick="OnDownloadImageClick" hidden="@(!SearchVisible)"/>
+            <img src=".\icons\fluent_download.png" class="TopMenuIconStyle" alt="Click To Download" title="Click to download this image" @onclick="OnDownloadImageClick" hidden="@(!SettingsMenuNewTab.SearchVisible)"/>
         </div>
         <div class="col"></div>
     </div>
     <div class="row" style="height: auto">
         <div class="col">
-            <div class="QuickLinkContainer container-fluid" hidden="@(!QuickLinksVisible)">
+            <div class="QuickLinkContainer container-fluid" hidden="@(!SettingsMenuNewTab.QuickLinksVisible)">
                 @{
                     if (_quickLinks != null)
                     {
