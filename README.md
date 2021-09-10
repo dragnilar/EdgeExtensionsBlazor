@@ -17,4 +17,4 @@ Note:  The extension uses the same APIs that Microsoft uses for Bing via a proxy
 
 - This project has no external dependencies besides the ones Blazor/Asp.NET rely upon and one specific NuGet package for allowing Blazor to to run as a Browser Extension.
 - You can build it using either the Dot Net 5 SDK CLI, JetBrains Rider or Visual Studio 2019 (latest version; edition does not matter).
-- When you build the project, the output folder will contain a wwwroot folder. This is the folder that you need to load for the unpacked extension via your extensions menu in Edge/Chromium
+- When you build the project, the output folder will contain a browserextension folder. This is the folder that you need to load for the unpacked extension via your extensions menu in Edge/Chromium
