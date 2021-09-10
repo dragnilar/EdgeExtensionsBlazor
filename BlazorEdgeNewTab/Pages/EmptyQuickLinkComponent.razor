@@ -1,0 +1,70 @@
+﻿@using BlazorLiquidSeperation.Constants
+@using WebExtensions.Net.Bookmarks
+@inherits BasePage;
+
+<button class="QuickLinkContent" title="Add Quick Link">
+    <div class="QuickLinkBookMarkImageContainer" data-bs-toggle="modal" data-bs-target="#AddNewQuickLinkModal">
+        <div style="font-size: x-large">+</div>
+    </div>
+    <br>
+    <span class="QuickLinkTitle">Add Quick Link</span>
+</button>
+
+<div class="modal fade" id="AddNewQuickLinkModal" tabindex="-1" aria-labelledby="AddNewQuickLinkModalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content M365PopUp">
+            <div class="modal-header">
+                <h5 class="modal-title text-secondary" id="AddNewQuickLinkModalTitle">Add New Quick Link</h5>
+            </div>
+            <div class="modal-body">
+                <form Model="this" @onsubmit="SaveNewBookmark">
+                    <label for="NewQuickLinkTitleText" class="form-label text-secondary">New Quick Link Title: </label>
+                    <input @bind-value="NewQuickLinkTitle" id="NewQuickLinkTitleText" class="form-control"/>
+                    <label for="NewQuickLinkUrlText" class="form-label text-secondary">New Quick Link URL: </label>
+                    <input class="form-control" @bind-value="NewQuickLinkUrl" id="NewQuickLinkUrlText"/>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" data-bs-dismiss="modal" disabled="@IsDisabled" class="btn btn-primary" @onclick="SaveNewBookmark">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [Parameter]
+    public EventCallback OnSaveEventCallback { get; set; }
+
+    public string NewQuickLinkTitle { get; set; }
+    public string NewQuickLinkUrl { get; set; }
+
+    public bool IsDisabled
+    {
+        get
+        {
+            if (string.IsNullOrWhiteSpace(NewQuickLinkTitle) || string.IsNullOrWhiteSpace(NewQuickLinkUrl))
+                return true;
+            return !Uri.IsWellFormedUriString(NewQuickLinkUrl, UriKind.Absolute);
+        }
+    }
+
+    private async Task SaveNewBookmark()
+    {
+        var bookMarkNode =
+            await WebExtensions.Bookmarks.Search(Settings.GetSettingValue(SettingsValues.QuickLinkBookMarkFolder));
+        var bookmarkTreeNodes = bookMarkNode.ToList();
+        if (bookmarkTreeNodes.Count() == 1)
+        {
+            await WebExtensions.Bookmarks.Create(new CreateDetails
+            {
+                Title = NewQuickLinkTitle,
+                Url = NewQuickLinkUrl,
+                ParentId = bookmarkTreeNodes.First().Id
+            });
+            await OnSaveEventCallback.InvokeAsync();
+        }
+    }
+
+}

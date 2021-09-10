@@ -1,0 +1,118 @@
+﻿@page "/newtab.html"
+@inherits BasePage;
+@inject IJSRuntime JS;
+
+<div class="container-fluid" xmlns="http://www.w3.org/1999/html">
+    <div class="row" style="height: 75px">
+        <div class="col">
+            <div class="dropdown">
+                <button class="dropdown-toggle TopMenuIconStyle btn" type="button" id="waffleDropDown" data-bs-toggle="dropdown" aria-expanded="false" title="Microsoft 365 Sites/Apps">
+                    <img src="\icons\fluent_square_menu.png" alt="waffle icon">
+                </button>
+                <div class="dropdown-menu p-4 text-muted M365PopUp" style="min-width: 350px" aria-labelledby="waffleDropDown">
+                    <MS635Menu></MS635Menu>
+                </div>
+            </div>
+        </div>
+        <div class="col-5"></div>
+        <div class="col-1">
+            <div>
+                <a href="https://rewards.microsoft.com/?FORM=ANNRW1&redref=amc" class="TopMenuIconStyle btn" title="Go To Microsoft Rewards Site">
+                    <img src=".\icons\fluent_medal.png" alt="Click for Microsoft Rewards" class="TopMenuRewardsStyle">
+                </a>
+            </div>
+        </div>
+        <div class="col-1">
+            <div class="dropdown">
+                <button class="dropdown-toggle TopMenuIconStyle btn" type="button" id="settingsDropDown" data-bs-toggle="dropdown" aria-expanded="false" title="Settings">
+                    <img src="\icons\fluent_gear.png" alt="waffle icon">
+                </button>
+                <div class="dropdown-menu p-4 text-muted M365PopUp" style="min-width: 450px" aria-labelledby="settingsDropDown">
+                    <form class="mb-3">
+                        <h4>Settings</h4>
+                        <EditForm Model="this">
+                            <div class="form-check form-switch">
+                                <InputCheckbox @bind-Value="@QuickLinksVisible" Id="showQuickLinksSwitch" class="form-check-input"/>
+                                <label class="form-check-label" for="showQuickLinksSwitch">Show Quick Links</label>
+                            </div>
+                            <br/>
+                            <div class="form-check form-switch">
+                                <InputCheckbox @bind-Value="@SearchVisible" Id="showSearchSwitch" class="form-check-input"/>
+                                <label class="form-control-label" for="showSearchSwitch">Show Web Search</label>
+                            </div>
+                            <br/>
+                            <label class="form-control-label">Quick Links Bookmark Folder</label>
+                            <div class="form-text">
+                                <InputText @bind-Value="QuickLinksFolder" class="form-control"></InputText>
+                            </div>
+                        </EditForm>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" style="margin-right: 0; margin-left: 0; height: 100px">
+        <div class="col-8"></div>
+        <div class="col-3">
+            <a style="text-decoration: none; color: ghostwhite" href="@MuseumLink">
+                <div class="MuseumCardStyle">
+                    @MuseumCardText
+                </div>
+            </a>
+        </div>
+        <div class="col-1">
+            <button class="imageNavigationButtonStyle" @onclick="GetPreviousImage" title="Previous Image">
+                <img class="imageNavChevronStyle" src="icons/fluent_backward.png" alt="&lt;"/>
+            </button>
+            <button class="imageNavigationButtonStyle" @onclick="GetNextImage" title="Next Image">
+                <img class="imageNavChevronStyle" src="icons/fluent_forward.png" alt="&gt;"/>
+            </button>
+        </div>
+    </div>
+    <div class="row" style="height: 100px">
+        <div class="col">
+            <a style="text-decoration: none; color: ghostwhite" href="@MuseumLink2">
+                <div class="MuseumCardStyle">
+                    @MuseumCardText2
+                </div>
+            </a>
+        </div>
+        <div class="col"></div>
+        <div class="col-6">
+            <form @onsubmit="Enter" class="SearchBoxOuterDivStyle" hidden="@(!SearchVisible)">
+                <div class="input-group mb-3 SearchBoxFormStyle">
+                    <input class="form-control SearchBoxStyle" type="text" @bind="SearchQuery" placeholder="Search the web" aria-label="Query" aria-describedby="queryButtonAddon">
+                    <button class="btn SearchButtonStyle" type="button" id="queryButtonAddon" @onclick="FireSearchEngineQuery">
+                        <img alt="Search Icon" src="./icons/fluent_search.png"/>
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="col">
+            <img src=".\icons\fluent_download.png" class="TopMenuIconStyle" alt="Click To Download" title="Click to download this image" @onclick="OnDownloadImageClick" hidden="@(!SearchVisible)"/>
+        </div>
+        <div class="col"></div>
+    </div>
+    <div class="row" style="height: auto">
+        <div class="col">
+            <div class="QuickLinkContainer container-fluid" hidden="@(!QuickLinksVisible)">
+                @{
+                    if (_quickLinks != null)
+                    {
+                        foreach (var quickLink in _quickLinks)
+                        {
+                            <QuickLinkComponent
+                                QuickLinkTitle="@GetQuickLinkName(quickLink.QuickLinkTitle)"
+                                QuickLinkUrl="@quickLink.QuickLinkUrl"
+                                QuickLinkImageUrl="@quickLink.QuickLinkImageUrl">
+                            </QuickLinkComponent>
+                        }
+                    }
+                    <EmptyQuickLinkComponent OnSaveEventCallback="SaveNewQuickLinkClickHandler">
+                    </EmptyQuickLinkComponent>
+
+                }
+            </div>
+        </div>
+    </div>
+</div>
