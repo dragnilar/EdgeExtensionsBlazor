@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using BlazorLiquidSeperation.Constants;
 using BlazorLiquidSeperation.Models;
 using Microsoft.JSInterop;
+using WebExtensions.Net.Bookmarks;
 using WebExtensions.Net.Downloads;
 
 namespace BlazorEdgeNewTab.Pages
@@ -20,6 +21,8 @@ namespace BlazorEdgeNewTab.Pages
         private List<QuickLink> _quickLinks;
         private int imageArchiveIndex = -1;
         private BingImageOfTheDay ImageOfTheDay;
+        private bool _searchVisible;
+        private bool _quickLinksVisible; 
         private string SearchQuery { get; set; }
         public string ImageDownloadLink { get; set; }
         public string MuseumCardText { get; set; }
@@ -35,6 +38,16 @@ namespace BlazorEdgeNewTab.Pages
             await Settings.LoadSettingsAsync(WebExtensions).ContinueWith(_ => SetUpQuickLinks());
             await GetBingImage();
             await GetBingImageArchive();
+        }
+
+        protected override Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                _searchVisible = SettingsMenuNewTab.SearchVisible;
+                _quickLinksVisible = SettingsMenuNewTab.QuickLinksVisible;
+            }
+            return base.OnAfterRenderAsync(firstRender);
         }
 
         private async Task SetUpQuickLinks()
@@ -275,6 +288,18 @@ namespace BlazorEdgeNewTab.Pages
         {
             Console.Write("Quick links folder was changed from settings menu.");
             await SetUpQuickLinks();
+        }
+
+        private void SearchVisibleChanged()
+        {
+            Console.WriteLine("Search visible changed");
+            _searchVisible = SettingsMenuNewTab.SearchVisible;
+        }
+
+        private void QuickLinksVisibleChanged()
+        {
+            Console.WriteLine("Quick Links visible changed");
+            _quickLinksVisible = SettingsMenuNewTab.QuickLinksVisible;
         }
     }
 }

@@ -23,7 +23,9 @@
             </div>
         </div>
         <div class="col-1">
-            <SettingsMenu @ref="SettingsMenuNewTab" OnQuickLinksFolderChangedCallBack="QuickLinksFolderChangedHandler" ></SettingsMenu>
+            <SettingsMenu @ref="SettingsMenuNewTab" OnQuickLinksFolderChangedCallBack="QuickLinksFolderChangedHandler"
+                          OnSearchVisibleChangedCallBack="SearchVisibleChanged"
+                          OnQuickLinksVisibleChangedCallBack="QuickLinksVisibleChanged"></SettingsMenu>
         </div>
     </div>
     <div class="row" style="margin-right: 0; margin-left: 0; height: 100px">
@@ -54,7 +56,7 @@
         </div>
         <div class="col"></div>
         <div class="col-6">
-            <form @onsubmit="Enter" class="SearchBoxOuterDivStyle" hidden="@(!SettingsMenuNewTab.SearchVisible)">
+            <form @onsubmit="Enter" class="SearchBoxOuterDivStyle" hidden="@(!_searchVisible)">
                 <div class="input-group mb-3 SearchBoxFormStyle">
                     <input class="form-control SearchBoxStyle" type="text" @bind="SearchQuery" placeholder="Search the web" aria-label="Query" aria-describedby="queryButtonAddon">
                     <button class="btn SearchButtonStyle" type="button" id="queryButtonAddon" @onclick="FireSearchEngineQuery">
@@ -64,13 +66,13 @@
             </form>
         </div>
         <div class="col">
-            <img src=".\icons\fluent_download.png" class="TopMenuIconStyle" alt="Click To Download" title="Click to download this image" @onclick="OnDownloadImageClick" hidden="@(!SettingsMenuNewTab.SearchVisible)"/>
+            <img src=".\icons\fluent_download.png" class="TopMenuIconStyle" alt="Click To Download" title="Click to download this image" @onclick="OnDownloadImageClick" hidden="@(!_searchVisible)"/>
         </div>
         <div class="col"></div>
     </div>
     <div class="row" style="height: auto">
         <div class="col">
-            <div class="QuickLinkContainer container-fluid" hidden="@(!SettingsMenuNewTab.QuickLinksVisible)">
+            <div class="QuickLinkContainer container-fluid" hidden="@(!_quickLinksVisible)">
                 @{
                     if (_quickLinks != null)
                     {

@@ -18,8 +18,10 @@
                 </div>
                 <br/>
                 <label class="form-control-label">Quick Links Bookmark Folder</label>
+                <br/>
+                <label>(sub folders are ignored)</label>
                 <div class="form-text">
-                    <InputText @bind-Value="QuickLinksFolder" class="form-control"></InputText>
+                   <InputText @bind-Value="QuickLinksFolder" class="form-control"></InputText>
                 </div>
             </EditForm>
         </form>
@@ -30,6 +32,10 @@
 
     [Parameter]
     public EventCallback OnQuickLinksFolderChangedCallBack { get; set; }
+    [Parameter]
+    public EventCallback OnQuickLinksVisibleChangedCallBack { get; set; }
+    [Parameter]
+    public EventCallback OnSearchVisibleChangedCallBack { get; set; }
 
     private bool _quickLinksVisible { get; set; }
     public bool QuickLinksVisible
@@ -42,6 +48,7 @@
             _quickLinksVisible = value;
             Settings.UpdateSetting(SettingsValues.ShowQuickLinks, value);
             Settings.SaveAsync();
+            OnQuickLinksVisibleChangedCallBack.InvokeAsync();
         }
     }
     private bool _searchVisible { get; set; }
@@ -55,6 +62,7 @@
             _searchVisible = value;
             Settings.UpdateSetting(SettingsValues.ShowWebSearch, value);
             Settings.SaveAsync();
+            OnSearchVisibleChangedCallBack.InvokeAsync();
         }
     }
     public string QuickLinksFolder
@@ -70,12 +78,12 @@
             OnQuickLinksFolderChangedCallBack.InvokeAsync();
         }
     }
-    
-    protected override Task OnInitializedAsync()
+
+    protected override void OnAfterRender(bool firstRender)
     {
         QuickLinksVisible = Convert.ToBoolean(Settings.GetSettingValue(SettingsValues.ShowQuickLinks));
         SearchVisible = Convert.ToBoolean(Settings.GetSettingValue(SettingsValues.ShowWebSearch));
-        return base.OnInitializedAsync();
+        base.OnAfterRender(firstRender);
     }
 
 }
