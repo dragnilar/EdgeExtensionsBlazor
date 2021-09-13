@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BlazorLiquidSeperation.Models
+namespace BlazorEdgeNewTab.Models
 {
     public class Data
     {

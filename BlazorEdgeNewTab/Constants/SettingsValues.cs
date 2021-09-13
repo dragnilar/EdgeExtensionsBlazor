@@ -1,4 +1,4 @@
-﻿namespace BlazorLiquidSeperation.Constants
+﻿namespace BlazorEdgeNewTab.Constants
 {
     public static class SettingsValues
     {

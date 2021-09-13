@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using WebExtensions.Net.Storage;
 
-namespace BlazorLiquidSeperation.Models
+namespace BlazorEdgeNewTab.Models
 {
     public static class ExtensionSettings
     {

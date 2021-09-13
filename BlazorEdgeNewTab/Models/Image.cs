@@ -1,4 +1,4 @@
-﻿namespace BlazorLiquidSeperation.Models
+﻿namespace BlazorEdgeNewTab.Models
 {
     public class Image
     {
