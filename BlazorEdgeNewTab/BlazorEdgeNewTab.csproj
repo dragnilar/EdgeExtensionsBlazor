@@ -8,9 +8,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Blazor.BrowserExtension" Version="0.6.1" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.9" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.9" PrivateAssets="all" />
+        <PackageReference Include="Blazor.BrowserExtension" Version="0.6.3" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.10" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.10" PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup>

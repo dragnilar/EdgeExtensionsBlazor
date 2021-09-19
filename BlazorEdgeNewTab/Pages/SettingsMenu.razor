@@ -21,7 +21,10 @@
                 <br/>
                 <label>(sub folders are ignored)</label>
                 <div class="form-text">
-                   <InputText @bind-Value="QuickLinksFolder" class="form-control"></InputText>
+                    <InputText @bind-Value="QuickLinksFolder" class="form-control"></InputText>
+                </div>
+                <div>
+                    <button @onclick="ResetSettings"></button>
                 </div>
             </EditForm>
         </form>
@@ -36,6 +39,8 @@
     public EventCallback OnQuickLinksVisibleChangedCallBack { get; set; }
     [Parameter]
     public EventCallback OnSearchVisibleChangedCallBack { get; set; }
+    [Parameter]
+    public EventCallback OnSettingsResetCallBack { get; set; }
 
     private bool _quickLinksVisible { get; set; }
     public bool QuickLinksVisible
@@ -84,6 +89,13 @@
         QuickLinksVisible = Convert.ToBoolean(Settings.GetSettingValue(SettingsValues.ShowQuickLinks));
         SearchVisible = Convert.ToBoolean(Settings.GetSettingValue(SettingsValues.ShowWebSearch));
         base.OnAfterRender(firstRender);
+    }
+
+    private void ResetSettings()
+    {
+        Settings.InitializeSettings();
+        Settings.SaveAsync();
+        OnSettingsResetCallBack.InvokeAsync();
     }
 
 }

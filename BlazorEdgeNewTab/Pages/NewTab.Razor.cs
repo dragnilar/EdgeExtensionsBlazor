@@ -120,6 +120,7 @@ namespace BlazorEdgeNewTab.Pages
                 Console.WriteLine("Getting image of the day data from cache...");
                 dto = JsonSerializer.Deserialize<BingImageOfTheDayDto>(
                     Settings.GetSettingValue(SettingsValues.ImageOfTheDayCache));
+                Console.Write($"Image of Day Json From Da Cache:{Settings.GetSettingValue(SettingsValues.ImageOfTheDayCache).ToString()}");
             }
             else
             {
