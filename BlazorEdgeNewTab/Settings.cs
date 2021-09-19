@@ -48,6 +48,11 @@ namespace BlazorEdgeNewTab
             };
         }
 
+        public static void ResetSettings()
+        {
+            SettingsDictionary = InitializeSettings();
+        }
+
         public static string GetSettingValue(string settingKey)
         {
             var foundSetting = SettingsDictionary.ContainsKey(settingKey) ? SettingsDictionary[settingKey] : null;
@@ -104,5 +109,6 @@ namespace BlazorEdgeNewTab
         {
             SettingsDictionary = keyValuePairs;
         }
+        
     }
 }

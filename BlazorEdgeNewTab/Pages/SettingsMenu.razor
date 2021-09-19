@@ -24,7 +24,7 @@
                     <InputText @bind-Value="QuickLinksFolder" class="form-control"></InputText>
                 </div>
                 <div>
-                    <button @onclick="ResetSettings"></button>
+                    <button class="btn btn-primary" @onclick="ResetSettings">Reset Settings</button>
                 </div>
             </EditForm>
         </form>
@@ -39,8 +39,6 @@
     public EventCallback OnQuickLinksVisibleChangedCallBack { get; set; }
     [Parameter]
     public EventCallback OnSearchVisibleChangedCallBack { get; set; }
-    [Parameter]
-    public EventCallback OnSettingsResetCallBack { get; set; }
 
     private bool _quickLinksVisible { get; set; }
     public bool QuickLinksVisible
@@ -93,9 +91,8 @@
 
     private void ResetSettings()
     {
-        Settings.InitializeSettings();
+        Settings.ResetSettings();
         Settings.SaveAsync();
-        OnSettingsResetCallBack.InvokeAsync();
     }
 
 }
