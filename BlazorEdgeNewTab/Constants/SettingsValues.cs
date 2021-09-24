@@ -1,4 +1,6 @@
-﻿namespace BlazorEdgeNewTab.Constants
+﻿using System;
+
+namespace BlazorEdgeNewTab.Constants
 {
     public static class SettingsValues
     {
@@ -13,5 +15,6 @@
         public const string ImageArchiveCache = "ImageArchiveCache";
         public const string ReQueryImagesAfterTime = "ReQueryImagesAfterTime";
         public const string ReQueryArchiveAfterTime = "ReQueryArchiveAfterTime";
+        public static DateTime DefaultRequeryDateTime = new(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 6, 0, 0);
     }
 }

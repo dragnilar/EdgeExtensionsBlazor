@@ -1,6 +1,8 @@
 ﻿@page "/newtab.html"
+@using BlazorEdgeNewTab.Services.Interfaces
 @inherits BasePage;
 @inject IJSRuntime JS;
+@inject INewTabService NewTabService;
 
 <div class="container-fluid" xmlns="http://www.w3.org/1999/html">
     <div class="row" style="height: 75px">
