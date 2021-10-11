@@ -20,13 +20,13 @@ namespace BlazorEdgeNewTab.Services
             BingImageOfTheDayDto dto;
             var reQueryTime = Convert.ToDateTime(Settings.GetSettingValue(SettingsValues.ReQueryImagesAfterTime)
                                                  ?? DateTime.Now.AddDays(-1).ToString(CultureInfo.InvariantCulture));
+            Console.WriteLine($"Requery date/time for image of day: {reQueryTime.ToString()}");
             if (Settings.GetSettingValue(SettingsValues.ImageOfTheDayCache) != null &&
-                DateTime.Now >= reQueryTime)
+                DateTime.Now.Date <= reQueryTime.Date)
             {
                 Console.WriteLine("Getting image of the day data from cache...");
                 dto = JsonSerializer.Deserialize<BingImageOfTheDayDto>(
                     Settings.GetSettingValue(SettingsValues.ImageOfTheDayCache));
-                Console.Write($"Image of Day Json From Da Cache:{Settings.GetSettingValue(SettingsValues.ImageOfTheDayCache).ToString()}");
             }
             else
             {
@@ -35,7 +35,7 @@ namespace BlazorEdgeNewTab.Services
                 _httpClient ??= new HttpClient();
                 dto = await _httpClient.GetFromJsonAsync<BingImageOfTheDayDto>(bingImageOfTheDayUrl);
                 Settings.UpdateSetting(SettingsValues.ImageOfTheDayCache, JsonSerializer.Serialize(dto));
-                Settings.UpdateSetting(SettingsValues.ReQueryImagesAfterTime, SettingsValues.DefaultRequeryDateTime.ToString(CultureInfo.InvariantCulture));
+                Settings.UpdateSetting(SettingsValues.ReQueryImagesAfterTime, DateTime.Now.ToString(CultureInfo.InvariantCulture));
                 await Settings.SaveAsync();
             }
 
@@ -47,6 +47,7 @@ namespace BlazorEdgeNewTab.Services
             List<Image> imageArchives;
             var reQueryTime = Convert.ToDateTime(Settings.GetSettingValue(SettingsValues.ReQueryArchiveAfterTime)
                                                  ?? DateTime.Now.AddDays(-1).ToString(CultureInfo.InvariantCulture));
+            Console.WriteLine($"Requery date/time for image archive: {reQueryTime.ToString()}");
             if (Settings.GetSettingValue(SettingsValues.ImageArchiveCache) != null &&
                 DateTime.Now.Date <= reQueryTime.Date)
             {
@@ -65,7 +66,7 @@ namespace BlazorEdgeNewTab.Services
                 imageArchives = dto?.data.images.ToList();
                 Console.WriteLine("Caching image archive data....");
                 Settings.UpdateSetting(SettingsValues.ImageArchiveCache, JsonSerializer.Serialize(imageArchives));
-                Settings.UpdateSetting(SettingsValues.ReQueryArchiveAfterTime, SettingsValues.DefaultRequeryDateTime.ToString(CultureInfo.InvariantCulture));
+                Settings.UpdateSetting(SettingsValues.ReQueryArchiveAfterTime, DateTime.Now.ToString(CultureInfo.InvariantCulture));
                 await Settings.SaveAsync();
             }
 
