@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using BlazorEdgeNewTab.Constants;
 using BlazorEdgeNewTab.Models;
+using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using WebExtensions.Net.Bookmarks;
 using WebExtensions.Net.Downloads;
@@ -61,7 +62,8 @@ namespace BlazorEdgeNewTab.Pages
             {
                 QuickLinkTitle = quickLinkBookMark.Title,
                 QuickLinkImageUrl = "chrome://favicon/size/64/" + quickLinkBookMark.Url,
-                QuickLinkUrl = quickLinkBookMark.Url
+                QuickLinkUrl = quickLinkBookMark.Url,
+                QuickLinkId = quickLinkBookMark.Id
             }));
             StateHasChanged();
         }
@@ -281,25 +283,27 @@ namespace BlazorEdgeNewTab.Pages
 
         private async Task SaveNewQuickLinkClickHandler()
         {
-            Console.WriteLine("Save was clicked on the new quick link modal.");
             await SetUpQuickLinks();
         }
 
         private async Task QuickLinksFolderChangedHandler()
         {
-            Console.Write("Quick links folder was changed from settings menu.");
+            await SetUpQuickLinks();
+        }
+
+        public async Task DeleteQuickLink(string quickLinkId)
+        {
+            await WebExtensions.Bookmarks.Remove(quickLinkId);
             await SetUpQuickLinks();
         }
 
         private void SearchVisibleChanged()
         {
-            Console.WriteLine("Search visible changed");
             _searchVisible = SettingsMenuNewTab.SearchVisible;
         }
 
         private void QuickLinksVisibleChanged()
         {
-            Console.WriteLine("Quick Links visible changed");
             _quickLinksVisible = SettingsMenuNewTab.QuickLinksVisible;
         }
     }

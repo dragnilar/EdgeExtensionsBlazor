@@ -137,6 +137,27 @@
     border: 2px solid #D6D6DA;
 }
 
+.DownloadButtonStyle {
+    border: none;
+    background: transparent;
+    opacity: 0.1;
+    transition: all 0.1s ease-in-out;
+}
+
+.DownloadButtonStyle:hover {
+    opacity: 0.90;
+    background: var(--main-bg-hover);
+    border-radius: 4px;
+}
+
+.DownloadButtonStyle:active {
+    border-color: #7E7F80;
+    border-width: 2px;
+    border-style: solid;
+    border-radius: 4px;
+    background: transparent;
+}
+
 /*Image navigation button styles*/
 
 .MuseumCardStyle {
@@ -195,10 +216,11 @@
 .QuickLinkContent {
     height: 100px;
     background: transparent;
-    width: 100px;
+    width: 110px;
     flex-direction: column;
     box-sizing: border-box;
     border-radius: 4px;
+    display: inline;
     border-style: none;
     border-width: 2px;
     position: relative;
@@ -212,6 +234,30 @@
 .QuickLinkContent:hover {
     opacity: 0.90;
     background: var(--main-bg-hover);
+}
+
+.QuickLinkDeleteButton{
+    position: relative;
+    display: inline;
+    top: 5%;
+    z-index: 10;
+    right:25%;
+    opacity: 0.05;
+    filter:invert(100%);
+    border: 2px solid;
+    border-radius: 50px;
+    height: 20px;
+    width: 22px;
+    transition: ease-in;
+    
+}
+
+.QuickLinkDeleteButton:hover{
+    opacity: 0.6;
+}
+
+.QuickLinkDeleteButton:active{
+    opacity: 0.8;
 }
 
 .QuickLinkBookMarkImageContainer {
@@ -250,9 +296,9 @@
 }
 
 .QuickLinkContainer {
-    position: relative;
-    flex: auto;
-    width: 80%
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 /* Pre-loading Animation */

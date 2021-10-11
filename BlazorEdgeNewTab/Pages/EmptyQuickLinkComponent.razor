@@ -1,5 +1,6 @@
 ﻿@using BlazorEdgeNewTab.Constants
 @using WebExtensions.Net.Bookmarks
+@using WebExtensions.Net.Tabs
 @inherits BasePage;
 
 <button class="QuickLinkContent" title="Add Quick Link">
@@ -7,7 +8,7 @@
         <div style="font-size: x-large">+</div>
     </div>
     <br>
-    <span class="QuickLinkTitle">Add Quick Link</span>
+    <span class="QuickLinkTitle" data-bs-toggle="modal" data-bs-target="#AddNewQuickLinkModal" >Add Quick Link</span>
 </button>
 
 <div class="modal fade" id="AddNewQuickLinkModal" tabindex="-1" aria-labelledby="AddNewQuickLinkModalTitle" aria-hidden="true">
@@ -63,6 +64,8 @@
                 Url = NewQuickLinkUrl,
                 ParentId = bookmarkTreeNodes.First().Id
             });
+            NewQuickLinkTitle = string.Empty;
+            NewQuickLinkUrl = string.Empty;
             await OnSaveEventCallback.InvokeAsync();
         }
     }

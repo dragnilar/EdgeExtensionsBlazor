@@ -29,7 +29,7 @@
         </div>
     </div>
     <div class="row" style="margin-right: 0; margin-left: 0; height: 100px">
-        <div class="col-7"></div>
+        <div class="col-6"></div>
         <div class="col-3">
             <a style="text-decoration: none; color: ghostwhite" href="@MuseumLink">
                 <div class="MuseumCardStyle">
@@ -37,7 +37,7 @@
                 </div>
             </a>
         </div>
-        <div class="col-2">
+        <div class="col-3">
             <button class="imageNavigationButtonStyle" @onclick="GetPreviousImage" title="Previous Image">
                 <img class="imageNavChevronStyle" src="icons/fluent_backward.png" alt="&lt;"/>
             </button>
@@ -66,30 +66,35 @@
             </form>
         </div>
         <div class="col">
-            <img src=".\icons\fluent_download.png" class="TopMenuIconStyle" alt="Click To Download" title="Click to download this image" @onclick="OnDownloadImageClick" hidden="@(!_searchVisible)"/>
+            <img src=".\icons\fluent_download.png" class="DownloadButtonStyle" alt="Click To Download" title="Click to download this image" @onclick="OnDownloadImageClick" hidden="@(!_searchVisible)"/>
         </div>
         <div class="col"></div>
     </div>
+    <div class="row" style="height: 30px"></div>
     <div class="row" style="height: auto">
         <div class="col">
-            <div class="QuickLinkContainer container-fluid" hidden="@(!_quickLinksVisible)">
-                @{
-                    if (_quickLinks != null)
-                    {
-                        foreach (var quickLink in _quickLinks)
+            <CascadingValue Value="this">
+                <div class="QuickLinkContainer container-fluid" hidden="@(!_quickLinksVisible)">
+                    @{
+                        if (_quickLinks != null)
                         {
-                            <QuickLinkComponent
-                                QuickLinkTitle="@GetQuickLinkName(quickLink.QuickLinkTitle)"
-                                QuickLinkUrl="@quickLink.QuickLinkUrl"
-                                QuickLinkImageUrl="@quickLink.QuickLinkImageUrl">
-                            </QuickLinkComponent>
+                            foreach (var quickLink in _quickLinks)
+                            {
+                                <QuickLinkComponent
+                                    QuickLinkTitle="@GetQuickLinkName(quickLink.QuickLinkTitle)"
+                                    QuickLinkUrl="@quickLink.QuickLinkUrl"
+                                    QuickLinkId = "@quickLink.QuickLinkId"
+                                    QuickLinkImageUrl="@quickLink.QuickLinkImageUrl">
+                                </QuickLinkComponent>
+                            }
                         }
-                    }
-                    <EmptyQuickLinkComponent OnSaveEventCallback="SaveNewQuickLinkClickHandler">
-                    </EmptyQuickLinkComponent>
+                        <EmptyQuickLinkComponent OnSaveEventCallback="SaveNewQuickLinkClickHandler">
+                        </EmptyQuickLinkComponent>
 
-                }
-            </div>
+                    }
+                </div>
+            </CascadingValue>
+
         </div>
     </div>
 </div>

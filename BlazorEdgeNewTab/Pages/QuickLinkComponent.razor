@@ -1,15 +1,32 @@
 ﻿@inject NavigationManager NavigationManager;
+@using BlazorEdgeNewTab.Constants
 
-<button class="QuickLinkContent" @onclick="FireQuickLink" title="@QuickLinkUrl">
-    <div class="QuickLinkBookMarkImageContainer">
-        <img src="@QuickLinkImageUrl" class="QuickLinkBookMarkImage" alt="@QuickLinkTitle"/>
+<div>
+    <button class="QuickLinkContent" @onclick="(OnQuickLinkClicked)">
+        <div class="QuickLinkBookMarkImageContainer" @onclick="(OnQuickLinkClicked)">
+            <img src="@QuickLinkImageUrl" class="QuickLinkBookMarkImage" alt="@QuickLinkTitle" title="@QuickLinkUrl"/>
+        </div>
+        <br>
+        <span class="QuickLinkTitle" title="@QuickLinkUrl"  @onclick="(OnQuickLinkClicked)">@QuickLinkTitle</span>
+    </button>
+    <img class="QuickLinkDeleteButton" src="icons\fluent_ellipsis.png" alt="Delete This Quick link" title="Delete this Quick Link" data-bs-toggle="modal" data-bs-target="#@ModalName"/>
+</div>
+
+<div class="modal fade" id="@ModalName" tabindex="-1" aria-labelledby="DeleteQuickLinkModalTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content M365PopUp">
+            <div class="modal-header">
+                <h5 class="modal-title text-secondary" id="DeleteQuickLinkModalTitle">Delete This Quick Link?</h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" data-bs-dismiss="modal" class="btn btn-primary" @onclick="DeleteQuickLink">Yes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+            </div>
+        </div>
     </div>
-    <br>
-    <span class="QuickLinkTitle">@QuickLinkTitle</span>
-</button>
-
+</div>
 @code {
-
+    
     [Parameter]
     public string QuickLinkUrl { get; set; }
 
@@ -18,10 +35,21 @@
 
     [Parameter]
     public string QuickLinkTitle { get; set; }
+    [Parameter]
+    public string QuickLinkId { get; set; }
+    [CascadingParameter]
+    public NewTab NewTabPage { get; set; }
 
-    private void FireQuickLink()
+    public string ModalName => $"DeleteQuickLinkModalFor{QuickLinkId}";
+
+    private void OnQuickLinkClicked()
     {
         NavigationManager.NavigateTo(QuickLinkUrl);
+    }
+
+    private async Task DeleteQuickLink()
+    {
+        await NewTabPage.DeleteQuickLink(QuickLinkId);
     }
 
 }
