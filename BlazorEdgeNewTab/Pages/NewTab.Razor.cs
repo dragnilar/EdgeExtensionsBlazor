@@ -18,7 +18,6 @@ namespace BlazorEdgeNewTab.Pages
     public partial class NewTab
     {
         private List<Image> _bingArchiveImages;
-        private HttpClient _httpClient;
         private List<QuickLink> _quickLinks;
         private int imageArchiveIndex = -1;
         private BingImageOfTheDay ImageOfTheDay;
@@ -26,6 +25,7 @@ namespace BlazorEdgeNewTab.Pages
         private bool _quickLinksVisible; 
         private string SearchQuery { get; set; }
         public string ImageDownloadLink { get; set; }
+        public string ImageDownloadName { get; set; }
         public string MuseumCardText { get; set; }
         public string MuseumCardText2 { get; set; }
         public string MuseumLink { get; set; }
@@ -38,7 +38,7 @@ namespace BlazorEdgeNewTab.Pages
             //QuickLinksVisible property will cause a nasty exception because it's trying to work on an HTML element that isn't drawn yet.
             await Settings.LoadSettingsAsync(WebExtensions).ContinueWith(_ => SetUpQuickLinks());
             await GetBingImage();
-            await GetBingImageArchive();
+            _bingArchiveImages = await NewTabService.GetBingImageArchive();
         }
 
         protected override Task OnAfterRenderAsync(bool firstRender)
@@ -73,12 +73,12 @@ namespace BlazorEdgeNewTab.Pages
             try
             {
                 Console.WriteLine("Getting Bing Image 🔍");
-                var dtoGetResult = await GetImageOfDayDto();
-                if (dtoGetResult.dto != null)
+                var dto = await NewTabService.GetImageOfDayDto();
+                if (dto != null)
                 {
-                    ImageOfTheDay = dtoGetResult.dto.images[0];
+                    ImageOfTheDay = dto.images[0];
                     if (ImageOfTheDay != null)
-                        await ApplyImageOfDayAndCache(dtoGetResult.dto, dtoGetResult.serializeDto);
+                        await ApplyImageOfTheDay(dto);
                     else
                         Console.WriteLine(
                             "We did not set the image, there was no first image in the json that came back. ☹");
@@ -95,73 +95,11 @@ namespace BlazorEdgeNewTab.Pages
             }
         }
 
-        private async Task ApplyImageOfDayAndCache(BingImageOfTheDayDto dto, bool serializeDto)
+        private async Task ApplyImageOfTheDay(BingImageOfTheDayDto dto)
         {
             await SetBackgroundImage(ImageOfTheDay.url);
             UpdateMuseumCardForImageOfDay();
             StateHasChanged();
-            if (serializeDto)
-            {
-                Console.WriteLine("Caching image of day data...");
-                Settings.UpdateSetting(SettingsValues.ImageOfTheDayCache, JsonSerializer.Serialize(dto));
-                Settings.UpdateSetting(SettingsValues.ReQueryImagesAfterTime,
-                    DateTime.Now.ToString(CultureInfo.InvariantCulture));
-                await Settings.SaveAsync();
-            }
-        }
-
-        private async Task<(BingImageOfTheDayDto dto, bool serializeDto)> GetImageOfDayDto()
-        {
-            BingImageOfTheDayDto dto;
-            var serializeDto = false;
-            var reQueryTime = Convert.ToDateTime(Settings.GetSettingValue(SettingsValues.ReQueryImagesAfterTime)
-                                                 ?? DateTime.Now.AddDays(-1).ToString(CultureInfo.InvariantCulture));
-            if (Settings.GetSettingValue(SettingsValues.ImageOfTheDayCache) != null &&
-                DateTime.Now.Date <= reQueryTime.Date)
-            {
-                Console.WriteLine("Getting image of the day data from cache...");
-                dto = JsonSerializer.Deserialize<BingImageOfTheDayDto>(
-                    Settings.GetSettingValue(SettingsValues.ImageOfTheDayCache));
-                Console.Write($"Image of Day Json From Da Cache:{Settings.GetSettingValue(SettingsValues.ImageOfTheDayCache).ToString()}");
-            }
-            else
-            {
-                var bingImageOfTheDayUrl =
-                    "https://api.allorigins.win/raw?url=https%3A//www.bing.com/HPImageArchive.aspx%3Fformat%3Djs%26idx%3D0%26n%3D1%26mkt%3Den-US";
-                _httpClient ??= new HttpClient();
-                dto = await _httpClient.GetFromJsonAsync<BingImageOfTheDayDto>(bingImageOfTheDayUrl);
-                serializeDto = true;
-            }
-
-            return (dto, serializeDto);
-        }
-
-        private async Task GetBingImageArchive()
-        {
-            var reQueryTime = Convert.ToDateTime(Settings.GetSettingValue(SettingsValues.ReQueryArchiveAfterTime)
-                                                 ?? DateTime.Now.AddDays(-1).ToString(CultureInfo.InvariantCulture));
-            if (Settings.GetSettingValue(SettingsValues.ImageArchiveCache) != null &&
-                DateTime.Now.Date <= reQueryTime.Date)
-            {
-                Console.WriteLine("Getting image archive data from cache...");
-                _bingArchiveImages =
-                    JsonSerializer.Deserialize<List<Image>>(Settings.GetSettingValue(SettingsValues.ImageArchiveCache));
-            }
-            else
-            {
-                var dateString = $"{DateTime.Now.Year}{DateTime.Now.Month:00}{DateTime.Now.Day:00}_0700&";
-                Console.WriteLine($"Querying bing with date string - {dateString}");
-                var bingImageArchiveUrl =
-                    $"https://api.allorigins.win/raw?url=https://www.bing.com/hp/api/v1/imagegallery?format=json&ssd={dateString}";
-                _httpClient ??= new HttpClient();
-                var dto = await _httpClient.GetFromJsonAsync<BingImageArchiveDto>(bingImageArchiveUrl);
-                _bingArchiveImages = dto?.data.images.ToList();
-                Console.WriteLine("Caching image archive data....");
-                Settings.UpdateSetting(SettingsValues.ImageArchiveCache, JsonSerializer.Serialize(_bingArchiveImages));
-                Settings.UpdateSetting(SettingsValues.ReQueryArchiveAfterTime,
-                    DateTime.Now.ToString(CultureInfo.InvariantCulture));
-                await Settings.SaveAsync();
-            }
         }
 
         private async Task GetNextImage()
@@ -228,9 +166,14 @@ namespace BlazorEdgeNewTab.Pages
                 : imageUrls.landscape.wallpaper;
         }
 
-        private async Task SetBackgroundImage(string Url)
+        private string GetImageNameForIndex(int index)
         {
-            var fullImagePath = "https://bing.com" + Url;
+            return index < 0 ? $"BingImageOfTheDay_{ImageOfTheDay.startdate}" : $"BingImageOfTheDay_{_bingArchiveImages[index].isoDate}";
+        }
+
+        private async Task SetBackgroundImage(string url)
+        {
+            var fullImagePath = "https://bing.com" + url;
             await JS.InvokeVoidAsync("setBackgroundImage1", fullImagePath).ConfigureAwait(false);
             ImageDownloadLink = fullImagePath.Replace("&pid=hp", "");
             Console.WriteLine("Image set 😊");
@@ -277,7 +220,7 @@ namespace BlazorEdgeNewTab.Pages
             {
                 Url = ImageDownloadLink,
                 SaveAs = true,
-                Filename = "Image.jpg"
+                Filename = $"{GetImageNameForIndex(imageArchiveIndex)}.jpeg"
             });
         }
 

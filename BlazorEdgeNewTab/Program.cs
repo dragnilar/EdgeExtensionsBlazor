@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using BlazorEdgeNewTab.Services;
+using BlazorEdgeNewTab.Services.Interfaces;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,10 +19,8 @@ namespace BlazorEdgeNewTab
             // see: https://github.com/dotnet/runtime/issues/52836
             builder.Services.AddScoped<HttpClient>(sp => new JsHttpClient(sp)
                 {BaseAddress = new Uri(builder.HostEnvironment.BaseAddress)});
-            builder.Services.AddBrowserExtensionServices(options =>
-            {
-                options.ProjectNamespace = typeof(Program).Namespace;
-            });
+            builder.Services.AddBrowserExtensionServices();
+            builder.Services.AddSingleton<INewTabService, NewTabService>();
             await builder.Build().RunAsync();
         }
 #pragma warning restore AsyncFixer01 // Unnecessary async/await usage
