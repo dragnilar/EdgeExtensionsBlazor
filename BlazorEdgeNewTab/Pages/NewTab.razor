@@ -5,7 +5,7 @@
 @inject INewTabService NewTabService;
 
 <div class="container-fluid" xmlns="http://www.w3.org/1999/html">
-    <div class="row" style="height: 75px">
+    <div class="row TopMenuRowStyle" id="TopMenuRow">
         <div class="col">
             <div class="dropdown">
                 <button class="dropdown-toggle TopMenuIconStyle btn" type="button" id="waffleDropDown" data-bs-toggle="dropdown" aria-expanded="false" title="Microsoft 365 Sites/Apps">
@@ -30,25 +30,25 @@
                           OnQuickLinksVisibleChangedCallBack="QuickLinksVisibleChanged"></SettingsMenu>
         </div>
     </div>
-    <div class="row" style="margin-right: 0; margin-left: 0; height: 100px">
+    <div class="row MuseumRowStyle" id="MuseumRow">
         <div class="col-6"></div>
         <div class="col-3">
-            <a style="text-decoration: none; color: ghostwhite" href="@MuseumLink">
+            <a class="MuseumLinkStyle" href="@MuseumLink">
                 <div class="MuseumCardStyle">
                     @MuseumCardText
                 </div>
             </a>
         </div>
         <div class="col-3">
-            <button class="imageNavigationButtonStyle" @onclick="GetPreviousImage" title="Previous Image">
-                <img class="imageNavChevronStyle" src="icons/fluent_backward.png" alt="&lt;"/>
+            <button class="MuseumNavigationButtonStyle" @onclick="GetPreviousImage" title="Previous Image">
+                <img class="MuseumNavChevronStyle" src="icons/fluent_backward.png" alt="&lt;"/>
             </button>
-            <button class="imageNavigationButtonStyle" @onclick="GetNextImage" title="Next Image">
-                <img class="imageNavChevronStyle" src="icons/fluent_forward.png" alt="&gt;"/>
+            <button class="MuseumNavigationButtonStyle" @onclick="GetNextImage" title="Next Image">
+                <img class="MuseumNavChevronStyle" src="icons/fluent_forward.png" alt="&gt;"/>
             </button>
         </div>
     </div>
-    <div class="row" style="height: 100px">
+    <div class="row MuseumRowStyle2" id="MuseumRow2">
         <div class="col">
             <a style="text-decoration: none; color: ghostwhite" href="@MuseumLink2">
                 <div class="MuseumCardStyle">
