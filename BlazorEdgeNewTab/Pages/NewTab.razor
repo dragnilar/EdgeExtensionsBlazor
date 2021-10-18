@@ -58,10 +58,10 @@
         </div>
         <div class="col"></div>
         <div class="col-6">
-            <form @onsubmit="Enter" class="SearchBoxOuterDivStyle" hidden="@(!_searchVisible)">
-                <div class="input-group mb-3 SearchBoxFormStyle">
+            <form @onsubmit="Enter" hidden="@(!_searchVisible)">
+                <div class="input-group mb-3">
                     <input class="form-control SearchBoxStyle" type="text" @bind="SearchQuery" placeholder="Search the web" aria-label="Query" aria-describedby="queryButtonAddon">
-                    <button class="btn SearchButtonStyle" type="button" id="queryButtonAddon" @onclick="FireSearchEngineQuery">
+                    <button type="button" class="SearchButtonStyle" id="queryButtonAddon" @onclick="FireSearchEngineQuery">
                         <img alt="Search Icon" src="./icons/fluent_search.png"/>
                     </button>
                 </div>
