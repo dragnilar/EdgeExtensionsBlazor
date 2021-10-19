@@ -31,6 +31,7 @@ namespace BlazorEdgeNewTab.Pages
         public string MuseumLink { get; set; }
         public string MuseumLink2 { get; set; }
         public SettingsMenu SettingsMenuNewTab { get; set; }
+        public bool FilterMode { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -51,6 +52,34 @@ namespace BlazorEdgeNewTab.Pages
             return base.OnAfterRenderAsync(firstRender);
         }
 
+        private void FilterQuickLinks()
+        {
+            if (FilterMode)
+            {
+                if (!string.IsNullOrWhiteSpace(SearchQuery))
+                {
+                    foreach (var quickLink in _quickLinks)
+                    {
+
+                        if (quickLink.QuickLinkTitle.Contains(SearchQuery))
+                        {
+                            quickLink.Visible = true;
+                        }
+                        else
+                        {
+                            quickLink.Visible = false;
+                        }
+                    }
+
+                    StateHasChanged();
+                }
+                else
+                {
+                    _quickLinks.ForEach(x=>x.Visible = true);
+                }
+            }
+        }
+
         private async Task SetUpQuickLinks()
         {
             _quickLinks = new List<QuickLink>();
@@ -63,7 +92,8 @@ namespace BlazorEdgeNewTab.Pages
                 QuickLinkTitle = quickLinkBookMark.Title,
                 QuickLinkImageUrl = "chrome://favicon/size/64/" + quickLinkBookMark.Url,
                 QuickLinkUrl = quickLinkBookMark.Url,
-                QuickLinkId = quickLinkBookMark.Id
+                QuickLinkId = quickLinkBookMark.Id,
+                Visible = true
             }));
             StateHasChanged();
         }
@@ -181,18 +211,35 @@ namespace BlazorEdgeNewTab.Pages
 
         private void Enter()
         {
-            if (!string.IsNullOrWhiteSpace(SearchQuery)) FireSearchEngineQuery();
+            if (FilterMode)
+            {
+                FilterQuickLinks();
+            }
+            else
+            {
+                if (!string.IsNullOrWhiteSpace(SearchQuery)) FireSearchEngineQuery();
+            }
+
         }
 
         private Task FireSearchEngineQuery()
         {
             try
             {
-                Console.WriteLine($"Performing a search with query : {SearchQuery}");
-                // The code below always throws an exception; we are using JS Interop to work around this for now...
-                // var searchProps = new SearchProperties {Query = SearchQuery};
-                //await WebExtensions.Search.Query(new QueryInfo {Text = SearchQuery, Disposition = Disposition.CurrentTab, AdditionalData = null, TabId = null}).ConfigureAwait(false);
-                JS.InvokeVoidAsync("runSearchQuery", SearchQuery).ConfigureAwait(false);
+                if (FilterMode)
+                {
+                    FilterQuickLinks();
+                }
+                else
+                {
+                    if (string.IsNullOrWhiteSpace(SearchQuery)) return Task.CompletedTask;
+                    Console.WriteLine($"Performing a search with query : {SearchQuery}");
+                    // The code below always throws an exception; we are using JS Interop to work around this for now...
+                    // var searchProps = new SearchProperties {Query = SearchQuery};
+                    //await WebExtensions.Search.Query(new QueryInfo {Text = SearchQuery, Disposition = Disposition.CurrentTab, AdditionalData = null, TabId = null}).ConfigureAwait(false);
+                    JS.InvokeVoidAsync("runSearchQuery", SearchQuery).ConfigureAwait(false);
+                }
+
             }
             catch (Exception e)
             {

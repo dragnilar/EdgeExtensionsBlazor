@@ -61,6 +61,10 @@
             <form @onsubmit="Enter" hidden="@(!_searchVisible)">
                 <div class="input-group mb-3">
                     <input class="form-control SearchBoxStyle" type="text" @bind="SearchQuery" placeholder="Search the web" aria-label="Query" aria-describedby="queryButtonAddon">
+                    <input type="checkbox" class="btn-check" id="btn-check" autocomplete="off" @bind="FilterMode">
+                    <label class="btn btn-secondary SearchButtonStyle" for="btn-check">                        
+                        <img alt="Filter Icon" src="./icons/fluent_filter.png" style="height: 24px; width: 24px;"/>
+                    </label>
                     <button type="button" class="SearchButtonStyle" id="queryButtonAddon" @onclick="FireSearchEngineQuery">
                         <img alt="Search Icon" src="./icons/fluent_search.png"/>
                     </button>
@@ -82,12 +86,15 @@
                         {
                             foreach (var quickLink in _quickLinks)
                             {
-                                <QuickLinkComponent
-                                    QuickLinkTitle="@GetQuickLinkName(quickLink.QuickLinkTitle)"
-                                    QuickLinkUrl="@quickLink.QuickLinkUrl"
-                                    QuickLinkId = "@quickLink.QuickLinkId"
-                                    QuickLinkImageUrl="@quickLink.QuickLinkImageUrl">
-                                </QuickLinkComponent>
+                                if (quickLink.Visible)
+                                {
+                                    <QuickLinkComponent
+                                        QuickLinkTitle="@GetQuickLinkName(quickLink.QuickLinkTitle)"
+                                        QuickLinkUrl="@quickLink.QuickLinkUrl"
+                                        QuickLinkId = "@quickLink.QuickLinkId"
+                                        QuickLinkImageUrl="@quickLink.QuickLinkImageUrl">
+                                    </QuickLinkComponent>
+                                }
                             }
                         }
                         <EmptyQuickLinkComponent OnSaveEventCallback="SaveNewQuickLinkClickHandler">
