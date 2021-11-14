@@ -107,17 +107,26 @@ namespace BlazorEdgeNewTab.Pages
             _quickLinks = new List<QuickLink>();
             var bookMarkNode =
                 await WebExtensions.Bookmarks.Search(Settings.GetSettingValue(SettingsValues.QuickLinkBookMarkFolder));
-            if (bookMarkNode == null) return;
-            var quickLinkBookMarks = await WebExtensions.Bookmarks.GetChildren(bookMarkNode.First().Id);
-            _quickLinks.AddRange(quickLinkBookMarks.Select(quickLinkBookMark => new QuickLink
+            if (!bookMarkNode.Any())
             {
-                QuickLinkTitle = quickLinkBookMark.Title,
-                QuickLinkImageUrl = "chrome://favicon/size/64/" + quickLinkBookMark.Url,
-                QuickLinkUrl = quickLinkBookMark.Url,
-                QuickLinkId = quickLinkBookMark.Id,
-                Visible = true
-            }));
-            StateHasChanged();
+                var folderName = Settings.GetSettingValue(SettingsValues.QuickLinkBookMarkFolder);
+                WebExtensions.Bookmarks.Create(new CreateDetails
+                    { Title = folderName});
+            }
+            else
+            {
+                var quickLinkBookMarks = await WebExtensions.Bookmarks.GetChildren(bookMarkNode.First().Id);
+                _quickLinks.AddRange(quickLinkBookMarks.Select(quickLinkBookMark => new QuickLink
+                {
+                    QuickLinkTitle = quickLinkBookMark.Title,
+                    QuickLinkImageUrl = "chrome://favicon/size/64/" + quickLinkBookMark.Url,
+                    QuickLinkUrl = quickLinkBookMark.Url,
+                    QuickLinkId = quickLinkBookMark.Id,
+                    Visible = true
+                }));
+                StateHasChanged();
+            }
+
         }
 
         private async Task GetBingImage()

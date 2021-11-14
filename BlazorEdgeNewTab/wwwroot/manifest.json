@@ -20,8 +20,8 @@
     "downloads"
   ],
   "icons": {
-    "128": "icons/icon128.png",
-    "16": "icons/icon16.png",
-    "48": "icons/icon48.png"
+    "128": "icons/BlazorNewTab.png",
+    "52": "icons/BlazorNewTab.png",
+    "28": "icons/BlazorNewTab.png"
   }
 }
