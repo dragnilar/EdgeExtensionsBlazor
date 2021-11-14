@@ -1,7 +1,7 @@
 # EdgeExtensionsBlazor
 This repo contains some Edge/Chromium Extensions that use Blazor (Web Assembly).
 
-## Blazor-Seperation
+## Blazor New Tab
 This is a new tab page extension that is similar to the new tab page for Microsoft Edge. 
 - Background image uses the Bing image of the day and updates along with Bing.
 - Allows you to view previous bing images of the day.
@@ -9,7 +9,7 @@ This is a new tab page extension that is similar to the new tab page for Microso
 - Features app link menu for Microsoft 365. Some of the links are different than the one for Edge (I.E. Visual Studio and Azure).
 - Allows you to search using your default search engine.
 
-* Currently the bookmark folder name is hardcoded as Edge Quick Links (case matters). 
+* The bookmarks folder is defaulted to Edge Quick Links; you can change it in the settings menu
 
 Note:  The extension uses the same APIs that Microsoft uses for Bing via a proxy (due to Bing using CORS). As a result, it may at times take a little bit of time for the image of the day to show up when the extension fires up for the first time on a particular day. 
 
