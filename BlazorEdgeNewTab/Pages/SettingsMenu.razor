@@ -8,13 +8,13 @@
             <h4>Settings</h4>
             <EditForm Model="this">
                 <div class="form-check form-switch">
-                    <InputCheckbox @bind-Value="@QuickLinksVisible" Id="showQuickLinksSwitch" class="form-check-input"/>
-                    <label class="form-check-label" for="showQuickLinksSwitch">Show Quick Links</label>
+                    <InputCheckbox @bind-Value="@SearchVisible" Id="showSearchSwitch" class="form-check-input"/>
+                    <label class="form-control-label" for="showSearchSwitch">Show Web Search</label>
                 </div>
                 <br/>
                 <div class="form-check form-switch">
-                    <InputCheckbox @bind-Value="@SearchVisible" Id="showSearchSwitch" class="form-check-input"/>
-                    <label class="form-control-label" for="showSearchSwitch">Show Web Search</label>
+                    <InputCheckbox @bind-Value="@QuickLinksVisible" Id="showQuickLinksSwitch" class="form-check-input"/>
+                    <label class="form-check-label" for="showQuickLinksSwitch">Show Quick Links</label>
                 </div>
                 <br/>
                 <label class="form-control-label">Quick Links Bookmark Folder</label>
@@ -24,8 +24,10 @@
                     <InputText @bind-Value="QuickLinksFolder" class="form-control"></InputText>
                 </div>
                 <br/>
-                <div>
-                    <button class="btn btn-primary" @onclick="ResetSettings">Reset Settings</button>
+                <div class="row g-3">
+                    <button class="btn btn-primary col-auto" @onclick="ResetSettings">Reset Settings</button>
+                    <div class="col-auto"></div>
+                    <button class="btn btn-primary col-auto" @onclick="RefreshImageOfDay">Refresh Image Of Day</button>
                 </div>
             </EditForm>
         </form>
@@ -40,6 +42,8 @@
     public EventCallback OnQuickLinksVisibleChangedCallBack { get; set; }
     [Parameter]
     public EventCallback OnSearchVisibleChangedCallBack { get; set; }
+    [Parameter]
+    public EventCallback OnRefreshImageOfDayCallBack { get; set; }
 
     private bool _quickLinksVisible { get; set; }
     public bool QuickLinksVisible
@@ -94,6 +98,11 @@
     {
         Settings.ResetSettings();
         Settings.SaveAsync();
+    }
+
+    private void RefreshImageOfDay()
+    {
+        OnRefreshImageOfDayCallBack.InvokeAsync();
     }
 
 }

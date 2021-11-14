@@ -25,7 +25,8 @@ namespace BlazorEdgeNewTab
                 SettingsValues.ImageOfTheDayCache,
                 SettingsValues.ImageArchiveCache,
                 SettingsValues.ReQueryImagesAfterTime,
-                SettingsValues.ReQueryArchiveAfterTime
+                SettingsValues.ReQueryArchiveAfterTime,
+                SettingsValues.UseQuickLinksFilter
             }
         );
 
@@ -44,7 +45,8 @@ namespace BlazorEdgeNewTab
                 {SettingsValues.ImageOfTheDayCache, null},
                 {SettingsValues.ImageArchiveCache, null},
                 {SettingsValues.ReQueryImagesAfterTime, DateTime.Now.ToString(CultureInfo.InvariantCulture)},
-                {SettingsValues.ReQueryArchiveAfterTime, DateTime.Now.ToString(CultureInfo.InvariantCulture)}
+                {SettingsValues.ReQueryArchiveAfterTime, DateTime.Now.ToString(CultureInfo.InvariantCulture)},
+                {SettingsValues.UseQuickLinksFilter, "False"}
             };
         }
 

@@ -15,6 +15,7 @@ namespace BlazorEdgeNewTab.Constants
         public const string ImageArchiveCache = "ImageArchiveCache";
         public const string ReQueryImagesAfterTime = "ReQueryImagesAfterTime";
         public const string ReQueryArchiveAfterTime = "ReQueryArchiveAfterTime";
+        public const string UseQuickLinksFilter = "UseQuickLinksFilter";
         public static DateTime DefaultRequeryDateTime = new(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 6, 0, 0);
     }
 }

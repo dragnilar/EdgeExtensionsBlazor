@@ -32,15 +32,17 @@ namespace BlazorEdgeNewTab.Pages
         public string MuseumLink2 { get; set; }
         public SettingsMenu SettingsMenuNewTab { get; set; }
 
+        protected ElementReference SearchBoxElement;
+
         public bool FilterMode
         {
             get => _filterMode;
             set
             {
                 _filterMode = value;
-                SearchEmptyText = _filterMode
-                    ? "Type in a filter and hit enter to apply it. Blank filter resets the filter."
-                    : "Search the web...";
+                UpdateSearchEmptyText();
+                Settings.UpdateSetting(SettingsValues.UseQuickLinksFilter, value.ToString());
+                Settings.SaveAsync();
             }
         }
 
@@ -51,6 +53,21 @@ namespace BlazorEdgeNewTab.Pages
             //NOTE - Do NOT get settings until the quick links are set up. The elements need to exist in the dom first or the
             //QuickLinksVisible property will cause a nasty exception because it's trying to work on an HTML element that isn't drawn yet.
             await Settings.LoadSettingsAsync(WebExtensions).ContinueWith(_ => SetUpQuickLinks());
+            await GetBingImagesForNewTab();
+            _filterMode = Convert.ToBoolean(Settings.GetSettingValue(SettingsValues.UseQuickLinksFilter));
+            if (_filterMode) UpdateSearchEmptyText();
+            JS.InvokeVoidAsync("SetFocusToElement", SearchBoxElement);
+        }
+        
+        private void UpdateSearchEmptyText()
+        {
+            SearchEmptyText = _filterMode
+                ? "Type in a filter and hit enter to apply it. Blank filter resets the filter."
+                : "Search the web...";
+        }
+
+        private async Task GetBingImagesForNewTab()
+        {
             await GetBingImage();
             _bingArchiveImages = await NewTabService.GetBingImageArchive();
         }
@@ -73,15 +90,7 @@ namespace BlazorEdgeNewTab.Pages
                 {
                     foreach (var quickLink in _quickLinks)
                     {
-
-                        if (quickLink.QuickLinkTitle.Contains(SearchQuery))
-                        {
-                            quickLink.Visible = true;
-                        }
-                        else
-                        {
-                            quickLink.Visible = false;
-                        }
+                        quickLink.Visible = quickLink.QuickLinkTitle.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase);
                     }
 
                     StateHasChanged();
@@ -308,6 +317,15 @@ namespace BlazorEdgeNewTab.Pages
         private void QuickLinksVisibleChanged()
         {
             _quickLinksVisible = SettingsMenuNewTab.QuickLinksVisible;
+        }
+
+        private async Task RefreshImageOfDayHandler()
+        {
+            Settings.UpdateSetting(SettingsValues.ReQueryImagesAfterTime, DateTime.Now.AddDays(-1).ToString(CultureInfo.InvariantCulture));
+            Settings.UpdateSetting(SettingsValues.ReQueryArchiveAfterTime, DateTime.Now.AddDays(-1).ToString(CultureInfo.InvariantCulture));
+            Settings.SaveAsync();
+            GetBingImagesForNewTab();
+            StateHasChanged();
         }
     }
 }

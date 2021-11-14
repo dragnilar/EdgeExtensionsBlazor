@@ -23,3 +23,7 @@ function showSaveChangesToast() {
         });
     }
 }
+
+window.SetFocusToElement = (element) => {
+    element.focus();
+}
