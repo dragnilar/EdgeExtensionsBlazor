@@ -60,7 +60,7 @@
         <div class="col-6">
             <form @onsubmit="Enter" hidden="@(!_searchVisible)">
                 <div class="input-group mb-3">
-                    <input class="form-control SearchBoxStyle" type="text" @bind="SearchQuery" placeholder="Search the web" aria-label="Query" aria-describedby="queryButtonAddon">
+                    <input class="form-control SearchBoxStyle" type="text" @bind="SearchQuery" placeholder="@SearchEmptyText" aria-label="Query" aria-describedby="queryButtonAddon">
                     <input type="checkbox" class="btn-check" id="btn-check" autocomplete="off" @bind="FilterMode">
                     <label class="btn btn-secondary SearchButtonStyle" for="btn-check">                        
                         <img alt="Filter Icon" src="./icons/fluent_filter.png" style="height: 24px; width: 24px;"/>

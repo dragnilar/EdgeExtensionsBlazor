@@ -1,16 +1,17 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <AssemblyVersion>2021.0810.21.0</AssemblyVersion>
         <FileVersion>2021.0810.21.0</FileVersion>
         <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+        <LangVersion>10</LangVersion>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="Blazor.BrowserExtension" Version="0.7.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="5.0.11" />
-        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="5.0.11" PrivateAssets="all" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0" PrivateAssets="all" />
     </ItemGroup>
 
     <ItemGroup>

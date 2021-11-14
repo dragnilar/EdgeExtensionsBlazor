@@ -19,19 +19,32 @@ namespace BlazorEdgeNewTab.Pages
     {
         private List<Image> _bingArchiveImages;
         private List<QuickLink> _quickLinks;
-        private int imageArchiveIndex = -1;
-        private BingImageOfTheDay ImageOfTheDay;
+        private int _imageArchiveIndex = -1;
+        private BingImageOfTheDay _imageOfTheDay;
         private bool _searchVisible;
-        private bool _quickLinksVisible; 
+        private bool _quickLinksVisible;
+        private bool _filterMode;
         private string SearchQuery { get; set; }
         public string ImageDownloadLink { get; set; }
-        public string ImageDownloadName { get; set; }
         public string MuseumCardText { get; set; }
         public string MuseumCardText2 { get; set; }
         public string MuseumLink { get; set; }
         public string MuseumLink2 { get; set; }
         public SettingsMenu SettingsMenuNewTab { get; set; }
-        public bool FilterMode { get; set; }
+
+        public bool FilterMode
+        {
+            get => _filterMode;
+            set
+            {
+                _filterMode = value;
+                SearchEmptyText = _filterMode
+                    ? "Type in a filter and hit enter to apply it. Blank filter resets the filter."
+                    : "Search the web...";
+            }
+        }
+
+        public string SearchEmptyText { get; set; } = "Search the web...";
 
         protected override async Task OnInitializedAsync()
         {
@@ -54,7 +67,7 @@ namespace BlazorEdgeNewTab.Pages
 
         private void FilterQuickLinks()
         {
-            if (FilterMode)
+            if (_filterMode)
             {
                 if (!string.IsNullOrWhiteSpace(SearchQuery))
                 {
@@ -106,8 +119,8 @@ namespace BlazorEdgeNewTab.Pages
                 var dto = await NewTabService.GetImageOfDayDto();
                 if (dto != null)
                 {
-                    ImageOfTheDay = dto.images[0];
-                    if (ImageOfTheDay != null)
+                    _imageOfTheDay = dto.images[0];
+                    if (_imageOfTheDay != null)
                         await ApplyImageOfTheDay(dto);
                     else
                         Console.WriteLine(
@@ -127,65 +140,65 @@ namespace BlazorEdgeNewTab.Pages
 
         private async Task ApplyImageOfTheDay(BingImageOfTheDayDto dto)
         {
-            await SetBackgroundImage(ImageOfTheDay.url);
+            await SetBackgroundImage(_imageOfTheDay.url);
             UpdateMuseumCardForImageOfDay();
             StateHasChanged();
         }
 
         private async Task GetNextImage()
         {
-            Console.WriteLine($"Getting next image 🖼, current image index is: {imageArchiveIndex}");
-            if (imageArchiveIndex >= _bingArchiveImages.Count - 1)
+            Console.WriteLine($"Getting next image 🖼, current image index is: {_imageArchiveIndex}");
+            if (_imageArchiveIndex >= _bingArchiveImages.Count - 1)
             {
-                imageArchiveIndex = -1;
-                await SetBackgroundImage(ImageOfTheDay.url);
+                _imageArchiveIndex = -1;
+                await SetBackgroundImage(_imageOfTheDay.url);
                 UpdateMuseumCardForImageOfDay();
             }
             else
             {
-                imageArchiveIndex++;
-                await SetBackgroundImage(GetImageUrlForIndex(imageArchiveIndex));
+                _imageArchiveIndex++;
+                await SetBackgroundImage(GetImageUrlForIndex(_imageArchiveIndex));
                 UpdateMuseumCardForArchiveImage();
             }
         }
 
         private async Task GetPreviousImage()
         {
-            Console.WriteLine($"Getting previous image 🖼, current image index is: {imageArchiveIndex}");
-            if (imageArchiveIndex == -1)
+            Console.WriteLine($"Getting previous image 🖼, current image index is: {_imageArchiveIndex}");
+            if (_imageArchiveIndex == -1)
             {
-                imageArchiveIndex = _bingArchiveImages.Count - 1;
-                await SetBackgroundImage(GetImageUrlForIndex(imageArchiveIndex));
+                _imageArchiveIndex = _bingArchiveImages.Count - 1;
+                await SetBackgroundImage(GetImageUrlForIndex(_imageArchiveIndex));
                 UpdateMuseumCardForArchiveImage();
             }
-            else if (imageArchiveIndex == 0)
+            else if (_imageArchiveIndex == 0)
             {
-                imageArchiveIndex = -1;
-                await SetBackgroundImage(ImageOfTheDay.url);
+                _imageArchiveIndex = -1;
+                await SetBackgroundImage(_imageOfTheDay.url);
                 UpdateMuseumCardForImageOfDay();
             }
             else
             {
-                imageArchiveIndex--;
-                await SetBackgroundImage(GetImageUrlForIndex(imageArchiveIndex));
+                _imageArchiveIndex--;
+                await SetBackgroundImage(GetImageUrlForIndex(_imageArchiveIndex));
                 UpdateMuseumCardForArchiveImage();
             }
         }
 
         private void UpdateMuseumCardForImageOfDay()
         {
-            MuseumCardText = ImageOfTheDay.title;
-            MuseumLink = ImageOfTheDay.copyrightlink;
-            MuseumCardText2 = ImageOfTheDay.copyright;
-            MuseumLink2 = $"https://bing.com{ImageOfTheDay.quiz}";
+            MuseumCardText = _imageOfTheDay.title;
+            MuseumLink = _imageOfTheDay.copyrightlink;
+            MuseumCardText2 = _imageOfTheDay.copyright;
+            MuseumLink2 = $"https://bing.com{_imageOfTheDay.quiz}";
         }
 
         private void UpdateMuseumCardForArchiveImage()
         {
-            MuseumCardText = _bingArchiveImages[imageArchiveIndex].title;
-            MuseumLink = $"https://bing.com{_bingArchiveImages[imageArchiveIndex].clickUrl}";
-            MuseumCardText2 = _bingArchiveImages[imageArchiveIndex].description;
-            MuseumLink2 = $"https://bing.com{_bingArchiveImages[imageArchiveIndex].clickUrl}";
+            MuseumCardText = _bingArchiveImages[_imageArchiveIndex].title;
+            MuseumLink = $"https://bing.com{_bingArchiveImages[_imageArchiveIndex].clickUrl}";
+            MuseumCardText2 = _bingArchiveImages[_imageArchiveIndex].description;
+            MuseumLink2 = $"https://bing.com{_bingArchiveImages[_imageArchiveIndex].clickUrl}";
         }
 
         private string GetImageUrlForIndex(int index)
@@ -198,7 +211,7 @@ namespace BlazorEdgeNewTab.Pages
 
         private string GetImageNameForIndex(int index)
         {
-            return index < 0 ? $"BingImageOfTheDay_{ImageOfTheDay.startdate}" : $"BingImageOfTheDay_{_bingArchiveImages[index].isoDate}";
+            return index < 0 ? $"BingImageOfTheDay_{_imageOfTheDay.startdate}" : $"BingImageOfTheDay_{_bingArchiveImages[index].isoDate}";
         }
 
         private async Task SetBackgroundImage(string url)
@@ -211,7 +224,7 @@ namespace BlazorEdgeNewTab.Pages
 
         private void Enter()
         {
-            if (FilterMode)
+            if (_filterMode)
             {
                 FilterQuickLinks();
             }
@@ -226,7 +239,7 @@ namespace BlazorEdgeNewTab.Pages
         {
             try
             {
-                if (FilterMode)
+                if (_filterMode)
                 {
                     FilterQuickLinks();
                 }
@@ -267,7 +280,7 @@ namespace BlazorEdgeNewTab.Pages
             {
                 Url = ImageDownloadLink,
                 SaveAs = true,
-                Filename = $"{GetImageNameForIndex(imageArchiveIndex)}.jpeg"
+                Filename = $"{GetImageNameForIndex(_imageArchiveIndex)}.jpeg"
             });
         }
 
