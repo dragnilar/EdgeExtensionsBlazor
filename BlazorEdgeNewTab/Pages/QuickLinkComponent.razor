@@ -38,7 +38,7 @@
     [Parameter]
     public string QuickLinkId { get; set; }
     [CascadingParameter]
-    public NewTab NewTabPage { get; set; }
+    public Index NewTabPage { get; set; }
 
     public string ModalName => $"DeleteQuickLinkModalFor{QuickLinkId}";
 

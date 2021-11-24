@@ -15,7 +15,7 @@ using WebExtensions.Net.Downloads;
 
 namespace BlazorEdgeNewTab.Pages
 {
-    public partial class NewTab
+    public partial class Index
     {
         private List<Image> _bingArchiveImages;
         private List<QuickLink> _quickLinks;
