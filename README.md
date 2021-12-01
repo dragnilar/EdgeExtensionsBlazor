@@ -1,6 +1,8 @@
 # EdgeExtensionsBlazor
 This repo contains some Edge/Chromium Extensions that use Blazor (Web Assembly).
 
+All of these extensions make extensive use of [Blazor.BrowserExtension](https://github.com/mingyaulee/Blazor.BrowserExtension), and would not be possible otherwise. If you are interested in developing extensions using Blazor, I strongly encourage you to check it out.
+
 ## Blazor New Tab
 
 ![Blazor Edge New Tab Logo](https://github.com/dragnilar/EdgeExtensionsBlazor/blob/master/BlazorEdgeNewTab/wwwroot/icons/BlazorNewTab.png)
