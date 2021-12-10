@@ -24,7 +24,7 @@ public class NewTabService : INewTabService
         var reQueryTime = Convert.ToDateTime(Settings.GetSettingValue(SettingsValues.ReQueryImagesAfterTime)
                                              ?? DateTime.Now.AddDays(-1).ToString(CultureInfo.InvariantCulture));
         if (Settings.GetSettingValue(SettingsValues.ImageOfTheDayCache) != null &&
-            DateTime.Now.Date <= reQueryTime.Date)
+            DateTime.Now > reQueryTime)
         {
             dto = JsonSerializer.Deserialize<BingImageOfTheDayDto>(
                 Settings.GetSettingValue(SettingsValues.ImageOfTheDayCache));
@@ -33,9 +33,10 @@ public class NewTabService : INewTabService
         {
             _httpClient ??= new HttpClient();
             dto = await _httpClient.GetFromJsonAsync<BingImageOfTheDayDto>(BingImageOfDayUri);
+            var imageDate = DateTime.ParseExact(dto.images[0].fullstartdate, "yyyyMMddHHmm", CultureInfo.InvariantCulture);
             Settings.UpdateSetting(SettingsValues.ImageOfTheDayCache, JsonSerializer.Serialize(dto));
             Settings.UpdateSetting(SettingsValues.ReQueryImagesAfterTime,
-                DateTime.Now.ToString(CultureInfo.InvariantCulture));
+                imageDate.ToString(CultureInfo.InvariantCulture));
             await Settings.SaveAsync();
         }
 
