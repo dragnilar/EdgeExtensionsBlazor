@@ -1,8 +1,9 @@
 # Personal Data
 
-Blazor Edge New Tab does not collect personal data in any shape or form, period. 
+Blazor Edge New Tab does not collect personal data in any shape or form, period.
 
-Blazor Edge New Tab leaves all data on your computer and in your browser bookmarks, storage, etc alone and does not send it anywhere to be analyzed, sold or anything of that nature.
+Blazor Edge New Tab leaves all data on your computer and in your browser bookmarks, storage, etc alone and does not send
+it anywhere to be analyzed, sold or anything of that nature.
 
 # Third Party Services
 
@@ -12,7 +13,8 @@ Blazor Edge New Tab uses the Chromium / WebExtensions storage sync api for savin
 
 ## Bookmarks API
 
-Blazor Edge New Tab uses the Chromium / WebExtensions bookmarks API to allow you to manage and display bookmarks on the tab.
+Blazor Edge New Tab uses the Chromium / WebExtensions bookmarks API to allow you to manage and display bookmarks on the
+tab.
 
 ## Downloads API
 
@@ -20,13 +22,15 @@ Blazor Edge New Tab uses the Chromium / WebExtensions downloads API to allow you
 
 ## Search API
 
-Blazor Edge New Tab uses the Chromium / WebExtensions search API to allow you to execute search queries against your default search engine provider from the new tab page.
+Blazor Edge New Tab uses the Chromium / WebExtensions search API to allow you to execute search queries against your
+default search engine provider from the new tab page.
 
-## Bing 
+## Bing
 
-Blazor Edge New Tab uses Microsoft Bing's image of the day feed to display the image backgrounds. No personal data of any kind is intentionally or explicitly sent to Microsoft. 
-
+Blazor Edge New Tab uses Microsoft Bing's image of the day feed to display the image backgrounds. No personal data of
+any kind is intentionally or explicitly sent to Microsoft.
 
 ## Other Search Providers
 
-Since Blazor Edge New Tab allows you to execute search queries against your default search provider, you should review their privacy policy if you have any quesitons or concerns about how they may use your search data. 
+Since Blazor Edge New Tab allows you to execute search queries against your default search provider, you should review
+their privacy policy if you have any quesitons or concerns about how they may use your search data. 

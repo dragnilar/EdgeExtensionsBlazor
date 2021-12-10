@@ -38,14 +38,18 @@
 
     [Parameter]
     public EventCallback OnQuickLinksFolderChangedCallBack { get; set; }
+
     [Parameter]
     public EventCallback OnQuickLinksVisibleChangedCallBack { get; set; }
+
     [Parameter]
     public EventCallback OnSearchVisibleChangedCallBack { get; set; }
+
     [Parameter]
     public EventCallback OnRefreshImageOfDayCallBack { get; set; }
 
     private bool _quickLinksVisible { get; set; }
+
     public bool QuickLinksVisible
     {
         get => _quickLinksVisible;
@@ -59,7 +63,9 @@
             OnQuickLinksVisibleChangedCallBack.InvokeAsync();
         }
     }
+
     private bool _searchVisible { get; set; }
+
     public bool SearchVisible
     {
         get => _searchVisible;
@@ -73,6 +79,7 @@
             OnSearchVisibleChangedCallBack.InvokeAsync();
         }
     }
+
     public string QuickLinksFolder
     {
         get => Settings.GetSettingValue(SettingsValues.QuickLinkBookMarkFolder);

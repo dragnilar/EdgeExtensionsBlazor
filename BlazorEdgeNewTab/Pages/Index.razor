@@ -28,7 +28,8 @@
             <SettingsMenu @ref="SettingsMenuNewTab" OnQuickLinksFolderChangedCallBack="QuickLinksFolderChangedHandler"
                           OnSearchVisibleChangedCallBack="SearchVisibleChanged"
                           OnRefreshImageOfDayCallBack="RefreshImageOfDayHandler"
-                          OnQuickLinksVisibleChangedCallBack="QuickLinksVisibleChanged"></SettingsMenu>
+                          OnQuickLinksVisibleChangedCallBack="QuickLinksVisibleChanged">
+            </SettingsMenu>
         </div>
     </div>
     <div class="row MuseumRowStyle" id="MuseumRow">
@@ -64,7 +65,7 @@
                     <input class="form-control SearchBoxStyle" type="text" @bind="SearchQuery" placeholder="@SearchEmptyText" aria-label="Query" aria-describedby="queryButtonAddon" name="SearchBox"
                            @ref="SearchBoxElement">
                     <input type="checkbox" class="btn-check" id="btn-check" autocomplete="off" @bind="FilterMode">
-                    <label class="btn btn-secondary SearchButtonStyle" for="btn-check">                        
+                    <label class="btn btn-secondary SearchButtonStyle" for="btn-check">
                         <img alt="Filter Icon" src="./icons/fluent_filter.png" style="height: 24px; width: 24px;"/>
                     </label>
                     <button type="button" class="SearchButtonStyle" id="queryButtonAddon" @onclick="FireSearchEngineQuery">
@@ -93,7 +94,7 @@
                                     <QuickLinkComponent
                                         QuickLinkTitle="@GetQuickLinkName(quickLink.QuickLinkTitle)"
                                         QuickLinkUrl="@quickLink.QuickLinkUrl"
-                                        QuickLinkId = "@quickLink.QuickLinkId"
+                                        QuickLinkId="@quickLink.QuickLinkId"
                                         QuickLinkImageUrl="@quickLink.QuickLinkImageUrl">
                                     </QuickLinkComponent>
                                 }

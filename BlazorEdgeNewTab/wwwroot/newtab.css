@@ -29,7 +29,7 @@
 
 /*M365 Menu Styles*/
 
-.TopMenuRowStyle{
+.TopMenuRowStyle {
     height: 75px;
 }
 
@@ -173,18 +173,18 @@
 
 /*Image navigation button styles*/
 
-.MuseumRowStyle{
-    margin-right: 0; 
-    margin-left: 0; 
+.MuseumRowStyle {
+    margin-right: 0;
+    margin-left: 0;
     height: 100px
 }
 
-.MuseumRowStyle2{
+.MuseumRowStyle2 {
     height: 100px;
 }
 
-.MuseumLinkStyle{
-    text-decoration: none; 
+.MuseumLinkStyle {
+    text-decoration: none;
     color: ghostwhite
 }
 
@@ -264,27 +264,27 @@
     background: var(--main-bg-hover);
 }
 
-.QuickLinkDeleteButton{
+.QuickLinkDeleteButton {
     position: relative;
     display: inline;
     top: 5%;
     z-index: 10;
-    right:25%;
+    right: 25%;
     opacity: 0.05;
-    filter:invert(100%);
+    filter: invert(100%);
     border: 2px solid;
     border-radius: 50px;
     height: 20px;
     width: 22px;
     transition: ease-in;
-    
+
 }
 
-.QuickLinkDeleteButton:hover{
+.QuickLinkDeleteButton:hover {
     opacity: 0.6;
 }
 
-.QuickLinkDeleteButton:active{
+.QuickLinkDeleteButton:active {
     opacity: 0.8;
 }
 

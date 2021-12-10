@@ -1,13 +1,12 @@
 ﻿@inject NavigationManager NavigationManager;
-@using BlazorEdgeNewTab.Constants
 
 <div>
-    <button class="QuickLinkContent" @onclick="(OnQuickLinkClicked)">
-        <div class="QuickLinkBookMarkImageContainer" @onclick="(OnQuickLinkClicked)">
+    <button class="QuickLinkContent" @onclick="OnQuickLinkClicked">
+        <div class="QuickLinkBookMarkImageContainer" @onclick="OnQuickLinkClicked">
             <img src="@QuickLinkImageUrl" class="QuickLinkBookMarkImage" alt="@QuickLinkTitle" title="@QuickLinkUrl"/>
         </div>
         <br>
-        <span class="QuickLinkTitle" title="@QuickLinkUrl"  @onclick="(OnQuickLinkClicked)">@QuickLinkTitle</span>
+        <span class="QuickLinkTitle" title="@QuickLinkUrl" @onclick="OnQuickLinkClicked">@QuickLinkTitle</span>
     </button>
     <img class="QuickLinkDeleteButton" src="icons\fluent_ellipsis.png" alt="Delete This Quick link" title="Delete this Quick Link" data-bs-toggle="modal" data-bs-target="#@ModalName"/>
 </div>
@@ -25,8 +24,9 @@
         </div>
     </div>
 </div>
+
 @code {
-    
+
     [Parameter]
     public string QuickLinkUrl { get; set; }
 
@@ -35,8 +35,10 @@
 
     [Parameter]
     public string QuickLinkTitle { get; set; }
+
     [Parameter]
     public string QuickLinkId { get; set; }
+
     [CascadingParameter]
     public Index NewTabPage { get; set; }
 

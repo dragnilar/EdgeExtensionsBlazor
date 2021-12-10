@@ -1,8 +1,7 @@
-﻿namespace BlazorEdgeNewTab.Models
+﻿namespace BlazorEdgeNewTab.Models;
+
+public class BingImageOfTheDayDto
 {
-    public class BingImageOfTheDayDto
-    {
-        public BingImageOfTheDay[] images { get; set; }
-        public BingImageToolTip tooltips { get; set; }
-    }
+    public BingImageOfTheDay[] images   { get; set; }
+    public BingImageToolTip    tooltips { get; set; }
 }
