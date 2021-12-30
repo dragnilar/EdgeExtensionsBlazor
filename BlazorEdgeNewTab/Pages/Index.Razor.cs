@@ -53,7 +53,7 @@ public partial class Index
         await GetBingImagesForNewTab();
         _filterMode = Convert.ToBoolean(Settings.GetSettingValue(SettingsValues.UseQuickLinksFilter));
         if (_filterMode) UpdateSearchEmptyText();
-        JS.InvokeVoidAsync("SetFocusToElement", SearchBoxElement);
+        await JS.InvokeVoidAsync("SetFocusToElement", SearchBoxElement);
     }
 
     private void UpdateSearchEmptyText()
@@ -103,15 +103,16 @@ public partial class Index
         _quickLinks = new List<QuickLink>();
         var bookMarkNode =
             await WebExtensions.Bookmarks.Search(Settings.GetSettingValue(SettingsValues.QuickLinkBookMarkFolder));
-        if (!bookMarkNode.Any())
+        var bookmarkTreeNodes = bookMarkNode.ToList();
+        if (!bookmarkTreeNodes.Any())
         {
             var folderName = Settings.GetSettingValue(SettingsValues.QuickLinkBookMarkFolder);
-            WebExtensions.Bookmarks.Create(new CreateDetails
+            await WebExtensions.Bookmarks.Create(new CreateDetails
                 { Title = folderName });
         }
         else
         {
-            var quickLinkBookMarks = await WebExtensions.Bookmarks.GetChildren(bookMarkNode.First().Id);
+            var quickLinkBookMarks = await WebExtensions.Bookmarks.GetChildren(bookmarkTreeNodes.First().Id);
             _quickLinks.AddRange(quickLinkBookMarks.Select(quickLinkBookMark => new QuickLink
             {
                 QuickLinkTitle = quickLinkBookMark.Title,
@@ -323,9 +324,7 @@ public partial class Index
     {
         Settings.UpdateSetting(SettingsValues.ReQueryImagesAfterTime,
             DateTime.Now.AddDays(-1).ToString(CultureInfo.InvariantCulture));
-        Settings.UpdateSetting(SettingsValues.ReQueryArchiveAfterTime,
-            DateTime.Now.AddDays(-1).ToString(CultureInfo.InvariantCulture));
-        Settings.SaveAsync();
+        await Settings.SaveAsync();
         GetBingImagesForNewTab();
         StateHasChanged();
     }

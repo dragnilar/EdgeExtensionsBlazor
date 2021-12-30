@@ -23,7 +23,6 @@ public static class Settings
             SettingsValues.ShowRandomImages,
             SettingsValues.QuickLinkBookMarkFolder,
             SettingsValues.ImageOfTheDayCache,
-            SettingsValues.ImageArchiveCache,
             SettingsValues.ReQueryImagesAfterTime,
             SettingsValues.UseQuickLinksFilter
         }
@@ -42,7 +41,6 @@ public static class Settings
             { SettingsValues.ShowRandomImages, "False" },
             { SettingsValues.QuickLinkBookMarkFolder, SettingsValues.DefaultBookmarkFolderName },
             { SettingsValues.ImageOfTheDayCache, null },
-            { SettingsValues.ImageArchiveCache, null },
             { SettingsValues.ReQueryImagesAfterTime, DateTime.Now.ToString(CultureInfo.InvariantCulture) },
             { SettingsValues.UseQuickLinksFilter, "False" }
         };
