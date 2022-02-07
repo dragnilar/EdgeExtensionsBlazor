@@ -18,8 +18,8 @@ public partial class Index
     private bool              _filterMode;
     private int               _imageArchiveIndex = -1;
     private BingImageOfTheDay _imageOfTheDay;
-    private List<QuickLink>   _quickLinks;
-    private bool              _quickLinksVisible;
+    private List<QuickLink>   _quickLinks { get; set; }
+    private bool              _quickLinksVisible { get; set; }
     private bool              _searchVisible;
 
     protected ElementReference SearchBoxElement;
@@ -98,7 +98,7 @@ public partial class Index
         }
     }
 
-    private async Task SetUpQuickLinks()
+    public async Task SetUpQuickLinks()
     {
         _quickLinks = new List<QuickLink>();
         var bookMarkNode =
@@ -273,16 +273,7 @@ public partial class Index
         return Task.CompletedTask;
     }
 
-    private string GetQuickLinkName(string quickLinkText)
-    {
-        if (!string.IsNullOrWhiteSpace(quickLinkText) && quickLinkText.Length > 25)
-        {
-            var returnValue = quickLinkText.Substring(0, 22) + "...";
-            return returnValue;
-        }
 
-        return quickLinkText;
-    }
 
     private async Task OnDownloadImageClick()
     {
@@ -292,11 +283,6 @@ public partial class Index
             SaveAs = true,
             Filename = $"{GetImageNameForIndex(_imageArchiveIndex)}.jpeg"
         });
-    }
-
-    private async Task SaveNewQuickLinkClickHandler()
-    {
-        await SetUpQuickLinks();
     }
 
     private async Task QuickLinksFolderChangedHandler()

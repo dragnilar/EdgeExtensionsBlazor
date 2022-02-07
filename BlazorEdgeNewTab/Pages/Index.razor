@@ -83,28 +83,7 @@
     <div class="row" style="height: auto">
         <div class="col">
             <CascadingValue Value="this">
-                <div class="QuickLinkContainer container-fluid" hidden="@(!_quickLinksVisible)">
-                    @{
-                        if (_quickLinks != null)
-                        {
-                            foreach (var quickLink in _quickLinks)
-                            {
-                                if (quickLink.Visible)
-                                {
-                                    <QuickLinkComponent
-                                        QuickLinkTitle="@GetQuickLinkName(quickLink.QuickLinkTitle)"
-                                        QuickLinkUrl="@quickLink.QuickLinkUrl"
-                                        QuickLinkId="@quickLink.QuickLinkId"
-                                        QuickLinkImageUrl="@quickLink.QuickLinkImageUrl">
-                                    </QuickLinkComponent>
-                                }
-                            }
-                        }
-                        <EmptyQuickLinkComponent OnSaveEventCallback="SaveNewQuickLinkClickHandler">
-                        </EmptyQuickLinkComponent>
-
-                    }
-                </div>
+                <QuickLinkContainerComponent QuickLinks="@_quickLinks" QuickLinksVisible="@_quickLinksVisible" ></QuickLinkContainerComponent>
             </CascadingValue>
 
         </div>

@@ -1,0 +1,49 @@
+﻿@using BlazorEdgeNewTab.Models
+<div class="QuickLinkContainer container-fluid" hidden="@(!QuickLinksVisible)">
+    @{
+        if (QuickLinks != null)
+        {
+            foreach (var quickLink in QuickLinks)
+            {
+                if (quickLink.Visible)
+                {
+                    <QuickLinkComponent
+                        QuickLinkTitle="@GetQuickLinkName(quickLink.QuickLinkTitle)"
+                        QuickLinkUrl="@quickLink.QuickLinkUrl"
+                        QuickLinkId="@quickLink.QuickLinkId"
+                        QuickLinkImageUrl="@quickLink.QuickLinkImageUrl">
+                    </QuickLinkComponent>
+                }
+            }
+        }
+        <EmptyQuickLinkComponent OnSaveEventCallback="SaveNewQuickLinkClickHandler">
+        </EmptyQuickLinkComponent>
+
+    }
+</div>
+
+@code {
+    [CascadingParameter]
+    public Index NewTabPage { get; set; }
+    [Parameter]
+    public bool QuickLinksVisible { get; set; }
+
+    [Parameter] 
+    public List<QuickLink> QuickLinks { get; set; }
+
+    private string GetQuickLinkName(string quickLinkText)
+    {
+        if (!string.IsNullOrWhiteSpace(quickLinkText) && quickLinkText.Length > 25)
+        {
+            var returnValue = quickLinkText.Substring(0, 22) + "...";
+            return returnValue;
+        }
+
+        return quickLinkText;
+    }
+
+    public async Task SaveNewQuickLinkClickHandler()
+    {
+        await NewTabPage.SetUpQuickLinks();
+    }
+}
