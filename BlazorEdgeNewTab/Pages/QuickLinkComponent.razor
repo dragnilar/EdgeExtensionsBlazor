@@ -1,4 +1,4 @@
-﻿@inject NavigationManager NavigationManager;
+﻿
 
 <div>
     <button class="QuickLinkContent" @onclick="OnQuickLinkClicked">
@@ -24,34 +24,3 @@
         </div>
     </div>
 </div>
-
-@code {
-
-    [Parameter]
-    public string QuickLinkUrl { get; set; }
-
-    [Parameter]
-    public string QuickLinkImageUrl { get; set; }
-
-    [Parameter]
-    public string QuickLinkTitle { get; set; }
-
-    [Parameter]
-    public string QuickLinkId { get; set; }
-
-    [CascadingParameter]
-    public Index NewTabPage { get; set; }
-
-    public string ModalName => $"DeleteQuickLinkModalFor{QuickLinkId}";
-
-    private void OnQuickLinkClicked()
-    {
-        NavigationManager.NavigateTo(QuickLinkUrl);
-    }
-
-    private async Task DeleteQuickLink()
-    {
-        await NewTabPage.DeleteQuickLink(QuickLinkId);
-    }
-
-}

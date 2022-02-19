@@ -311,7 +311,7 @@ public partial class Index
         Settings.UpdateSetting(SettingsValues.ReQueryImagesAfterTime,
             DateTime.Now.AddDays(-1).ToString(CultureInfo.InvariantCulture));
         await Settings.SaveAsync();
-        GetBingImagesForNewTab();
+        await GetBingImagesForNewTab();
         StateHasChanged();
     }
 }
