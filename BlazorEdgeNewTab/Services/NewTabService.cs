@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using BlazorEdgeNewTab.Constants;
 using BlazorEdgeNewTab.Models;
@@ -16,11 +15,11 @@ public class NewTabService : INewTabService
 {
     private HttpClient _httpClient;
     private readonly string BingImageOfDayUri =
-        "https://api.allorigins.win/raw?url=https%3A//www.bing.com/HPImageArchive.aspx%3Fformat%3Djs%26idx%3D0%26n%3D8%26mkt%3Den-US";
+        "https://api.allorigins.win/get?url=https%3A//www.bing.com/HPImageArchive.aspx%3Fformat%3Djs%26idx%3D0%26n%3D7";
 
     public async Task<BingImageOfTheDayDto> GetImageOfDayDto()
     {
-        BingImageOfTheDayDto dto;
+        BingImageOfTheDayDto dto = new BingImageOfTheDayDto();
         var reQueryTime = Convert.ToDateTime(Settings.GetSettingValue(SettingsValues.ReQueryImagesAfterTime)
                                              ?? DateTime.Now.AddDays(-1).ToString(CultureInfo.InvariantCulture));
         Console.WriteLine($"Re-Query Date for Bing Image Of Day In Cache Is: {reQueryTime.Date}");
@@ -28,14 +27,28 @@ public class NewTabService : INewTabService
         if (DateTime.Now.Date > reQueryTime.Date || Settings.GetSettingValue(SettingsValues.ImageOfTheDayCache) == null)
         {
             Console.WriteLine("Getting Bing Image of Day from Bing");
+            Console.WriteLine($"Using URL to get image of the day: {BingImageOfDayUri}");
             _httpClient ??= new HttpClient();
-            dto = await _httpClient.GetFromJsonAsync<BingImageOfTheDayDto>(BingImageOfDayUri);
-            Console.WriteLine($"Dto from bing: {dto.images[0].fullstartdate}");
-            var imageDate = DateTime.ParseExact(dto.images[0].fullstartdate, "yyyyMMddHHmm", CultureInfo.InvariantCulture);
-            Settings.UpdateSetting(SettingsValues.ImageOfTheDayCache, JsonSerializer.Serialize(dto));
-            Settings.UpdateSetting(SettingsValues.ReQueryImagesAfterTime,
-                imageDate.ToString(CultureInfo.InvariantCulture));
-            await Settings.SaveAsync();
+            var responseDto = await _httpClient.GetFromJsonAsync<AllOriginsResultDto>(BingImageOfDayUri);
+            if (responseDto != null)
+            {
+                var correctedJson = responseDto.contents.Replace("\\", "");
+                dto = JsonSerializer.Deserialize<BingImageOfTheDayDto>(correctedJson, new JsonSerializerOptions
+                {
+                    
+                });
+                Console.WriteLine($"Dto from bing: {dto.images[0].fullstartdate}");
+                var imageDate = DateTime.ParseExact(dto.images[0].fullstartdate, "yyyyMMddHHmm", CultureInfo.InvariantCulture);
+                Settings.UpdateSetting(SettingsValues.ImageOfTheDayCache, JsonSerializer.Serialize(dto));
+                Settings.UpdateSetting(SettingsValues.ReQueryImagesAfterTime,
+                    imageDate.ToString(CultureInfo.InvariantCulture));
+                await Settings.SaveAsync();
+                return dto;
+            }
+            else
+            {
+                Console.WriteLine($"Received no or a null response back from All Origins. :(");
+            }
         }
         else
         {
