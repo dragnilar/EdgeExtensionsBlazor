@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -8,6 +10,8 @@ using System.Threading.Tasks;
 using BlazorEdgeNewTab.Constants;
 using BlazorEdgeNewTab.Models;
 using BlazorEdgeNewTab.Services.Interfaces;
+using WebExtensions.Net;
+using WebExtensions.Net.Bookmarks;
 
 namespace BlazorEdgeNewTab.Services;
 
@@ -59,4 +63,33 @@ public class NewTabService : INewTabService
         
         return dto;
     }
+
+    public async Task<List<QuickLink>> SetUpQuickLinks(IWebExtensionsApi webExtensions)
+    {
+        var quickLinks = new List<QuickLink>();
+        var bookMarkNode =
+            await webExtensions.Bookmarks.Search(Settings.GetSettingValue(SettingsValues.QuickLinkBookMarkFolder));
+        var bookmarkTreeNodes = bookMarkNode.ToList();
+        if (!bookmarkTreeNodes.Any())
+        {
+            var folderName = Settings.GetSettingValue(SettingsValues.QuickLinkBookMarkFolder);
+            await webExtensions.Bookmarks.Create(new CreateDetails
+                {Title = folderName});
+        }
+        else
+        {
+            var quickLinkBookMarks = await webExtensions.Bookmarks.GetChildren(bookmarkTreeNodes.First().Id);
+            quickLinks.AddRange(quickLinkBookMarks.Select(quickLinkBookMark => new QuickLink
+            {
+                QuickLinkTitle = quickLinkBookMark.Title,
+                QuickLinkImageUrl = "chrome://favicon/size/64/" + quickLinkBookMark.Url,
+                QuickLinkUrl = quickLinkBookMark.Url,
+                QuickLinkId = quickLinkBookMark.Id,
+                Visible = true
+            }));
+        }
+        return quickLinks;
+    }
+
+    
 }

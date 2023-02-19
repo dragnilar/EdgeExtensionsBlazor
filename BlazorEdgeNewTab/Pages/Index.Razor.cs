@@ -18,8 +18,8 @@ public partial class Index
     private bool              _filterMode;
     private int               _imageArchiveIndex = -1;
     private BingImageOfTheDay _imageOfTheDay;
-    private List<QuickLink>   _quickLinks { get; set; }
-    private bool              _quickLinksVisible { get; set; }
+    private List<QuickLink>   QuickLinks { get; set; }
+    private bool              QuickLinksVisible { get; set; }
     private bool              _searchVisible;
 
     protected ElementReference SearchBoxElement;
@@ -73,7 +73,7 @@ public partial class Index
         if (firstRender)
         {
             _searchVisible = SettingsMenuNewTab.SearchVisible;
-            _quickLinksVisible = SettingsMenuNewTab.QuickLinksVisible;
+            QuickLinksVisible = SettingsMenuNewTab.QuickLinksVisible;
         }
 
         return base.OnAfterRenderAsync(firstRender);
@@ -85,7 +85,7 @@ public partial class Index
         {
             if (!string.IsNullOrWhiteSpace(SearchQuery))
             {
-                foreach (var quickLink in _quickLinks)
+                foreach (var quickLink in QuickLinks)
                     quickLink.Visible =
                         quickLink.QuickLinkTitle.Contains(SearchQuery, StringComparison.OrdinalIgnoreCase);
 
@@ -93,34 +93,16 @@ public partial class Index
             }
             else
             {
-                _quickLinks.ForEach(x => x.Visible = true);
+                QuickLinks.ForEach(x => x.Visible = true);
             }
         }
     }
 
     public async Task SetUpQuickLinks()
     {
-        _quickLinks = new List<QuickLink>();
-        var bookMarkNode =
-            await WebExtensions.Bookmarks.Search(Settings.GetSettingValue(SettingsValues.QuickLinkBookMarkFolder));
-        var bookmarkTreeNodes = bookMarkNode.ToList();
-        if (!bookmarkTreeNodes.Any())
+        QuickLinks= await NewTabService.SetUpQuickLinks(WebExtensions);
+        if (QuickLinks.Any())
         {
-            var folderName = Settings.GetSettingValue(SettingsValues.QuickLinkBookMarkFolder);
-            await WebExtensions.Bookmarks.Create(new CreateDetails
-                { Title = folderName });
-        }
-        else
-        {
-            var quickLinkBookMarks = await WebExtensions.Bookmarks.GetChildren(bookmarkTreeNodes.First().Id);
-            _quickLinks.AddRange(quickLinkBookMarks.Select(quickLinkBookMark => new QuickLink
-            {
-                QuickLinkTitle = quickLinkBookMark.Title,
-                QuickLinkImageUrl = "chrome://favicon/size/64/" + quickLinkBookMark.Url,
-                QuickLinkUrl = quickLinkBookMark.Url,
-                QuickLinkId = quickLinkBookMark.Id,
-                Visible = true
-            }));
             StateHasChanged();
         }
     }
@@ -303,7 +285,7 @@ public partial class Index
 
     private void QuickLinksVisibleChanged()
     {
-        _quickLinksVisible = SettingsMenuNewTab.QuickLinksVisible;
+        QuickLinksVisible = SettingsMenuNewTab.QuickLinksVisible;
     }
 
     private async Task RefreshImageOfDayHandler()
