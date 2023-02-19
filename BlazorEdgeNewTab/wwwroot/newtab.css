@@ -80,6 +80,7 @@
     margin-left: 15px;
     border: 5px solid transparent;
     background: var(--main-element-bg-color);
+    color: whitesmoke;
 }
 
 /*Search Box Styles*/

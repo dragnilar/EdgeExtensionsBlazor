@@ -3,13 +3,13 @@
     <button class="dropdown-toggle TopMenuIconStyle btn" type="button" id="settingsDropDown" data-bs-toggle="dropdown" aria-expanded="false" title="Settings">
         <img src="\icons\fluent_gear.png" alt="waffle icon">
     </button>
-    <div class="dropdown-menu p-4 text-muted M365PopUp" style="min-width: 450px" aria-labelledby="settingsDropDown">
+    <div class="dropdown-menu p-4 M365PopUp" style="min-width: 450px" aria-labelledby="settingsDropDown">
         <form class="mb-3">
             <h4>Settings</h4>
             <EditForm Model="this">
                 <div class="form-check form-switch">
                     <InputCheckbox @bind-Value="@SearchVisible" Id="showSearchSwitch" class="form-check-input"/>
-                    <label class="form-control-label" for="showSearchSwitch">Show Web Search</label>
+                    <label class="form-control-label for="showSearchSwitch">Show Web Search</label>
                 </div>
                 <br/>
                 <div class="form-check form-switch">
