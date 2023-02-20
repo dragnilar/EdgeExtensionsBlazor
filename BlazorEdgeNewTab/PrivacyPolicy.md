@@ -25,6 +25,10 @@ Blazor Edge New Tab uses the Chromium / WebExtensions downloads API to allow you
 Blazor Edge New Tab uses the Chromium / WebExtensions search API to allow you to execute search queries against your
 default search engine provider from the new tab page.
 
+## Favicon API
+
+Blazor Edge New Tab uses the Chromium / WebExtensions API to access the icons used for your bookmarks that which are displayed on the tab.
+
 ## Bing
 
 Blazor Edge New Tab uses Microsoft Bing's image of the day feed to display the image backgrounds. No personal data of

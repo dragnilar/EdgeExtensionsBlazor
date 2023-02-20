@@ -29,3 +29,20 @@ This is a new tab page extension that is similar to the new tab page for Microso
 - This project has no external dependencies besides the ones Blazor/Asp.NET rely upon and one specific NuGet package for allowing Blazor to to run as a Browser Extension.
 - You can build it using either the Dot Net 5 SDK CLI, JetBrains Rider or Visual Studio 2019 (latest version; edition does not matter).
 - When you build the project, the output folder will contain a browserextension folder. This is the folder that you need to load for the unpacked extension via your extensions menu in Edge/Chromium
+
+
+# Basic Usage Instructions (For Blazor New Tab):
+
+1) Load the extension as you would any other standard unpacked extension
+
+2) Your new tab page should be replaced with one provided by the extension.
+
+3) The new tab page should load the bing image of the day, assuming allorigins.win and bing are available.
+
+4) The extension should display quick link tiles below the web search if you have a folder in your favorites named "Edge Quick Links". If you want to use a different folder to test, you can change the name of the default folder using the settings menu (click the gear button in the upper right hand corner of the new tab page to access).
+
+5) The web search should take you to your default search provider page (preferably Bing) if you type in text into the web search text box and hit enter or click the magnifying glass / search button. 
+
+6) If you click the filter button on the web search text box, the new tab page should switch to filter mode and let you type in the name of a favorite. When you hit enter, your favorites / quick links will be filtered based on what you typed. 
+
+7) If you delete all the text from the web search text box and hit enter again while in filter mode, it should clear the filter and bring back all available favorites. 
