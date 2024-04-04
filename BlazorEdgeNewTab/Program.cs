@@ -3,6 +3,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using BlazorEdgeNewTab.Services;
 using BlazorEdgeNewTab.Services.Interfaces;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -14,12 +15,12 @@ public static class Program
     public static async Task Main(string[] args)
     {
         var builder = WebAssemblyHostBuilder.CreateDefault(args);
-        builder.RootComponents.Add<App>("#app");
-        // workaround to use JavaScript fetch to bypass url validation
-        // see: https://github.com/dotnet/runtime/issues/52836
-        builder.Services.AddScoped<HttpClient>(sp => new JsHttpClient(sp)
-            { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-        builder.Services.AddBrowserExtensionServices();
+        builder.UseBrowserExtension(browserExtension =>
+        {
+            builder.RootComponents.Add<App>("#app");
+            builder.RootComponents.Add<HeadOutlet>("head::after");
+        });
+        builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
         builder.Services.AddSingleton<INewTabService, NewTabService>();
         await builder.Build().RunAsync();
     }
