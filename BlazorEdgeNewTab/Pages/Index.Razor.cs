@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using BlazorEdgeNewTab.Constants;
 using BlazorEdgeNewTab.Models;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.JSInterop;
-using WebExtensions.Net.Bookmarks;
 using WebExtensions.Net.Downloads;
 
 namespace BlazorEdgeNewTab.Pages;
@@ -252,6 +252,14 @@ public partial class Index
             Console.WriteLine(e);
         }
 
+        return Task.CompletedTask;
+    }
+    
+    
+    private Task UseCopilot(MouseEventArgs arg)
+    {
+        Console.WriteLine("Use Co-Pilot Clicked");
+        NavigationManager.NavigateTo("https://bing.com/chat");
         return Task.CompletedTask;
     }
 
