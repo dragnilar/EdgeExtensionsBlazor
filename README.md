@@ -46,3 +46,9 @@ This is a new tab page extension that is similar to the new tab page for Microso
 6) If you click the filter button on the web search text box, the new tab page should switch to filter mode and let you type in the name of a favorite. When you hit enter, your favorites / quick links will be filtered based on what you typed. 
 
 7) If you delete all the text from the web search text box and hit enter again while in filter mode, it should clear the filter and bring back all available favorites. 
+
+8) The co-pilot button on the search bar should navigate you to the Bing Co-Pilot / Bing Chat website where you can use Co-Pilot. 
+
+9) The Waffle button in the upper left hand corner should display a drop down with links to various MS365 apps and services. 
+
+10) The rewards button / badge in the upper right hand corner (to the right of the settings button) should take you to the MS Rewards site.
