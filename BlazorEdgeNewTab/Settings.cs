@@ -88,7 +88,7 @@ public static class Settings
     public static async Task LoadSettingsAsync(IWebExtensionsApi webApi)
     {
         Console.WriteLine("Loading settings...");
-        Storage ??= await webApi.Storage.GetLocal();
+        Storage ??= webApi.Storage.Local;
         var jsonElement = await Storage.Get(StorageKeys);
         if (jsonElement.ToString() != "{}")
         {

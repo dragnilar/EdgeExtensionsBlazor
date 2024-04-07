@@ -64,7 +64,7 @@ public class NewTabService : INewTabService
     public async Task<List<QuickLink>> SetUpQuickLinks(IWebExtensionsApi webExtensions)
     {
         var quickLinks  = new List<QuickLink>();
-        var extensionId = await webExtensions.Runtime.GetId();
+        var extensionId = webExtensions.Runtime.Id;
         var bookMarkNode =
             await webExtensions.Bookmarks.Search(Settings.GetSettingValue(SettingsValues.QuickLinkBookMarkFolder));
         var bookmarkTreeNodes = bookMarkNode.ToList();

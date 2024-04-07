@@ -1,9 +1,8 @@
 ﻿@page "/index.html"
 @using BlazorEdgeNewTab.Services.Interfaces
 @inherits IndexPage;
-@inject IJSRuntime JS;
+@inject IJSRuntime     JS;
 @inject INewTabService NewTabService;
-
 <div class="container-fluid" xmlns="http://www.w3.org/1999/html">
     <div class="row TopMenuRowStyle" id="TopMenuRow">
         <div class="col">
@@ -64,11 +63,16 @@
                 <div class="input-group mb-3">
                     <input class="form-control SearchBoxStyle" type="text" @bind="SearchQuery" placeholder="@SearchEmptyText" aria-label="Query" aria-describedby="queryButtonAddon" name="SearchBox"
                            @ref="SearchBoxElement">
-                    <input type="checkbox" class="btn-check" id="btn-check" autocomplete="off" @bind="FilterMode">
-                    <label class="btn btn-secondary SearchButtonStyle" for="btn-check">
-                        <img alt="Filter Icon" src="./icons/fluent_filter.png" style="height: 24px; width: 24px;"/>
+                    <input type="checkbox" class="btn-check" id="btn-check" autocomplete="off" @bind="FilterMode"
+                           >
+                    <label class="btn btn-secondary SearchButtonStyle" for="btn-check" title="@(@FilterMode ? "Click here to toggle filter mode off" : "Click here to toggle filter mode on - searches will be done against your bookmarks below")">
+                        <img alt="Filter Icon" src="./icons/fluent_filter.png" style="height: 24px; width: 24px;"
+                             />
                     </label>
-                    <button type="button" class="SearchButtonStyle" id="queryButtonAddon" @onclick="FireSearchEngineQuery">
+                    <button type="button" id="copilotButton" class="SearchButtonStyle" @onclick="UseCopilot" title="Click here to start chatting with Bing / Co-Pilot. This will leave your new tab page.">
+                        <img src="icons/Copilot_Color_24x24.svg" alt="Copilot Icon"/>
+                    </button>
+                    <button type="button" class="SearchButtonStyle" id="queryButtonAddon" @onclick="FireSearchEngineQuery" title="Click here to perform a web search with your search query in the text box. This will leave your new tab page.">
                         <img alt="Search Icon" src="./icons/fluent_search.png"/>
                     </button>
                 </div>
@@ -85,7 +89,6 @@
             <CascadingValue Value="this">
                 <QuickLinkContainerComponent QuickLinks="@QuickLinks" QuickLinksVisible="@QuickLinksVisible" ></QuickLinkContainerComponent>
             </CascadingValue>
-
         </div>
     </div>
 </div>
