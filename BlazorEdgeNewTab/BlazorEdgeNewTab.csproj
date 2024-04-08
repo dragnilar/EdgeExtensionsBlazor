@@ -11,6 +11,8 @@
 	
 	<ItemGroup>
 		<PackageReference Include="Blazor.BrowserExtension" Version="1.2.3" />
+		<PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.5.1" />
+		<PackageReference Include="Blazorise.Tailwind" Version="1.5.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.3" PrivateAssets="all" />
 	</ItemGroup>
