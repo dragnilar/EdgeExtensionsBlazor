@@ -1,11 +1,16 @@
 ﻿using System.Threading.Tasks;
+using System.Xml.Linq;
+using Blazorise;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 
 namespace BlazorEdgeNewTab.Pages;
 
 public partial class QuickLinkComponent
 {
-    [Inject] 
+    [Inject]
+    public IModalService ModalService { get; set; }
+    [Inject]
     private NavigationManager NavigationManager { get; set; }
     [Parameter]
     public string QuickLinkUrl { get; set; }
@@ -22,15 +27,26 @@ public partial class QuickLinkComponent
     [CascadingParameter]
     public Index NewTabPage { get; set; }
 
-    public string ModalName => $"DeleteQuickLinkModalFor{QuickLinkId}";
+    public string ModalName               => $"DeleteQuickLinkModalFor{QuickLinkId}";
 
     private void OnQuickLinkClicked()
     {
         NavigationManager.NavigateTo(QuickLinkUrl);
     }
+    
 
-    private async Task DeleteQuickLink()
+    private Task OnDeleteQuickLinkButton_Click(MouseEventArgs arg)
     {
-        await NewTabPage.DeleteQuickLink(QuickLinkId);
+        return ModalService.Show<DeleteQuickLinkModal>(
+            param =>
+            {
+                param.Add(x => x.QuickLinkId, QuickLinkId);
+                param.Add(x => x.QuickLinkTitle, QuickLinkTitle);
+            },
+            new ModalInstanceOptions
+            {
+                Centered = true,
+                UseModalStructure = false,
+            });
     }
 }

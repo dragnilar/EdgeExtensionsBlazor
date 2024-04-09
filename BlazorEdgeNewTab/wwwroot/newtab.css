@@ -641,4 +641,13 @@
     }
 }
 
+.modal-dialog{
+    margin: 0 auto 0 auto;
+}
+
+.modal-content {
+    display: inline-block;
+    background-color: var(--main-element-bg-color);
+}
+
 

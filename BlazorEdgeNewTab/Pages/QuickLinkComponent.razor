@@ -1,6 +1,4 @@
-﻿
-
-<div>
+﻿<div>
     <button class="QuickLinkContent" @onclick="OnQuickLinkClicked">
         <div class="QuickLinkBookMarkImageContainer" @onclick="OnQuickLinkClicked">
             <img src="@QuickLinkImageUrl" class="QuickLinkBookMarkImage" alt="@QuickLinkTitle" title="@QuickLinkUrl"/>
@@ -8,19 +6,5 @@
         <br>
         <span class="QuickLinkTitle" title="@QuickLinkUrl" @onclick="OnQuickLinkClicked">@QuickLinkTitle</span>
     </button>
-    <img class="QuickLinkDeleteButton" src="icons\fluent_ellipsis.png" alt="Delete This Quick link" title="Delete this Quick Link" data-bs-toggle="modal" data-bs-target="#@ModalName"/>
-</div>
-
-<div class="modal fade" id="@ModalName" tabindex="-1" aria-labelledby="DeleteQuickLinkModalTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content M365PopUp">
-            <div class="modal-header">
-                <h5 class="modal-title text-secondary" id="DeleteQuickLinkModalTitle">Delete This Quick Link?</h5>
-            </div>
-            <div class="modal-footer">
-                <button type="button" data-bs-dismiss="modal" class="btn btn-primary" @onclick="DeleteQuickLink">Yes</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
-            </div>
-        </div>
-    </div>
+    <img class="QuickLinkDeleteButton" src="icons\fluent_ellipsis.png" alt="Delete This Quick link" title="Delete this Quick Link" @onclick="OnDeleteQuickLinkButton_Click"/>
 </div>

@@ -1,0 +1,38 @@
+﻿<ModalContent Class="M365PopUp">
+    <ModalHeader>
+        <ModalTitle>Delete This Quick Link?</ModalTitle>
+    </ModalHeader>
+    <ModalBody>
+        <Text TextSize="TextSize.Heading5">Selected QuickLink:</Text>
+        <br/>
+        <Text TextSize="TextSize.Heading6">@QuickLinkTitle</Text>
+    </ModalBody>
+    <ModalFooter>
+        <button type="button" data-bs-dismiss="modal" class="btn btn-primary" @onclick="DeleteQuickLink">Yes</button>
+        <button type="button" class="btn btn-secondary" @onclick="CancelDeleteQuickLink">No</button>
+    </ModalFooter>
+</ModalContent>
+
+@code
+{
+    [CascadingParameter]
+    public Index NewTabPage { get; set; }
+    [Inject]
+    public IModalService ModalService { get; set; }
+    [Parameter]
+    public string QuickLinkId { get; set; }
+    [Parameter]
+    public string QuickLinkTitle { get; set; }
+    
+    private Task CancelDeleteQuickLink(MouseEventArgs arg)
+    {
+        return ModalService.Hide();
+    }
+    
+    private async Task DeleteQuickLink()
+    {
+        await NewTabPage.DeleteQuickLink(QuickLinkId);
+        await ModalService.Hide();
+    }
+    
+}
