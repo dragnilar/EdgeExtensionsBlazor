@@ -11,8 +11,9 @@
 	
 	<ItemGroup>
 		<PackageReference Include="Blazor.BrowserExtension" Version="1.2.3" />
+		<PackageReference Include="Blazorise.Animate" Version="1.5.1" />
+		<PackageReference Include="Blazorise.Bootstrap5" Version="1.5.1" />
 		<PackageReference Include="Blazorise.Icons.FontAwesome" Version="1.5.1" />
-		<PackageReference Include="Blazorise.Tailwind" Version="1.5.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.3" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.3" PrivateAssets="all" />
 	</ItemGroup>
@@ -31,5 +32,8 @@
 	<ItemGroup>
 		<Folder Include="wwwroot\css\" />
 	</ItemGroup>
+	<Target Name="PostBuildFixAnimateJsFiles" AfterTargets="Build">
+		<Copy SourceFiles="PostBuildFiles\blazorise.animate.js" DestinationFolder="$(OutputPath)browserextension\content\Blazorise.Animate\"/>
+	</Target>
 
 </Project>

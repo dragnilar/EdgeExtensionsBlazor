@@ -24,6 +24,10 @@ function showSaveChangesToast() {
     }
 }
 
+function replaceScripts(){
+    
+}
+
 window.SetFocusToElement = (element) => {
     element.focus();
 }

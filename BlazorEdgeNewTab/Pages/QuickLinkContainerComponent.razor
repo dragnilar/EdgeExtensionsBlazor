@@ -1,4 +1,5 @@
 ﻿@using BlazorEdgeNewTab.Models
+@using System.Xml.Linq
 <div class="QuickLinkContainer container-fluid" hidden="@(!QuickLinksVisible)">
     @{
         if (QuickLinks != null)
@@ -7,12 +8,16 @@
             {
                 if (quickLink.Visible)
                 {
-                    <QuickLinkComponent
-                        QuickLinkTitle="@GetQuickLinkName(quickLink.QuickLinkTitle)"
-                        QuickLinkUrl="@quickLink.QuickLinkUrl"
-                        QuickLinkId="@quickLink.QuickLinkId"
-                        QuickLinkImageUrl="@quickLink.QuickLinkImageUrl">
-                    </QuickLinkComponent>
+                    <div ElementId="#qLink-Animate">
+                        <Animate Anchor="#qLink-Animate" Animation="Animations.ZoomOut" DelayMilliseconds="250">
+                            <QuickLinkComponent
+                                QuickLinkTitle="@GetQuickLinkName(quickLink.QuickLinkTitle)"
+                                QuickLinkUrl="@quickLink.QuickLinkUrl"
+                                QuickLinkId="@quickLink.QuickLinkId"
+                                QuickLinkImageUrl="@quickLink.QuickLinkImageUrl">
+                            </QuickLinkComponent>
+                        </Animate>
+                    </div>
                 }
             }
         }
@@ -29,7 +34,7 @@
     public bool QuickLinksVisible { get; set; }
 
     [Parameter] 
-    public List<QuickLink> QuickLinks { get; set; }
+    public List<QuickLink> QuickLinks { get;       set; }
 
     private string GetQuickLinkName(string quickLinkText)
     {
